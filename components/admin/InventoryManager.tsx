@@ -2,13 +2,13 @@ import React, { useState, useMemo } from 'react';
 import { BackendContextType, Language, formatCurrency, Product } from '../../types';
 import { TRANSLATIONS } from '../../services/translations';
 import { 
-  Package, Search, Plus, Filter, FileText, ArrowDown, ArrowUp, AlertTriangle, 
-  Download, Calendar, History, Box, ChevronDown, Check, FileDown, ArrowRight
+    Package, Search, Plus, Filter, FileText, ArrowDown, ArrowUp, AlertTriangle, 
+    Download, Calendar, History, Box, ChevronDown, Check, FileDown, ArrowRight
 } from 'lucide-react';
 
 interface InventoryManagerProps {
-  backend: BackendContextType;
-  lang: Language;
+    backend: BackendContextType;
+    lang: Language;
 }
 
 const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) => {
@@ -83,10 +83,10 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
           state.products.forEach(p => {
               if (p.hasVariants) {
                   p.variants.forEach(v => {
-                      csvContent += [
-                          escapeCSV(p.name),
-                          escapeCSV(v.name),
-                          escapeCSV(v.sku),
+                    csvContent += [
+                            escapeCSV(p.name),
+                            escapeCSV(v.name),
+                            escapeCSV(v.sku),
                           v.stock,
                           p.costPrice,
                           v.price,

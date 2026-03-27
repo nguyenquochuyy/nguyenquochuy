@@ -6,6 +6,7 @@ import {
   Lock, Landmark, CreditCard, User, Mail, Phone, MapPin, Truck, ArrowLeft,
   ShieldCheck, RefreshCw, QrCode, Copy, Crown
 } from 'lucide-react';
+import MockVNPay from './MockVNPay';
 
 interface CheckoutPageProps {
   cart: CartItem[];
@@ -43,6 +44,7 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({ cart, setCart, backend, onO
 
   const [selectedBankIdx, setSelectedBankIdx] = useState(0);
   const [copiedField, setCopiedField] = useState<string | null>(null);
+  const [showVNPay, setShowVNPay] = useState(false);
 
   useEffect(() => {
       if (cart.length === 0) {
@@ -103,10 +105,8 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({ cart, setCart, backend, onO
     });
   };
 
-  const handlePlaceOrder = (e: React.FormEvent) => {
-    e.preventDefault();
+  const submitOrderToServer = () => {
     setIsProcessing(true);
-    
     setTimeout(() => {
       const newOrder = placeOrder(
         { name: customerInfo.name, phone: customerInfo.phone, address: customerInfo.address, email: customerInfo.email },
@@ -119,6 +119,15 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({ cart, setCart, backend, onO
       setCart([]);
       onOrderSuccess(newOrder);
     }, 1500);
+  };
+
+  const handlePlaceOrder = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (paymentMethod === 'VNPAY') {
+        setShowVNPay(true);
+        return;
+    }
+    submitOrderToServer();
   };
 
   const inputClass = "w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none font-medium transition-all shadow-sm";
@@ -180,6 +189,11 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({ cart, setCart, backend, onO
                                     })()}
                                 </div>
                             )}
+                        </label>
+                        <label className={`flex items-start gap-4 p-4 border-2 rounded-xl cursor-pointer transition-all ${paymentMethod === 'VNPAY' ? 'border-indigo-600 bg-indigo-50 shadow-md' : 'border-slate-200 bg-white'}`}>
+                            <input type="radio" name="payment" value="VNPAY" checked={paymentMethod === 'VNPAY'} onChange={() => setPaymentMethod('VNPAY')} className="mt-1 w-5 h-5 text-indigo-600 border-slate-300 focus:ring-indigo-500"/>
+                            <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-white rounded-lg border border-slate-200 text-indigo-600"><QrCode size={20}/></div>
+                            <div><p className="font-bold text-slate-900">Thanh toán qua VNPAY</p><p className="text-xs text-slate-500">Thanh toán trực tuyến bằng thẻ ATM nội địa hoặc ứng dụng ngân hàng.</p></div>
                         </label>
                     </div>
                 </div>
@@ -246,6 +260,18 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({ cart, setCart, backend, onO
           </div>
         </form>
       </div>
+
+      {showVNPay && (
+        <MockVNPay 
+            amount={total} 
+            orderInfo={`UHS${Date.now().toString().slice(-6)}`}
+            onSuccess={() => {
+                setShowVNPay(false);
+                submitOrderToServer();
+            }}
+            onCancel={() => setShowVNPay(false)}
+        />
+      )}
     </div>
   );
 };

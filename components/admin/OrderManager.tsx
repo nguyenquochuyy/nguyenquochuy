@@ -57,7 +57,7 @@ const OrderManager: React.FC<OrderManagerProps> = ({ backend, lang }) => {
                         <button onClick={onClose} className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg">
                             <X size={24} />
                         </button>
-                    </div>
+                    </div>`qă`
                 </div>
 
                 <div className="p-8">
@@ -148,7 +148,7 @@ const OrderManager: React.FC<OrderManagerProps> = ({ backend, lang }) => {
                                 <span>{t.shippingFee}</span>
                                 <span>{order.shippingFee === 0 ? 'Free' : formatCurrency(order.shippingFee)}</span>
                             </div>
-                             <div className="flex justify-between text-sm text-slate-600 border-b border-slate-100 pb-3">
+                                <div className="flex justify-between text-sm text-slate-600 border-b border-slate-100 pb-3">
                                 <span>Thuế (VAT {order.taxRate}%)</span>
                                 <span>{formatCurrency(order.taxAmount)}</span>
                             </div>
@@ -210,12 +210,12 @@ const OrderManager: React.FC<OrderManagerProps> = ({ backend, lang }) => {
           <table className="w-full text-left">
              <thead className="bg-slate-50 border-b border-slate-200 text-xs text-slate-500 uppercase font-semibold">
                 <tr>
-                   <th className="px-6 py-4">{t.orderId}</th>
-                   <th className="px-6 py-4">{t.customer}</th>
-                   <th className="px-6 py-4">{t.placedAt}</th>
-                   <th className="px-6 py-4 text-center">{t.status}</th>
-                   <th className="px-6 py-4 text-right">{t.total}</th>
-                   <th className="px-6 py-4 text-right">{t.actions}</th>
+                    <th className="px-6 py-4">{t.orderId}</th>
+                    <th className="px-6 py-4">{t.customer}</th>
+                    <th className="px-6 py-4">{t.placedAt}</th>
+                    <th className="px-6 py-4 text-center">{t.status}</th>
+                    <th className="px-6 py-4 text-right">{t.total}</th>
+                    <th className="px-6 py-4 text-right">{t.actions}</th>
                 </tr>
              </thead>
              <tbody className="divide-y divide-slate-100 text-sm">

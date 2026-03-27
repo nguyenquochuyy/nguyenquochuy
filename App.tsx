@@ -31,7 +31,8 @@ const AppController: React.FC = () => {
           const emp = currentUser as Employee;
           if ((emp.level2PasswordAttempts || 0) < 5 && emp.level2Password) {
              // Logic to show L2 modal is handled in the AdminRoute wrapper or below
-             setIsL2AuthRequired(true);
+             // Tạm thời tắt yêu cầu nhập MK cấp 2
+             // setIsL2AuthRequired(true);
           }
       }
   }, [currentUser, location]);

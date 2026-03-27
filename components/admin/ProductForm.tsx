@@ -19,8 +19,8 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, onCancel, initialDa
   
   const [categories, setCategories] = useState<Category[]>([]);
   useEffect(() => {
-     const state = loadState();
-     setCategories(state.categories.sort((a,b) => a.order - b.order));
+      const state = loadState();
+      setCategories(state.categories.sort((a,b) => a.order - b.order));
   }, []);
 
   const [formData, setFormData] = useState<Omit<Product, 'id'>>({
@@ -45,9 +45,9 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, onCancel, initialDa
   const [confirmRemoveVariantIndex, setConfirmRemoveVariantIndex] = useState<number | null>(null);
 
   useEffect(() => {
-     if (categories.length > 0 && !formData.category) {
+      if (categories.length > 0 && !formData.category) {
         setFormData(prev => ({ ...prev, category: categories[0].id }));
-     }
+      }
   }, [categories]);
 
   useEffect(() => {

@@ -2,8 +2,7 @@
 // Use this client to communicate with the Node.js backend
 import { BackendState, Product, Order, Category, Customer, Employee, Transaction, Voucher, PaymentAccount, StoreSettings } from '../types';
 
-// In production (Vite), import.meta.env.VITE_API_URL will be used.
-// Locally, it falls back to localhost:5000.
+// Gọi thẳng vào backend (đã có setup CORS)
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 const headers = { 'Content-Type': 'application/json' };
@@ -11,9 +10,14 @@ const headers = { 'Content-Type': 'application/json' };
 export const api = {
   // --- STATE SYNC ---
   getState: async (): Promise<BackendState> => {
-    const res = await fetch(`${API_URL}/state`);
-    if(!res.ok) throw new Error('Failed to fetch state');
-    return res.json();
+    try {
+      const res = await fetch(`${API_URL}/state`);
+      if(!res.ok) throw new Error(`HTTP Error! status: ${res.status}`);
+      return await res.json();
+    } catch (error) {
+      console.error("🔴 Error details when fetching backend:", error);
+      throw error;
+    }
   },
 
   // --- AUTH ---

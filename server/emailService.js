@@ -1,15 +1,28 @@
 
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
-dotenv.config();
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+dotenv.config({ path: join(__dirname, '.env') });
+
+// Lazy transporter - created on first use to ensure dotenv is fully loaded
+let _transporter = null;
+const getTransporter = () => {
+  if (!_transporter) {
+    _transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+      }
+    });
   }
-});
+  return _transporter;
+};
+
 
 const wrapHtml = (content) => `
   <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
@@ -54,7 +67,7 @@ export const sendOrderConfirmation = async (order) => {
   `);
 
   try {
-    await transporter.sendMail({
+    await getTransporter().sendMail({
       from: '"UniShop" <no-reply@unishop.com>',
       to: order.customerEmail,
       subject: `✅ Xác nhận đơn hàng #${order.id}`,
@@ -75,7 +88,7 @@ export const sendWelcomeEmail = async (customer) => {
     <p>Hãy đăng nhập ngay để trải nghiệm mua sắm tuyệt vời.</p>
   `);
   try {
-    await transporter.sendMail({
+    await getTransporter().sendMail({
       from: '"UniShop" <welcome@unishop.com>',
       to: customer.email,
       subject: '🎉 Chào mừng bạn gia nhập UniShop!',
@@ -98,7 +111,7 @@ export const sendVerificationCode = async (email, code) => {
   `);
 
   try {
-    await transporter.sendMail({
+    await getTransporter().sendMail({
       from: '"UniShop" <verify@unishop.com>',
       to: email,
       subject: `🔑 Mã xác thực: ${code}`,

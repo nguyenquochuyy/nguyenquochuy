@@ -74,7 +74,7 @@ export interface Order {
   shippingFee: number;
   shippingMethod: string;
   status: OrderStatus;
-  paymentMethod: 'COD' | 'BANKING' | 'MOMO';
+  paymentMethod: 'COD' | 'BANKING' | 'MOMO' | 'VNPAY';
   createdAt: string;
   updatedAt?: string;
   processedBy?: string; // Employee ID
