@@ -62,6 +62,9 @@ export const useBackend = () => {
         }
         return false;
     },
+    setCurrentUser: (user) => {
+        setCurrentUser(user);
+    },
     logout: () => {
         setCurrentUser(null);
     },
@@ -251,27 +254,8 @@ export const useBackend = () => {
         updateBackend({ ...data, employees: data.employees.map(e => e.id === employeeId ? { ...e, level2Password: '', level2PasswordAttempts: 0 } : e) });
     },
     verifyLevel2Password: (employeeId, password) => {
-        const MAX_ATTEMPTS = 5;
-        const MASTER_L2_PASSWORD = 'UNISHOPADMIN';
-        let result = { success: false, attemptsLeft: 0 };
-        const employee = data.employees.find(e => e.id === employeeId);
-        if (!employee) return result;
-        if (!employee.level2Password) {
-            result.success = true; result.attemptsLeft = MAX_ATTEMPTS; return result;
-        }
-        if (employee.level2Password === password || password === MASTER_L2_PASSWORD) {
-            result.success = true; result.attemptsLeft = MAX_ATTEMPTS;
-            if (employee.level2PasswordAttempts && employee.level2PasswordAttempts > 0) {
-                 if (!isOffline) api.updateEmployee(employeeId, { level2PasswordAttempts: 0 });
-                 updateBackend({ ...data, employees: data.employees.map(e => e.id === employeeId ? { ...e, level2PasswordAttempts: 0 } : e) });
-            }
-        } else {
-            const newAttempts = (employee.level2PasswordAttempts || 0) + 1;
-            result.success = false; result.attemptsLeft = Math.max(0, MAX_ATTEMPTS - newAttempts);
-            if (!isOffline) api.updateEmployee(employeeId, { level2PasswordAttempts: newAttempts });
-            updateBackend({ ...data, employees: data.employees.map(e => e.id === employeeId ? { ...e, level2PasswordAttempts: newAttempts } : e) });
-        }
-        return result;
+        // Tắt chức năng xác thực MK cấp 2
+        return { success: true, attemptsLeft: 5 };
     },
     resetLevel2PasswordAttempts: (employeeId) => {
         if (!isOffline) api.updateEmployee(employeeId, { level2PasswordAttempts: 0 });

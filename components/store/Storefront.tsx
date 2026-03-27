@@ -154,7 +154,7 @@ const Storefront: React.FC<StorefrontProps> = ({ backend, onExit, currentUser })
         onCartClick={() => setIsCartOpen(true)}
         onHomeClick={() => { setCategoryFilter('All'); setSearchTerm(''); navigateHome(); }}
         onExit={onExit}
-        isEmployee={isEmployee}
+        isEmployee={isEmployee || false}
         currentUser={currentUser}
         onProfileClick={navigateToProfile}
         onWishlistClick={!isEmployee ? navigateToWishlist : undefined}

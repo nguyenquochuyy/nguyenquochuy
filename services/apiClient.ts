@@ -58,6 +58,34 @@ export const api = {
     return res.json();
   },
 
+  createCustomer: async (customerData: any) => {
+    const res = await fetch(`${API_URL}/auth/create-customer`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(customerData),
+    });
+    return res.json();
+  },
+
+  // 2FA endpoints
+  send2FACode: async (email: string, method: 'email' | 'sms') => {
+    const res = await fetch(`${API_URL}/auth/send-2fa-code`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ email, method }),
+    });
+    return res.json();
+  },
+
+  verify2FACode: async (email: string, code: string) => {
+    const res = await fetch(`${API_URL}/auth/verify-2fa-code`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ email, code }),
+    });
+    return res.json();
+  },
+
   // --- PRODUCTS ---
   addProduct: async (product: any) => {
     await fetch(`${API_URL}/products`, { method: 'POST', headers, body: JSON.stringify(product) });

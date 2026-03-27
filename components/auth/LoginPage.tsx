@@ -95,7 +95,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onNavigate, backend, message, onC
                             className="w-full pl-10 pr-10 py-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                             placeholder="••••••••"
                         />
-                         <button 
+                        <button 
                             type="button" 
                             onClick={() => setShowPassword(!showPassword)}
                             className="absolute right-3 top-3.5 text-slate-400 hover:text-slate-600"
@@ -110,15 +110,6 @@ const LoginPage: React.FC<LoginPageProps> = ({ onNavigate, backend, message, onC
                         <input type="checkbox" className="w-4 h-4 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500" />
                         Remember me
                     </label>
-                    {allowedRole !== 'STAFF' && (
-                        <button 
-                            type="button" 
-                            onClick={() => onNavigate && onNavigate('FORGOT_PASSWORD')}
-                            className="text-sm font-medium text-indigo-600 hover:underline"
-                        >
-                            Forgot password?
-                        </button>
-                    )}
                 </div>
 
                 {error && (

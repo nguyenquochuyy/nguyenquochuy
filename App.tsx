@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { useBackend } from './hooks/useBackend';
 import { Customer, Employee } from './types';
@@ -7,11 +7,15 @@ import Storefront from './components/store/Storefront';
 import AdminDashboard from './components/admin/AdminDashboard';
 import PortalPage from './components/PortalPage';
 import LoginPage from './components/auth/LoginPage';
+import AdminLogin from './components/auth/AdminLogin';
+import StoreLogin from './components/auth/StoreLogin';
 import RegisterPage from './components/auth/RegisterPage';
 import ForgotPasswordPage from './components/auth/ForgotPasswordPage';
 import VerifyEmailPage from './components/auth/VerifyEmailPage';
 import Level2PasswordModal from './components/auth/Level2PasswordModal';
 import { Loader2, WifiOff } from 'lucide-react';
+import { api } from './services/apiClient';
+import { authStorage } from './services/authStorage';
 
 // --- MAIN APP CONTROLLER ---
 const AppController: React.FC = () => {
@@ -21,6 +25,23 @@ const AppController: React.FC = () => {
   
   // Admin Specific State
   const [isL2AuthRequired, setIsL2AuthRequired] = useState(false);
+
+  // Check for existing session on mount
+  useEffect(() => {
+    const session = authStorage.getSession();
+    if (session && !currentUser) {
+      setCurrentUser(session.user);
+    }
+  }, [currentUser, setCurrentUser]);
+
+  // Setup tab close listener for session cleanup
+  useEffect(() => {
+    const cleanup = authStorage.setupTabCloseListener(() => {
+      backend.logout();
+    });
+    
+    return cleanup;
+  }, [backend]);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -39,9 +60,11 @@ const AppController: React.FC = () => {
 
   // Navigate to Portal after Login
   React.useEffect(() => {
-      if (currentUser && location.pathname === '/login') {
-          navigate('/portal');
-      }
+    if (currentUser && location.pathname === '/admin/login') {
+      navigate('/portal');
+    } else if (currentUser && location.pathname === '/login') {
+      navigate('/store');
+    }
   }, [currentUser, location.pathname, navigate]);
 
   if (isLoading) {
@@ -58,7 +81,7 @@ const AppController: React.FC = () => {
   // --- Protected Route Wrappers ---
   const ProtectedRoute = ({ children }: { children: React.ReactElement }) => {
       if (!currentUser) return <Navigate to="/login" replace />;
-      return children;
+        return children;
   };
 
   const AdminRoute = ({ children }: { children: React.ReactElement }) => {
@@ -98,14 +121,33 @@ const AppController: React.FC = () => {
         {/* === PUBLIC ROUTES === */}
         <Route path="/" element={<Navigate to="/store" replace />} />
         
-        <Route path="/login" element={
-            <LoginPage 
-                onNavigate={(view) => navigate(view === 'REGISTER' ? '/register' : '/forgot-password')} 
+        <Route path="/admin/login" element={
+            <AdminLogin 
                 backend={backend} 
                 message={loginMessage} 
                 onClearMessage={() => setLoginMessage(null)}
             />
         } />
+        
+        <Route path="/login" element={
+            <StoreLogin 
+                backend={backend} 
+                message={loginMessage} 
+                onClearMessage={() => setLoginMessage(null)}
+                onNavigate={(view) => {
+                    if (view === 'REGISTER') navigate('/register');
+                    else if (view === 'FORGOT_PASSWORD') navigate('/forgot-password');
+                    else if (view === 'STORE') navigate('/store');
+                }}
+                onLoginSuccess={(user) => {
+                    // Update backend context with logged in user
+                    backend.setCurrentUser(user);
+                    console.log('User logged in:', user);
+                }}
+            />
+        } />
+        
+        <Route path="/customer-login" element={<Navigate to="/login" replace />} />
         
         <Route path="/register" element={
             <RegisterPage 
@@ -119,10 +161,22 @@ const AppController: React.FC = () => {
             <VerifyEmailPage 
                 email={pendingRegistration?.email || ''} 
                 onNavigate={() => navigate('/login')} 
-                onVerifySuccess={() => { 
-                    if(pendingRegistration) backend.register(pendingRegistration); 
+                onVerifySuccess={async () => { 
+                    if(pendingRegistration) {
+                        try {
+                            // Call API to create customer
+                            const response = await api.createCustomer(pendingRegistration);
+                            if (response.success) {
+                                setLoginMessage({type:'success', text:'Tài khoản đã được tạo thành công! Vui lòng đăng nhập.'});
+                            } else {
+                                setLoginMessage({type:'error', text: response.message || 'Có lỗi xảy ra khi tạo tài khoản.'});
+                            }
+                        } catch (error) {
+                            console.error('Create customer error:', error);
+                            setLoginMessage({type:'error', text: 'Không thể kết nối đến server để tạo tài khoản.'});
+                        }
+                    }
                     setPendingRegistration(null); 
-                    setLoginMessage({type:'success', text:'Xác thực thành công! Vui lòng đăng nhập.'}); 
                     navigate('/login'); 
                 }} 
             />

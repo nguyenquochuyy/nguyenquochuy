@@ -28,7 +28,22 @@ connectDB();
 // Gắn các Routes từ Router tổng
 app.use('/', rootRoutes);
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.json({ 
+    status: 'OK', 
+    message: 'UniShop API is running',
+    timestamp: new Date().toISOString()
+  });
 });
+
+// Export cho Vercel
+export default app;
+
+// For local development only
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 Server running on http://localhost:${PORT}`);
+  });
+}

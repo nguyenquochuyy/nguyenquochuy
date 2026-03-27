@@ -18,7 +18,8 @@ const AdminAppController: React.FC = () => {
       // Check L2 Auth on login
       if (currentUser && 'role' in currentUser) {
           const emp = currentUser as Employee;
-          if ((emp.level2PasswordAttempts || 0) < 5) setIsL2AuthRequired(true);
+          // Tạm thời tắt yêu cầu nhập MK cấp 2
+          // if ((emp.level2PasswordAttempts || 0) < 5) setIsL2AuthRequired(true);
       }
   }, [currentUser]);
 

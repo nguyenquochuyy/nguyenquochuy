@@ -203,6 +203,7 @@ export interface BackendContextType {
   // Auth
   login: (email: string, password: string) => boolean;
   logout: () => void;
+  setCurrentUser: (user: Employee | Customer) => void;
   register: (customerData: Omit<Customer, 'id' | 'joinedAt' | 'status' | 'loyaltyPoints' | 'wishlist'>) => void;
   getCurrentUser: () => Employee | Customer | null;
   // Product
