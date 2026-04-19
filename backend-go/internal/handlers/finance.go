@@ -8,6 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"unishop/backend/internal/events"
 	"unishop/backend/internal/models"
 	"unishop/backend/pkg/utils"
 )
@@ -45,6 +46,7 @@ func (h *FinanceHandler) AddTransaction(c *gin.Context) {
 		return
 	}
 	tx.ID = res.InsertedID.(primitive.ObjectID)
+	events.Global.Broadcast("transactions")
 	utils.Created(c, tx)
 }
 

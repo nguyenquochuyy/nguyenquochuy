@@ -8,6 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"unishop/backend/internal/events"
 	"unishop/backend/internal/models"
 	"unishop/backend/pkg/utils"
 )
@@ -58,6 +59,7 @@ func (h *VoucherHandler) Create(c *gin.Context) {
 		return
 	}
 	voucher.ID = res.InsertedID.(primitive.ObjectID)
+	events.Global.Broadcast("vouchers")
 	utils.Created(c, voucher)
 }
 
@@ -79,6 +81,7 @@ func (h *VoucherHandler) Update(c *gin.Context) {
 		utils.InternalError(c, err)
 		return
 	}
+	events.Global.Broadcast("vouchers")
 	utils.OK(c, gin.H{"message": "Cập nhật voucher thành công"})
 }
 
@@ -94,5 +97,6 @@ func (h *VoucherHandler) Delete(c *gin.Context) {
 		utils.InternalError(c, err)
 		return
 	}
+	events.Global.Broadcast("vouchers")
 	utils.OK(c, gin.H{"message": "Đã xóa voucher"})
 }

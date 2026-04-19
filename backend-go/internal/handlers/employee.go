@@ -10,6 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"golang.org/x/crypto/bcrypt"
 
+	"unishop/backend/internal/events"
 	"unishop/backend/internal/models"
 	"unishop/backend/pkg/utils"
 )
@@ -72,6 +73,7 @@ func (h *EmployeeHandler) Create(c *gin.Context) {
 		return
 	}
 	emp.ID = res.InsertedID.(primitive.ObjectID)
+	events.Global.Broadcast("employees")
 	utils.Created(c, emp)
 }
 
@@ -94,5 +96,6 @@ func (h *EmployeeHandler) Update(c *gin.Context) {
 		utils.InternalError(c, err)
 		return
 	}
+	events.Global.Broadcast("employees")
 	utils.OK(c, gin.H{"message": "Cập nhật nhân viên thành công"})
 }

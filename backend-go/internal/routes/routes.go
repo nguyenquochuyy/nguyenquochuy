@@ -24,6 +24,7 @@ func Setup(r *gin.Engine, db *mongo.Database, cfg *config.Config) {
 	refundH := handlers.NewRefundHandler(db)
 	reviewH := handlers.NewReviewHandler(db)
 	emailCampaignH := handlers.NewEmailCampaignHandler(db)
+	forecastH := handlers.NewForecastHandler(db)
 
 	api := r.Group("/api")
 
@@ -116,6 +117,8 @@ func Setup(r *gin.Engine, db *mongo.Database, cfg *config.Config) {
 		// Inventory
 		protected.POST("/inventory/adjust", inventoryH.Adjust)
 		protected.GET("/inventory/logs", inventoryH.Logs)
+		protected.GET("/inventory/forecast", forecastH.GetForecast)
+		protected.POST("/inventory/daily-sales", forecastH.RecordDailySales)
 
 		// Finance
 		protected.GET("/transactions", financeH.ListTransactions)

@@ -1,9 +1,10 @@
 import React, { useState, useMemo } from 'react';
 import { BackendContextType, Language, formatCurrency, Product } from '../../types';
 import { TRANSLATIONS } from '../../services/translations';
+import StockForecasting from './StockForecasting';
 import { 
     Package, Search, Plus, Filter, FileText, ArrowDown, ArrowUp, AlertTriangle, 
-    Download, Calendar, History, Box, ChevronDown, Check, FileDown, ArrowRight
+    Download, Calendar, History, Box, ChevronDown, Check, FileDown, ArrowRight, TrendingDown
 } from 'lucide-react';
 
 interface InventoryManagerProps {
@@ -16,6 +17,7 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
   const { state, adjustStock } = backend;
   
   const [activeTab, setActiveTab] = useState<'stock' | 'history'>('stock');
+  const [showForecast, setShowForecast] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState<'ALL' | 'IN' | 'OUT'>('ALL');
   
@@ -388,25 +390,22 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
             </div>
         </div>
 
-        {/* Low Stock Alerts Panel */}
+        {/* Cảnh báo tồn kho thấp */}
         {lowStockDetails.length > 0 && (
             <div className="bg-rose-50 border border-rose-200 rounded-2xl p-6 shadow-sm animate-fade-in">
                 <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
                         <AlertTriangle size={24} className="text-rose-600" />
                         <div>
-                            <h3 className="font-bold text-rose-900">Low Stock Alerts</h3>
-                            <p className="text-sm text-rose-700">{lowStockDetails.length} items need restocking</p>
+                            <h3 className="font-bold text-rose-900">Cảnh Báo Tồn Kho Thấp</h3>
+                            <p className="text-sm text-rose-700">{lowStockDetails.length} sản phẩm cần nhập hàng</p>
                         </div>
                     </div>
                     <button
-                        onClick={() => {
-                            // Scroll to first low stock item in stock list
-                            setActiveTab('stock');
-                        }}
+                        onClick={() => { setActiveTab('stock'); }}
                         className="px-4 py-2 bg-rose-600 text-white rounded-lg text-sm font-bold hover:bg-rose-700 transition-colors"
                     >
-                        View All
+                        Xem tất cả
                     </button>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -420,7 +419,7 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
                             </div>
                             <div className="text-right">
                                 <p className="text-xl font-bold text-rose-600">{item.stock}</p>
-                                <p className="text-xs text-rose-500">left</p>
+                                <p className="text-xs text-rose-500">còn lại</p>
                             </div>
                         </div>
                     ))}
@@ -444,6 +443,13 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
                 >
                     <History size={18} /> {t.history}
                     {activeTab === 'history' && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 rounded-t-full"></div>}
+                </button>
+                <button 
+                    onClick={() => setShowForecast(true)}
+                    className="pb-3 font-bold text-sm flex items-center gap-2 transition-all relative text-violet-600 hover:text-violet-800"
+                >
+                    <TrendingDown size={18} /> Dự Báo Tồn Kho
+                    {lowStockItems > 0 && <span className="absolute -top-1 -right-2 w-4 h-4 bg-rose-500 text-white text-[10px] rounded-full flex items-center justify-center font-bold">{lowStockItems}</span>}
                 </button>
             </div>
 
@@ -578,6 +584,9 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
                 </div>
             </div>
         )}
+
+        {/* Stock Forecasting Modal */}
+        {showForecast && <StockForecasting onClose={() => setShowForecast(false)} />}
     </div>
   );
 };

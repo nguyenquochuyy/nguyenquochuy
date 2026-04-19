@@ -9,6 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
+	"unishop/backend/internal/events"
 	"unishop/backend/internal/models"
 	"unishop/backend/pkg/utils"
 )
@@ -51,5 +52,6 @@ func (h *SettingsHandler) Update(c *gin.Context) {
 		utils.InternalError(c, err)
 		return
 	}
+	events.Global.Broadcast("settings")
 	utils.OK(c, gin.H{"message": "Đã lưu cài đặt"})
 }

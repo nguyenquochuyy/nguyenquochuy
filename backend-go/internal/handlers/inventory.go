@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"unishop/backend/internal/events"
 	"unishop/backend/internal/models"
 	"unishop/backend/pkg/utils"
 )
@@ -83,6 +84,9 @@ func (h *InventoryHandler) Adjust(c *gin.Context) {
 		utils.InternalError(c, err)
 		return
 	}
+
+	events.Global.Broadcast("products")
+	events.Global.Broadcast("inventoryLogs")
 
 	utils.OK(c, gin.H{"stockBefore": stockBefore, "stockAfter": stockAfter})
 }
