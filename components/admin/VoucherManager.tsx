@@ -137,7 +137,7 @@ const VoucherManager: React.FC<VoucherManagerProps> = ({ backend, lang }) => {
                                     {v.status === 'DISABLED' && <span className="text-[10px] font-bold bg-slate-200 text-slate-500 px-2 py-0.5 rounded-full">DISABLED</span>}
                                 </div>
                                 <p className="text-sm text-indigo-600 font-bold mt-1">
-                                    {v.type === 'PERCENT' ? `Giảm ${v.value}%` : `Giảm ${formatCurrency(v.value)}`}
+                                    {v.type === 'PERCENT' ? `${t.discountPercent} ${v.value}%` : `${t.discountFixed} ${formatCurrency(v.value)}`}
                                 </p>
                             </div>
                             <div className="flex gap-1">
@@ -193,7 +193,7 @@ const VoucherManager: React.FC<VoucherManagerProps> = ({ backend, lang }) => {
 
                     {/* Summary Table */}
                     <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                        <h3 className="font-bold text-slate-800 mb-4">Detailed Metrics</h3>
+                        <h3 className="font-bold text-slate-800 mb-4">{t.detailedMetrics}</h3>
                         <div className="overflow-x-auto">
                             <table className="w-full text-left text-sm">
                                 <thead className="bg-slate-50 text-slate-500 font-medium">
@@ -227,7 +227,7 @@ const VoucherManager: React.FC<VoucherManagerProps> = ({ backend, lang }) => {
                 <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setIsModalOpen(false)}></div>
                 <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl relative z-10 flex flex-col overflow-hidden">
                     <div className="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
-                        <h3 className="font-bold text-lg text-slate-900">{editingId ? 'Edit Voucher' : t.addVoucher}</h3>
+                        <h3 className="font-bold text-lg text-slate-900">{editingId ? t.editVoucher : t.addVoucher}</h3>
                         <button onClick={() => setIsModalOpen(false)}><X size={20} className="text-slate-400 hover:text-slate-600" /></button>
                     </div>
                     <form onSubmit={handleSubmit} className="p-6 space-y-4">
@@ -248,8 +248,8 @@ const VoucherManager: React.FC<VoucherManagerProps> = ({ backend, lang }) => {
                                     value={formData.type}
                                     onChange={e => setFormData({...formData, type: e.target.value as any})}
                                 >
-                                    <option value="PERCENT">Percent (%)</option>
-                                    <option value="FIXED">Fixed Amount (₫)</option>
+                                    <option value="PERCENT">{t.percentOption}</option>
+                                    <option value="FIXED">{t.fixedAmountOption}</option>
                                 </select>
                             </div>
                             <div>
@@ -288,7 +288,7 @@ const VoucherManager: React.FC<VoucherManagerProps> = ({ backend, lang }) => {
 
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Start Date</label>
+                                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Ngày bắt đầu</label>
                                 <input 
                                     type="date" required
                                     className="w-full p-2.5 bg-white text-slate-900 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
@@ -297,7 +297,7 @@ const VoucherManager: React.FC<VoucherManagerProps> = ({ backend, lang }) => {
                                 />
                             </div>
                             <div>
-                                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">End Date</label>
+                                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Ngày kết thúc</label>
                                 <input 
                                     type="date" required
                                     className="w-full p-2.5 bg-white text-slate-900 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
@@ -309,12 +309,12 @@ const VoucherManager: React.FC<VoucherManagerProps> = ({ backend, lang }) => {
 
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Usage Limit</label>
+                                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Giới hạn sử dụng</label>
                                 <input 
                                     type="number" required min="1"
                                     className="w-full p-2.5 bg-white text-slate-900 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                                     value={formData.usageLimit}
-                                    onChange={e => setFormData({...formData, usageLimit: parseInt(e.target.value) || 0})}
+                                    onChange={e => setFormData({...formData, usageLimit: parseInt(e.target.value) || 1})}
                                 />
                             </div>
                             <div>

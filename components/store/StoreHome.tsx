@@ -21,21 +21,27 @@ interface StoreHomeProps {
 
 const ITEMS_PER_PAGE = 8;
 
-const StoreHome: React.FC<StoreHomeProps> = ({ 
-  products, categories, onProductClick, onAddToCart, 
+const StoreHome: React.FC<StoreHomeProps> = ({
+  products, categories, onProductClick, onAddToCart,
   searchTerm, categoryFilter, setCategoryFilter, setSearchTerm, onViewAllClick
 }) => {
   const t = TRANSLATIONS['vi'];
   const [currentHeroSlide, setCurrentHeroSlide] = useState(0);
   const [sortOption, setSortOption] = useState<'newest' | 'price-asc' | 'price-desc'>('newest');
   const [currentPage, setCurrentPage] = useState(1);
-  
+
   // Flash Sale Timer State
   const [timeLeft, setTimeLeft] = useState({ hours: 12, minutes: 45, seconds: 30 });
 
   // Newsletter State
   const [email, setEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
+
+  // Advanced Filters State
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000000]);
+  const [stockFilter, setStockFilter] = useState<'all' | 'in-stock' | 'low-stock'>('all');
+  const [discountFilter, setDiscountFilter] = useState<boolean>(false);
 
   // --- MOCK DATA ---
   const HERO_SLIDES = [
@@ -141,10 +147,16 @@ const StoreHome: React.FC<StoreHomeProps> = ({
   const processedProducts = useMemo(() => {
       let result = products.filter(p => {
         if (!p.isVisible) return false;
-        const matchesCategory = categoryFilter === 'All' || p.category === categoryFilter || 
+        const matchesCategory = categoryFilter === 'All' || p.category === categoryFilter ||
                                 categories.find(c => c.id === p.category)?.parentId === categoryFilter;
-        const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase());
-        return matchesCategory && matchesSearch;
+        const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                               p.sku.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesPrice = p.price >= priceRange[0] && p.price <= priceRange[1];
+        const matchesStock = stockFilter === 'all' ||
+                           (stockFilter === 'in-stock' && p.stock > 0) ||
+                           (stockFilter === 'low-stock' && p.stock > 0 && p.stock < 10);
+        const matchesDiscount = !discountFilter || (discountFilter && p.discount > 0);
+        return matchesCategory && matchesSearch && matchesPrice && matchesStock && matchesDiscount;
       });
 
       if (sortOption === 'price-asc') {
@@ -152,10 +164,10 @@ const StoreHome: React.FC<StoreHomeProps> = ({
       } else if (sortOption === 'price-desc') {
           result.sort((a, b) => b.price - a.price);
       } else {
-          result.reverse(); 
+          result.reverse();
       }
       return result;
-  }, [products, categoryFilter, searchTerm, sortOption, categories]);
+  }, [products, categoryFilter, searchTerm, sortOption, categories, priceRange, stockFilter, discountFilter]);
 
   const trendingProducts = useMemo(() => {
       return [...products]
@@ -170,7 +182,7 @@ const StoreHome: React.FC<StoreHomeProps> = ({
     currentPage * ITEMS_PER_PAGE
   );
 
-  useEffect(() => { setCurrentPage(1); }, [categoryFilter, searchTerm, sortOption]);
+  useEffect(() => { setCurrentPage(1); }, [categoryFilter, searchTerm, sortOption, priceRange, stockFilter, discountFilter]);
 
   const getDiscountedPrice = (product: Product) => {
     if (!product.discount) return product.price;
@@ -204,7 +216,7 @@ const StoreHome: React.FC<StoreHomeProps> = ({
     <div className="bg-white">
         {/* HERO SLIDER */}
         {searchTerm === '' && categoryFilter === 'All' && (
-            <div className="relative w-full h-[500px] md:h-[650px] overflow-hidden bg-slate-900 group">
+            <div className="relative w-full h-[600px] md:h-[750px] overflow-hidden bg-slate-900 group z-0">
                 {HERO_SLIDES.map((slide, index) => (
                     <div 
                         key={slide.id}

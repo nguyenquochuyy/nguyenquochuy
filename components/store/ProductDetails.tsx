@@ -427,7 +427,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
                           </div>
 
                           {/* Service Badges */}
-                          <div className="grid grid-cols-2 gap-3 pt-4 border-t border-slate-100">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4 border-t border-slate-100">
                               <div className="flex gap-3 items-center p-2">
                                   <div className="w-10 h-10 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center"><Truck size={20}/></div>
                                   <div className="text-xs"><p className="font-bold text-slate-900">Freeship</p><p className="text-slate-500">Đơn từ 500k</p></div>

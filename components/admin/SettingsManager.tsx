@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { BackendContextType, Language, Employee, StoreSettings } from '../../types';
 import { TRANSLATIONS } from '../../services/translations';
@@ -137,19 +136,19 @@ const SettingsManager: React.FC<SettingsManagerProps> = ({ backend, lang }) => {
                       <h3 className="text-lg font-bold text-slate-800 border-b border-slate-100 pb-2">{t.shopInfo}</h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           <div>
-                              <label className={labelClass}>Shop Name</label>
+                              <label className={labelClass}>{t.shopName}</label>
                               <input type="text" className={inputClass} value={localSettings.shopInfo.name} onChange={e => updateSection('shopInfo', { name: e.target.value })} />
                           </div>
                           <div>
-                              <label className={labelClass}>Hotline</label>
+                              <label className={labelClass}>{t.hotline}</label>
                               <input type="text" className={inputClass} value={localSettings.shopInfo.phone} onChange={e => updateSection('shopInfo', { phone: e.target.value })} />
                           </div>
                           <div className="md:col-span-2">
-                              <label className={labelClass}>Address</label>
+                              <label className={labelClass}>{t.address}</label>
                               <input type="text" className={inputClass} value={localSettings.shopInfo.address} onChange={e => updateSection('shopInfo', { address: e.target.value })} />
                           </div>
                           <div>
-                              <label className={labelClass}>Contact Email</label>
+                              <label className={labelClass}>{t.contactEmail}</label>
                               <input type="email" className={inputClass} value={localSettings.shopInfo.email} onChange={e => updateSection('shopInfo', { email: e.target.value })} />
                           </div>
                       </div>
@@ -161,12 +160,12 @@ const SettingsManager: React.FC<SettingsManagerProps> = ({ backend, lang }) => {
                       <div>
                           <h3 className="text-lg font-bold text-slate-800 border-b border-slate-100 pb-2 mb-4">{t.payment}</h3>
                           <div className="space-y-4">
-                              <ToggleSwitch checked={localSettings.paymentMethods.cod} onChange={(e: any) => updateSection('paymentMethods', { cod: e.target.checked })} label="Cash on Delivery (COD)" subLabel="Allow customers to pay upon receipt." icon={CreditCard} />
-                              <ToggleSwitch checked={localSettings.paymentMethods.banking} onChange={(e: any) => updateSection('paymentMethods', { banking: e.target.checked })} label="Bank Transfer" subLabel="Show bank account details at checkout." icon={DollarSign} />
+                              <ToggleSwitch checked={localSettings.paymentMethods.cod} onChange={(e: any) => updateSection('paymentMethods', { cod: e.target.checked })} label={t.cashOnDelivery} subLabel={t.codSubLabel} icon={CreditCard} />
+                              <ToggleSwitch checked={localSettings.paymentMethods.banking} onChange={(e: any) => updateSection('paymentMethods', { banking: e.target.checked })} label={t.bankTransfer} subLabel={t.bankTransferSubLabel} icon={DollarSign} />
                               <div className={toggleContainerClass}>
                                   <div className="flex items-center gap-4">
                                       <div className="p-2.5 bg-pink-50 rounded-lg border border-pink-100"><div className="w-6 h-6 bg-pink-600 rounded flex items-center justify-center text-white text-[10px] font-bold">Mo</div></div>
-                                      <div><p className="font-bold text-slate-800 text-base">Momo Wallet</p><p className="text-xs text-slate-500 font-medium">Integrate with Momo QR Payment.</p></div>
+                                      <div><p className="font-bold text-slate-800 text-base">{t.momoWallet}</p><p className="text-xs text-slate-500 font-medium">{t.momoSubLabel}</p></div>
                                   </div>
                                   <label className="relative inline-flex items-center cursor-pointer">
                                       <input type="checkbox" className="sr-only peer" checked={localSettings.paymentMethods.momo} onChange={e => updateSection('paymentMethods', { momo: e.target.checked })} />
@@ -177,7 +176,7 @@ const SettingsManager: React.FC<SettingsManagerProps> = ({ backend, lang }) => {
                       </div>
                       {localSettings.paymentMethods.banking && (
                           <div className="animate-fade-in">
-                              <div className="flex justify-between items-center mb-4"><h3 className="text-lg font-bold text-slate-800">Thông tin chuyển khoản</h3><button onClick={() => setIsAddingAccount(true)} className="text-xs bg-indigo-50 text-indigo-600 px-3 py-1.5 rounded-lg font-bold hover:bg-indigo-100 transition-colors flex items-center gap-1"><Plus size={14}/> Thêm tài khoản</button></div>
+                              <div className="flex justify-between items-center mb-4"><h3 className="text-lg font-bold text-slate-800">{t.bankInfo}</h3><button onClick={() => setIsAddingAccount(true)} className="text-xs bg-indigo-50 text-indigo-600 px-3 py-1.5 rounded-lg font-bold hover:bg-indigo-100 transition-colors flex items-center gap-1"><Plus size={14}/> {t.addAccount}</button></div>
                               <div className="space-y-3">
                                   {paymentAccounts.map(acc => (
                                       <div key={acc.id} className="p-4 bg-slate-50 border border-slate-200 rounded-xl flex justify-between items-center group hover:border-indigo-200 transition-all">
@@ -191,34 +190,34 @@ const SettingsManager: React.FC<SettingsManagerProps> = ({ backend, lang }) => {
                               </div>
                               {isAddingAccount && (
                                   <div className="mt-4 p-4 bg-white border-2 border-indigo-100 rounded-xl shadow-sm animate-fade-in-up">
-                                      <div className="flex justify-between items-center mb-3"><span className="text-sm font-bold text-indigo-900">Thêm tài khoản mới</span><button onClick={() => setIsAddingAccount(false)}><X size={16} className="text-slate-400 hover:text-slate-600"/></button></div>
+                                      <div className="flex justify-between items-center mb-3"><span className="text-sm font-bold text-indigo-900">{t.addNewAccount}</span><button onClick={() => setIsAddingAccount(false)}><X size={16} className="text-slate-400 hover:text-slate-600"/></button></div>
                                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
                                           <div>
-                                              <label className="text-xs font-bold text-slate-500 mb-1 block">Tên Ngân Hàng</label>
-                                              <div className="relative"><Landmark size={14} className="absolute left-3 top-2.5 text-slate-400"/><input type="text" className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-1 focus:ring-indigo-500 outline-none" placeholder="VD: Vietcombank" value={newAccount.bank} onChange={e => setNewAccount({...newAccount, bank: e.target.value})}/></div>
+                                              <label className="text-xs font-bold text-slate-500 mb-1 block">{t.bankName}</label>
+                                              <div className="relative"><Landmark size={14} className="absolute left-3 top-2.5 text-slate-400"/><input type="text" className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-1 focus:ring-indigo-500 outline-none" placeholder={lang === 'vi' ? 'VD: Vietcombank' : 'e.g. Vietcombank'} value={newAccount.bank} onChange={e => setNewAccount({...newAccount, bank: e.target.value})}/></div>
                                           </div>
                                           <div>
-                                              <label className="text-xs font-bold text-slate-500 mb-1 block">Số Tài Khoản</label>
+                                              <label className="text-xs font-bold text-slate-500 mb-1 block">{t.accountNumber}</label>
                                               <div className="relative"><Hash size={14} className="absolute left-3 top-2.5 text-slate-400"/><input type="text" className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-1 focus:ring-indigo-500 outline-none font-mono" placeholder="000..." value={newAccount.number} onChange={e => setNewAccount({...newAccount, number: e.target.value})}/></div>
                                           </div>
                                           <div className="md:col-span-2">
-                                              <label className="text-xs font-bold text-slate-500 mb-1 block">Chủ Tài Khoản</label>
-                                              <div className="relative"><User size={14} className="absolute left-3 top-2.5 text-slate-400"/><input type="text" className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-1 focus:ring-indigo-500 outline-none uppercase" placeholder="NGUYEN VAN A" value={newAccount.holder} onChange={e => setNewAccount({...newAccount, holder: e.target.value.toUpperCase()})}/></div>
+                                              <label className="text-xs font-bold text-slate-500 mb-1 block">{t.accountHolder}</label>
+                                              <div className="relative"><User size={14} className="absolute left-3 top-2.5 text-slate-400"/><input type="text" className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-1 focus:ring-indigo-500 outline-none uppercase" placeholder={lang === 'vi' ? 'NGUYEN VAN A' : 'NGUYEN VAN A'} value={newAccount.holder} onChange={e => setNewAccount({...newAccount, holder: e.target.value.toUpperCase()})}/></div>
                                           </div>
                                       </div>
-                                      <button onClick={handleAddAccount} disabled={!newAccount.bank || !newAccount.number} className="w-full py-2 bg-indigo-600 text-white rounded-lg text-sm font-bold hover:bg-indigo-700 transition-colors disabled:opacity-50">Lưu Tài Khoản</button>
+                                      <button onClick={handleAddAccount} disabled={!newAccount.bank || !newAccount.number} className="w-full py-2 bg-indigo-600 text-white rounded-lg text-sm font-bold hover:bg-indigo-700 transition-colors disabled:opacity-50">{t.saveAccount}</button>
                                   </div>
                               )}
                           </div>
                       )}
                   </div>
               );
-          case 'shipping': return (<div className="space-y-6 max-w-2xl"><h3 className="text-lg font-bold text-slate-800 border-b border-slate-100 pb-2">{t.shipping}</h3><div className="grid grid-cols-1 md:grid-cols-2 gap-6"><div><label className={labelClass}>Standard Shipping Fee (VND)</label><div className="relative"><input type="number" className={inputClass} value={localSettings.shipping.standardFee} onChange={e => updateSection('shipping', { standardFee: parseInt(e.target.value) || 0 })} /><span className="absolute right-3 top-2.5 text-slate-400 text-sm font-bold">₫</span></div></div><div><label className={labelClass}>Free Shipping Threshold (VND)</label><div className="relative"><input type="number" className={inputClass} value={localSettings.shipping.freeShipThreshold} onChange={e => updateSection('shipping', { freeShipThreshold: parseInt(e.target.value) || 0 })} /><span className="absolute right-3 top-2.5 text-slate-400 text-sm font-bold">₫</span></div></div></div></div>);
-          case 'inventory': return (<div className="space-y-6 max-w-2xl"><h3 className="text-lg font-bold text-slate-800 border-b border-slate-100 pb-2">{t.inventory}</h3><div className="grid grid-cols-1 gap-6"><div><label className={labelClass}>{t.lowStockThreshold}</label><input type="number" className={inputClass} value={localSettings.inventory.lowStockThreshold} onChange={e => updateSection('inventory', { lowStockThreshold: parseInt(e.target.value) || 0 })} /><p className="text-xs text-slate-500 mt-1">Alert when stock falls below this number.</p></div><ToggleSwitch checked={localSettings.inventory.showOutOfStock} onChange={(e: any) => updateSection('inventory', { showOutOfStock: e.target.checked })} label={t.showOutOfStock} subLabel="Display out of stock items in storefront." icon={Package}/></div></div>);
-          case 'orders': return (<div className="space-y-6 max-w-2xl"><h3 className="text-lg font-bold text-slate-800 border-b border-slate-100 pb-2">{t.orders}</h3><div className="space-y-6"><ToggleSwitch checked={localSettings.orders.autoConfirm} onChange={(e: any) => updateSection('orders', { autoConfirm: e.target.checked })} label={t.autoConfirmOrders} subLabel="Automatically confirm orders when placed." icon={CheckCircle}/><div className="grid grid-cols-1 md:grid-cols-2 gap-6"><div><label className={labelClass}>{t.invoicePrefix}</label><input type="text" className={inputClass} value={localSettings.orders.invoicePrefix} onChange={e => updateSection('orders', { invoicePrefix: e.target.value })} /></div></div></div></div>);
+          case 'shipping': return (<div className="space-y-6 max-w-2xl"><h3 className="text-lg font-bold text-slate-800 border-b border-slate-100 pb-2">{t.shipping}</h3><div className="grid grid-cols-1 md:grid-cols-2 gap-6"><div><label className={labelClass}>{t.standardShippingFee}</label><div className="relative"><input type="number" className={inputClass} value={localSettings.shipping.standardFee} onChange={e => updateSection('shipping', { standardFee: parseInt(e.target.value) || 0 })} /><span className="absolute right-3 top-2.5 text-slate-400 text-sm font-bold">₫</span></div></div><div><label className={labelClass}>{t.freeShippingThreshold}</label><div className="relative"><input type="number" className={inputClass} value={localSettings.shipping.freeShipThreshold} onChange={e => updateSection('shipping', { freeShipThreshold: parseInt(e.target.value) || 0 })} /><span className="absolute right-3 top-2.5 text-slate-400 text-sm font-bold">₫</span></div></div></div></div>);
+          case 'inventory': return (<div className="space-y-6 max-w-2xl"><h3 className="text-lg font-bold text-slate-800 border-b border-slate-100 pb-2">{t.inventory}</h3><div className="grid grid-cols-1 gap-6"><div><label className={labelClass}>{t.lowStockThreshold}</label><input type="number" className={inputClass} value={localSettings.inventory.lowStockThreshold} onChange={e => updateSection('inventory', { lowStockThreshold: parseInt(e.target.value) || 0 })} /><p className="text-xs text-slate-500 mt-1">{t.lowStockAlert}</p></div><ToggleSwitch checked={localSettings.inventory.showOutOfStock} onChange={(e: any) => updateSection('inventory', { showOutOfStock: e.target.checked })} label={t.showOutOfStock} subLabel={t.showOutOfStockSubLabel} icon={Package}/></div></div>);
+          case 'orders': return (<div className="space-y-6 max-w-2xl"><h3 className="text-lg font-bold text-slate-800 border-b border-slate-100 pb-2">{t.orders}</h3><div className="space-y-6"><ToggleSwitch checked={localSettings.orders.autoConfirm} onChange={(e: any) => updateSection('orders', { autoConfirm: e.target.checked })} label={t.autoConfirmOrders} subLabel={t.autoConfirmSubLabel} icon={CheckCircle}/><div className="grid grid-cols-1 md:grid-cols-2 gap-6"><div><label className={labelClass}>{t.invoicePrefix}</label><input type="text" className={inputClass} value={localSettings.orders.invoicePrefix} onChange={e => updateSection('orders', { invoicePrefix: e.target.value })} /></div></div></div></div>);
           case 'finance': return (
               <div className="space-y-6 max-w-2xl">
-                  <h3 className="text-lg font-bold text-slate-800 border-b border-slate-100 pb-2">Cài đặt Thuế & Tài chính</h3>
+                  <h3 className="text-lg font-bold text-slate-800 border-b border-slate-100 pb-2">{t.taxFinanceSettings}</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 bg-slate-50 rounded-xl border border-slate-200">
                       <div>
                           <label className={labelClass}>{t.taxRate}</label>
@@ -226,7 +225,7 @@ const SettingsManager: React.FC<SettingsManagerProps> = ({ backend, lang }) => {
                               <input type="number" className={inputClass} value={localSettings.tax.defaultRate} onChange={e => updateSection('tax', { defaultRate: parseFloat(e.target.value) || 0 })} />
                               <span className="absolute right-3 top-2.5 text-slate-400 text-sm font-bold">%</span>
                           </div>
-                          <p className="text-xs text-slate-500 mt-1">Thuế suất VAT mặc định cho tất cả đơn hàng.</p>
+                          <p className="text-xs text-slate-500 mt-1">{t.vatRateDefault}</p>
                       </div>
                   </div>
               </div>
@@ -236,30 +235,30 @@ const SettingsManager: React.FC<SettingsManagerProps> = ({ backend, lang }) => {
           case 'security': return (
             <div className="space-y-12 max-w-3xl">
                 <div className="space-y-6">
-                    <h3 className="text-lg font-bold text-slate-800 border-b border-slate-100 pb-2">Account Security</h3>
+                    <h3 className="text-lg font-bold text-slate-800 border-b border-slate-100 pb-2">{t.accountSecurity}</h3>
                     <ToggleSwitch checked={localSettings.security.enable2FA} onChange={(e: any) => updateSection('security', { enable2FA: e.target.checked })} label={t.enable2FA} subLabel="Require verification code on login." icon={Lock}/>
                     <div>
                         <label className={labelClass}>{t.passwordExpiry}</label>
                         <input type="number" className={inputClass} value={localSettings.security.passwordExpiry} onChange={e => updateSection('security', { passwordExpiry: parseInt(e.target.value) || 0 })} />
-                        <p className="text-xs text-slate-500 mt-1">Force users to change password every X days.</p>
+                        <p className="text-xs text-slate-500 mt-1">{t.forcePasswordChange}</p>
                     </div>
                 </div>
                 
                 {currentUser.role === 'OWNER' && (
                     <div className="space-y-6">
                         <h3 className="text-lg font-bold text-slate-800 border-b border-slate-100 pb-2 flex items-center gap-2">
-                            <ShieldAlert size={20} /> Mật khẩu cấp 2
+                            <ShieldAlert size={20} /> {t.level2Password}
                         </h3>
                         <p className="text-sm text-slate-500">
-                            Quản lý quyền truy cập lớp thứ 2 cho nhân viên. Bật tính năng này để yêu cầu mật khẩu phụ khi truy cập trang quản trị.
+                            {t.level2PasswordDesc}
                         </p>
                         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
                             <table className="w-full text-sm">
                                 <thead className="bg-slate-50 border-b border-slate-100">
                                     <tr>
-                                        <th className="px-6 py-4 font-semibold text-slate-600 text-left">Nhân viên</th>
-                                        <th className="px-6 py-4 font-semibold text-slate-600 text-center">Trạng thái</th>
-                                        <th className="px-6 py-4 font-semibold text-slate-600 text-right">Thao tác</th>
+                                        <th className="px-6 py-4 font-semibold text-slate-600 text-left">{t.employee}</th>
+                                        <th className="px-6 py-4 font-semibold text-slate-600 text-center">{t.status}</th>
+                                        <th className="px-6 py-4 font-semibold text-slate-600 text-right">{t.actions}</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-slate-100">
@@ -272,11 +271,11 @@ const SettingsManager: React.FC<SettingsManagerProps> = ({ backend, lang }) => {
                                             <td className="px-6 py-4 text-center">
                                                 {emp.level2Password ? (
                                                     <span className="inline-flex items-center gap-1 text-xs font-bold bg-emerald-100 text-emerald-700 px-3 py-1.5 rounded-full border border-emerald-200">
-                                                        <CheckCircle size={12}/> Đã bật
+                                                        <CheckCircle size={12}/> {t.enabled}
                                                     </span>
                                                 ) : (
                                                     <span className="inline-flex items-center gap-1 text-xs font-bold bg-slate-100 text-slate-500 px-3 py-1.5 rounded-full border border-slate-200">
-                                                        <X size={12}/> Đã tắt
+                                                        <X size={12}/> {t.disabled}
                                                     </span>
                                                 )}
                                             </td>
@@ -296,7 +295,7 @@ const SettingsManager: React.FC<SettingsManagerProps> = ({ backend, lang }) => {
                                                         <button 
                                                             onClick={() => handleOpenL2Modal(emp)} 
                                                             className="p-1.5 bg-slate-100 hover:bg-indigo-100 text-slate-500 hover:text-indigo-600 rounded-lg transition-colors border border-slate-200"
-                                                            title="Đổi mật khẩu"
+                                                            title={lang === 'vi' ? 'Đổi mật khẩu' : 'Change Password'}
                                                         >
                                                             <Edit size={16} />
                                                         </button>
@@ -312,12 +311,12 @@ const SettingsManager: React.FC<SettingsManagerProps> = ({ backend, lang }) => {
                 )}
             </div>
           );
-          default: return (<div className="flex flex-col items-center justify-center py-20 text-slate-400 h-full"><div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-6">{React.createElement(menuItems.find(i => i.id === activeTab)?.icon || Store, { size: 40, className: "text-slate-300" })}</div><p className="text-xl font-bold text-slate-600 mb-2">Settings for {menuItems.find(i => i.id === activeTab)?.label || activeTab}</p><p className="text-sm font-medium">Configuration panel under development.</p></div>);
+          default: return (<div className="flex flex-col items-center justify-center py-20 text-slate-400 h-full"><div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-6">{React.createElement(menuItems.find(i => i.id === activeTab)?.icon || Store, { size: 40, className: "text-slate-300" })}</div><p className="text-xl font-bold text-slate-600 mb-2">Settings for {menuItems.find(i => i.id === activeTab)?.label || activeTab}</p><p className="text-sm font-medium">{t.configUnderDev}</p></div>);
       }
   };
 
   return (
-    <div className="max-w-6xl mx-auto h-[calc(100vh-140px)] flex flex-col animate-fade-in-up">
+    <div className="max-w-6xl mx-auto max-h-[calc(100vh-140px)] flex flex-col animate-fade-in-up">
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
             <div>

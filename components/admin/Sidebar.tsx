@@ -1,7 +1,7 @@
 import React from 'react';
-import { 
-  LayoutDashboard, Package, ShoppingCart, FolderTree, ClipboardList, 
-  DollarSign, Ticket, Shield, Settings, Globe, LogOut, ChevronLeft, ChevronRight, Users 
+import {
+  LayoutDashboard, Package, ShoppingCart, FolderTree, ClipboardList,
+  DollarSign, Ticket, Shield, Settings, LogOut, ChevronLeft, ChevronRight, Users, MessageSquare
 } from 'lucide-react';
 import { Language, UserRole, Employee } from '../../types';
 import { TRANSLATIONS } from '../../services/translations';
@@ -12,14 +12,15 @@ interface SidebarProps {
   isCollapsed: boolean;
   setIsCollapsed: (collapsed: boolean) => void;
   lang: Language;
-  toggleLanguage: () => void;
   currentUser?: Employee;
   onExit: () => void;
+  isMobileOpen?: boolean;
+  onCloseMobile?: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ 
-  activeTab, setActiveTab, isCollapsed, setIsCollapsed, 
-  lang, toggleLanguage, currentUser, onExit 
+const Sidebar: React.FC<SidebarProps> = ({
+  activeTab, setActiveTab, isCollapsed, setIsCollapsed,
+  lang, currentUser, onExit, isMobileOpen = false, onCloseMobile
 }) => {
   const t = TRANSLATIONS[lang];
   const currentRole = currentUser?.role || 'STAFF';
@@ -61,8 +62,10 @@ const Sidebar: React.FC<SidebarProps> = ({
   return (
     <aside 
       className={`
-          relative bg-slate-900 text-slate-300 flex flex-col transition-all duration-300 ease-in-out shadow-2xl z-20 print:hidden h-full
+          bg-slate-900 text-slate-300 flex flex-col transition-all duration-300 ease-in-out shadow-2xl print:hidden
+          fixed inset-y-0 left-0 z-40
           ${isCollapsed ? 'w-20' : 'w-72'}
+          ${isMobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
       `}
     >
       {/* Header Area */}
@@ -89,16 +92,14 @@ const Sidebar: React.FC<SidebarProps> = ({
       </div>
       
       {/* Navigation Content */}
-      <nav className="flex-1 px-3 py-6 space-y-1 overflow-y-auto overflow-x-hidden scrollbar-hide">
+      <nav className="flex-1 min-h-0 px-3 py-6 space-y-1 overflow-y-auto overflow-x-hidden scrollbar-hide">
         
         <div className="mb-2 px-3">
             {!isCollapsed && <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2 ml-1">Main Menu</p>}
         </div>
 
         <SidebarItem id="dashboard" icon={LayoutDashboard} label={t.dashboard} />
-        <SidebarItem id="categories" icon={FolderTree} label={t.categories} />
-        <SidebarItem id="products" icon={Package} label={t.products} />
-        <SidebarItem id="inventory" icon={ClipboardList} label={t.inventory} />
+        <SidebarItem id="products" icon={Package} label="Sản Phẩm" />
         <SidebarItem id="orders" icon={ShoppingCart} label={t.orders} />
         <SidebarItem id="customers" icon={Users} label={t.customers} />
 
@@ -109,16 +110,14 @@ const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {(currentRole === 'OWNER' || currentRole === 'ACCOUNTANT') && (
-            <>
-              <SidebarItem id="finance" icon={DollarSign} label={t.finance} />
-              <SidebarItem id="vouchers" icon={Ticket} label={t.vouchers} />
-            </>
+            <SidebarItem id="finance" icon={DollarSign} label="Tài Chính" />
         )}
 
         {currentRole === 'OWNER' && (
             <SidebarItem id="staff" icon={Shield} label={t.staff} />
         )}
         
+        <SidebarItem id="reviews" icon={MessageSquare} label="Reviews" />
         <SidebarItem id="settings" icon={Settings} label={t.settings} />
 
       </nav>
@@ -128,23 +127,21 @@ const Sidebar: React.FC<SidebarProps> = ({
           {!isCollapsed && (
               <div className="flex items-center justify-between mb-4 px-1">
                   <span className="text-xs font-medium text-slate-500">{t.lang}</span>
-                  <button 
-                      onClick={toggleLanguage}
-                      className="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-xs font-bold text-slate-300 transition-colors border border-slate-700"
-                  >
-                      <Globe size={12} /> {lang === 'vi' ? 'Tiếng Việt' : 'English'}
-                  </button>
+                  <span className="text-xs font-bold text-slate-300">Tiếng Việt</span>
               </div>
           )}
 
-          <button 
+          <div
+              role="button"
+              tabIndex={0}
               onClick={() => setActiveTab('profile')}
+              onKeyDown={(e) => e.key === 'Enter' && setActiveTab('profile')}
               className={`
-              w-full flex items-center p-2 rounded-xl transition-all duration-200
+              cursor-pointer w-full flex items-center p-2 rounded-xl transition-all duration-200
               ${isCollapsed ? 'justify-center' : 'bg-slate-800 border border-slate-700/50'}
               ${activeTab === 'profile' ? (isCollapsed ? 'bg-indigo-600/50' : 'bg-slate-700 ring-2 ring-indigo-500') : 'hover:bg-slate-700'}
           `}>
-              <div className="relative group">
+              <div className="relative">
                   <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-500 flex items-center justify-center text-white font-bold text-sm shadow-md ring-2 ring-slate-900">
                       {currentUser?.name.charAt(0)}
                   </div>
@@ -162,7 +159,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                       <LogOut size={16} />
                   </button>
               )}
-          </button>
+          </div>
           
           {isCollapsed && (
               <button onClick={onExit} className="w-full mt-4 p-2 flex justify-center text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors">

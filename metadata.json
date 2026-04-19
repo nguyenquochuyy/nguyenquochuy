@@ -1,5 +1,0 @@
-{
-  "name": "UniShop - Dual Frontends",
-  "description": "A comprehensive demo showing an Admin Dashboard and Customer Storefront sharing a single logic layer. Features real-time data sync via local storage and AI-powered product description generation.",
-  "requestFramePermissions": []
-}

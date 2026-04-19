@@ -199,7 +199,7 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({ cart, setCart, backend, onO
                 </div>
             </div>
             <div className="flex flex-col-reverse sm:flex-row justify-between items-center mt-8 gap-4">
-                <div className="grid grid-cols-3 gap-4 text-xs text-slate-500 text-center"><span className="flex items-center gap-2"><Lock size={12}/> Bảo mật SSL</span><span className="flex items-center gap-2"><RefreshCw size={12}/> Đổi trả 30 ngày</span><span className="flex items-center gap-2"><ShieldCheck size={12}/> Hàng chính hãng</span></div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-slate-500 text-center"><span className="flex items-center gap-2"><Lock size={12}/> Bảo mật SSL</span><span className="flex items-center gap-2"><RefreshCw size={12}/> Đổi trả 30 ngày</span><span className="flex items-center gap-2"><ShieldCheck size={12}/> Hàng chính hãng</span></div>
                 <button type="submit" disabled={isProcessing} className="w-full sm:w-auto bg-slate-900 text-white px-10 py-4 rounded-xl font-bold text-lg hover:bg-indigo-700 transition-all shadow-xl shadow-slate-200 flex items-center justify-center gap-3 disabled:opacity-60">{isProcessing ? <Loader2 size={24} className="animate-spin"/> : `Đặt Hàng (${formatCurrency(total)})`}</button>
             </div>
           </div>

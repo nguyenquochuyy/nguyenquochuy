@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { BackendContextType } from '../../types';
+import { BackendContextType, Customer } from '../../types';
 import { LogIn, Mail, Lock, Loader2, AlertCircle, Eye, EyeOff, CheckCircle, ShoppingBag, User, ArrowLeft, Shield } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { TRANSLATIONS } from '../../services/translations';
-import { authStorage } from '../../services/authStorage';
-import { api } from '../../services/apiClient';
+import { storeAuthStorage } from '../../services/authStorage';
+import { api, tokenManager } from '../../services/apiClient';
 import { loginAnalytics } from '../../services/loginAnalytics';
 import SocialLoginButtons from './SocialLoginButtons';
 
@@ -28,7 +28,7 @@ const StoreLogin: React.FC<StoreLoginProps> = ({ backend, message, onClearMessag
 
   // Load saved credentials on mount
   useEffect(() => {
-    const credentials = authStorage.getCredentials();
+    const credentials = storeAuthStorage.getCredentials();
     if (credentials) {
       setEmail(credentials.email);
       setRememberMe(credentials.rememberMe);
@@ -43,66 +43,27 @@ const StoreLogin: React.FC<StoreLoginProps> = ({ backend, message, onClearMessag
     const startTime = performance.now();
 
     try {
-      const response = await api.login(email, password);
+      const response = await api.storeLogin(email, password);
       const responseTime = performance.now() - startTime;
-      
-      console.log('Login API response:', response); // Debug log
-      
-      if (response && response.success) {
-        // Use response.user directly since API already authenticated
-        const user = response.user;
-        console.log('Current user after login:', user); // Debug log
-        
-        if (user) {
-          const isEmployee = 'role' in user;
-          if (isEmployee) {
-            setError('Tài khoản này không phải là tài khoản khách hàng.');
-            loginAnalytics.trackLoginFailure(email, 'Admin account attempted on customer login');
-          } else {
-            // Track successful login
-            loginAnalytics.trackLoginSuccess(email, user.id, 'email');
-            loginAnalytics.updateLoginResponseTime(email, responseTime);
-            
-            // Save credentials if remember me is checked
-            authStorage.saveCredentials(email, rememberMe);
-            
-            // Save session
-            authStorage.saveSession(user);
-            
-            // Update global state
-            if (onLoginSuccess) {
-              onLoginSuccess(user);
-            }
-            
-            console.log('Navigating to /store...'); // Debug log
-            navigate('/store');
-          }
-        } else {
-          console.error('No user found after login');
-          setError('Đăng nhập thành công nhưng không thể tải thông tin người dùng.');
-        }
-      } else {
-        // Track failed login
-        const failureReason = response?.isLocked ? 'Account locked' : 
-                            response?.remainingAttempts !== undefined ? 'Invalid credentials' : 
-                            'Unknown error';
-        loginAnalytics.trackLoginFailure(email, failureReason);
-        loginAnalytics.updateLoginResponseTime(email, responseTime);
 
-        // Handle specific error messages from backend
-        if (response?.isLocked) {
-          setError(response.message || 'Tài khoản đã bị khóa. Vui lòng liên hệ quản trị viên.');
-        } else if (response?.remainingAttempts !== undefined) {
-          setError(response.message || 'Email hoặc mật khẩu không hợp lệ.');
-        } else {
-          setError('Email hoặc mật khẩu không hợp lệ.');
-        }
+      if (response && response.success && response.user) {
+        const user = response.user;
+        loginAnalytics.trackLoginSuccess(email, user.id || user._id, 'email');
+        loginAnalytics.updateLoginResponseTime(email, responseTime);
+        storeAuthStorage.saveCredentials(email, rememberMe);
+        storeAuthStorage.saveSession(user, response.token, 24 * 60 * 60 * 1000);
+        if (onLoginSuccess) onLoginSuccess(user);
+        navigate('/store');
+      } else {
+        tokenManager.clearStore();
+        loginAnalytics.trackLoginFailure(email, response?.message || 'Invalid credentials');
+        loginAnalytics.updateLoginResponseTime(email, responseTime);
+        setError(response?.message || 'Email hoặc mật khẩu không đúng.');
       }
     } catch (err) {
       console.error('Login error:', err);
-      const responseTime = performance.now() - startTime;
+      tokenManager.clearStore();
       loginAnalytics.trackLoginFailure(email, 'Network error');
-      loginAnalytics.updateLoginResponseTime(email, responseTime);
       setError('Không thể kết nối đến server.');
     } finally {
       setIsLoading(false);

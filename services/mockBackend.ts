@@ -1,8 +1,8 @@
 
-import { Product, Order, OrderStatus, BackendState, Category, Customer, InventoryLog, FinanceAccount, Transaction, Voucher, Employee, ActivityLog, PaymentAccount, StoreSettings } from '../types';
+import { Product, Order, OrderStatus, BackendState, Category, Customer, InventoryLog, FinanceAccount, Transaction, Voucher, Employee, ActivityLog, PaymentAccount, StoreSettings, Refund, ProductHistory, Review } from '../types';
 
 // Changed version to force reset for loyalty features
-const STORAGE_KEY = 'unishop_db_v17_settings_unified';
+const STORAGE_KEY = 'unishop_db_v18_auth_split';
 
 // Dọn dẹp mạnh: Xóa rác local storage CŨ ngay lần chạy này
 if (!sessionStorage.getItem('db_wiped_v2')) {
@@ -15,7 +15,32 @@ const INITIAL_CATEGORIES: Category[] = [];
 
 const INITIAL_PRODUCTS: Product[] = [];
 
-const INITIAL_CUSTOMERS: Customer[] = [];
+const INITIAL_CUSTOMERS: Customer[] = [
+  {
+    id: 'cust_001',
+    name: 'Nguyễn Văn An',
+    phone: '0901111111',
+    email: 'an@gmail.com',
+    password: 'Customer@123',
+    address: '12 Lê Lợi, Q1, TP.HCM',
+    status: 'ACTIVE',
+    joinedAt: new Date().toISOString(),
+    loyaltyPoints: 0,
+    wishlist: []
+  },
+  {
+    id: 'cust_002',
+    name: 'Trần Thị Bình',
+    phone: '0902222222',
+    email: 'binh@gmail.com',
+    password: 'Customer@123',
+    address: '45 Nguyễn Huệ, Q1, TP.HCM',
+    status: 'ACTIVE',
+    joinedAt: new Date().toISOString(),
+    loyaltyPoints: 150,
+    wishlist: []
+  }
+];
 
 const INITIAL_ACCOUNTS: FinanceAccount[] = [
   { id: 'acc1', name: 'Tiền mặt (Cash)', type: 'CASH', balance: 0 }
@@ -27,16 +52,39 @@ const INITIAL_VOUCHERS: Voucher[] = [];
 
 const INITIAL_EMPLOYEES: Employee[] = [
   {
-    id: 'emp_admin_custom',
-    name: 'Super Admin',
-    email: 'admin@gmail.com',
-    password: '123456',
-    phone: '0900000000',
+    id: 'emp_owner_001',
+    name: 'Admin Owner',
+    email: 'owner@unishop.com',
+    password: 'Owner@2026',
+    phone: '0900000001',
     role: 'OWNER',
     status: 'ACTIVE',
     joinedAt: new Date().toISOString(),
     lastActive: new Date().toISOString(),
-    level2Password: '123456',
+    level2PasswordAttempts: 0
+  },
+  {
+    id: 'emp_acc_001',
+    name: 'Kế toán',
+    email: 'accountant@unishop.com',
+    password: 'Acc@2026',
+    phone: '0900000002',
+    role: 'ACCOUNTANT',
+    status: 'ACTIVE',
+    joinedAt: new Date().toISOString(),
+    lastActive: new Date().toISOString(),
+    level2PasswordAttempts: 0
+  },
+  {
+    id: 'emp_staff_001',
+    name: 'Nhân viên',
+    email: 'staff@unishop.com',
+    password: 'Staff@2026',
+    phone: '0900000003',
+    role: 'STAFF',
+    status: 'ACTIVE',
+    joinedAt: new Date().toISOString(),
+    lastActive: new Date().toISOString(),
     level2PasswordAttempts: 0
   }
 ];
@@ -44,6 +92,8 @@ const INITIAL_EMPLOYEES: Employee[] = [
 const INITIAL_LOGS: InventoryLog[] = [];
 
 const INITIAL_TRANSACTIONS: Transaction[] = [];
+
+const INITIAL_REFUNDS: Refund[] = [];
 
 const DEFAULT_SETTINGS: StoreSettings = {
   shopInfo: { name: 'UniShop', phone: '0901234567', address: '123 Le Loi, D1, HCMC', email: 'contact@unishop.com' },
@@ -76,6 +126,9 @@ export const loadState = (): BackendState => {
     vouchers: INITIAL_VOUCHERS,
     employees: INITIAL_EMPLOYEES,
     activityLogs: [],
+    productHistory: [],
+    reviews: [],
+    refunds: INITIAL_REFUNDS,
     settings: DEFAULT_SETTINGS,
   };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(initialState));

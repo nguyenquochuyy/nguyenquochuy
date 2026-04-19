@@ -29,6 +29,8 @@ const AllProductsPage: React.FC<AllProductsPageProps> = ({
   const [sortOption, setSortOption] = useState<'newest' | 'price-asc' | 'price-desc'>('newest');
   const [currentPage, setCurrentPage] = useState(1);
   const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
+  const [stockFilter, setStockFilter] = useState<'all' | 'in-stock' | 'low-stock'>('all');
+  const [discountFilter, setDiscountFilter] = useState<boolean>(false);
 
   const getDiscountedPrice = (product: Product) => {
     if (!product.discount) return product.price;
@@ -47,17 +49,23 @@ const AllProductsPage: React.FC<AllProductsPageProps> = ({
   const processedProducts = useMemo(() => {
       let result = products.filter(p => {
         if (!p.isVisible) return false;
-        
-        const matchesCategory = categoryFilter === 'All' || p.category === categoryFilter || 
+
+        const matchesCategory = categoryFilter === 'All' || p.category === categoryFilter ||
                                 categories.find(c => c.id === p.category)?.parentId === categoryFilter;
-        
+
         const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase());
-        
+
         const price = getDiscountedPrice(p);
         const matchesMinPrice = priceRange.min === '' || price >= parseFloat(priceRange.min);
         const matchesMaxPrice = priceRange.max === '' || price <= parseFloat(priceRange.max);
 
-        return matchesCategory && matchesSearch && matchesMinPrice && matchesMaxPrice;
+        const matchesStock = stockFilter === 'all' ||
+                           (stockFilter === 'in-stock' && p.stock > 0) ||
+                           (stockFilter === 'low-stock' && p.stock > 0 && p.stock < 10);
+
+        const matchesDiscount = !discountFilter || (discountFilter && p.discount > 0);
+
+        return matchesCategory && matchesSearch && matchesMinPrice && matchesMaxPrice && matchesStock && matchesDiscount;
       });
 
       if (sortOption === 'price-asc') {
@@ -65,12 +73,12 @@ const AllProductsPage: React.FC<AllProductsPageProps> = ({
       } else if (sortOption === 'price-desc') {
           result.sort((a, b) => getDiscountedPrice(b) - getDiscountedPrice(a));
       } else {
-          result.reverse(); 
+          result.reverse();
       }
       return result;
-  }, [products, searchTerm, categoryFilter, priceRange, sortOption, categories]);
+  }, [products, searchTerm, categoryFilter, priceRange, sortOption, categories, stockFilter, discountFilter]);
 
-  useEffect(() => { setCurrentPage(1); }, [searchTerm, categoryFilter, priceRange, sortOption]);
+  useEffect(() => { setCurrentPage(1); }, [searchTerm, categoryFilter, priceRange, sortOption, stockFilter, discountFilter]);
   useEffect(() => {
     if (initialCategoryFilter !== 'All') {
         const parent = categories.find(c => c.id === initialCategoryFilter)?.parentId;
@@ -83,11 +91,13 @@ const AllProductsPage: React.FC<AllProductsPageProps> = ({
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
-  
+
   const handleResetFilters = () => {
     setSearchTerm('');
     setCategoryFilter('All');
     setPriceRange({ min: '', max: '' });
+    setStockFilter('all');
+    setDiscountFilter(false);
   };
 
   const StockBadge = ({ stock }: { stock: number }) => {
@@ -229,6 +239,22 @@ const AllProductsPage: React.FC<AllProductsPageProps> = ({
                   <span>-</span>
                   <input type="number" placeholder="Đến" value={priceRange.max} onChange={e => setPriceRange(p => ({...p, max: e.target.value}))} className="w-full text-sm p-2 bg-slate-50 rounded-lg border border-slate-200 focus:ring-1 focus:ring-indigo-500 outline-none" />
                 </div>
+              </div>
+
+              <div>
+                <h3 className="text-sm font-bold text-slate-900 mb-2">Tình trạng kho</h3>
+                <div className="space-y-2">
+                  <button onClick={() => setStockFilter('all')} className={`w-full text-left text-sm p-2 rounded-md transition-colors ${stockFilter === 'all' ? 'bg-indigo-50 text-indigo-700 font-bold' : 'text-slate-600 hover:bg-slate-50'}`}>Tất cả</button>
+                  <button onClick={() => setStockFilter('in-stock')} className={`w-full text-left text-sm p-2 rounded-md transition-colors ${stockFilter === 'in-stock' ? 'bg-indigo-50 text-indigo-700 font-bold' : 'text-slate-600 hover:bg-slate-50'}`}>Còn hàng</button>
+                  <button onClick={() => setStockFilter('low-stock')} className={`w-full text-left text-sm p-2 rounded-md transition-colors ${stockFilter === 'low-stock' ? 'bg-indigo-50 text-indigo-700 font-bold' : 'text-slate-600 hover:bg-slate-50'}`}>Sắp hết hàng</button>
+                </div>
+              </div>
+
+              <div>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" checked={discountFilter} onChange={e => setDiscountFilter(e.target.checked)} className="w-4 h-4 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500" />
+                  <span className="text-sm font-bold text-slate-900">Chỉ hiện sản phẩm giảm giá</span>
+                </label>
               </div>
             </div>
           </aside>

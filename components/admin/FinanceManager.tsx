@@ -1,9 +1,10 @@
 import React, { useState, useMemo } from 'react';
-import { BackendContextType, Language, formatCurrency, Transaction } from '../../types';
+import { BackendContextType, Language, formatCurrency, Transaction, Voucher } from '../../types';
 import { TRANSLATIONS } from '../../services/translations';
-import { 
-  DollarSign, TrendingUp, TrendingDown, Calendar, CreditCard, Plus, Filter, 
-  ArrowUpRight, ArrowDownRight, Wallet, Banknote, Landmark, X, Save, BarChart3
+import VoucherManager from './VoucherManager';
+import {
+  DollarSign, TrendingUp, TrendingDown, Calendar, CreditCard, Plus, Filter,
+  ArrowUpRight, ArrowDownRight, Wallet, Banknote, Landmark, X, Save, BarChart3, Ticket
 } from 'lucide-react';
 import { 
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, 
@@ -17,8 +18,9 @@ interface FinanceManagerProps {
 
 const FinanceManager: React.FC<FinanceManagerProps> = ({ backend, lang }) => {
   const t = TRANSLATIONS[lang];
-  const { state, addTransaction } = backend;
-  
+  const { state, addTransaction, addVoucher, updateVoucher, deleteVoucher } = backend;
+
+  const [mainTab, setMainTab] = useState<'finance' | 'vouchers'>('finance');
   const [activeTab, setActiveTab] = useState<'overview' | 'transactions' | 'accounts'>('overview');
   const [isModalOpen, setIsModalOpen] = useState(false);
   
@@ -91,6 +93,37 @@ const FinanceManager: React.FC<FinanceManagerProps> = ({ backend, lang }) => {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto animate-fade-in-up">
+        {/* Main Tab Switcher */}
+        <div className="flex gap-2 border-b border-slate-200">
+          <button
+            onClick={() => setMainTab('finance')}
+            className={`px-4 py-2 font-medium transition-colors border-b-2 ${
+              mainTab === 'finance'
+                ? 'border-indigo-600 text-indigo-600'
+                : 'border-transparent text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              <DollarSign size={18} /> Tài Chính
+            </div>
+          </button>
+          <button
+            onClick={() => setMainTab('vouchers')}
+            className={`px-4 py-2 font-medium transition-colors border-b-2 ${
+              mainTab === 'vouchers'
+                ? 'border-indigo-600 text-indigo-600'
+                : 'border-transparent text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              <Ticket size={18} /> Mã Giảm Giá
+            </div>
+          </button>
+        </div>
+
+        {/* Finance Tab */}
+        {mainTab === 'finance' && (
+        <>
         {/* Header & Tabs */}
         <div className="flex flex-col md:flex-row justify-between items-end gap-4 border-b border-slate-200 pb-2">
             <div className="flex gap-6">
@@ -161,7 +194,7 @@ const FinanceManager: React.FC<FinanceManagerProps> = ({ backend, lang }) => {
                 {/* Charts */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                        <h3 className="font-bold text-slate-800 mb-4">{t.cashFlow} Breakdown</h3>
+                        <h3 className="font-bold text-slate-800 mb-4">{t.cashFlow} {t.breakdownLabel}</h3>
                         <div className="h-64">
                             <ResponsiveContainer width="100%" height="100%">
                                 <PieChart>
@@ -185,7 +218,7 @@ const FinanceManager: React.FC<FinanceManagerProps> = ({ backend, lang }) => {
                         </div>
                     </div>
                     <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                        <h3 className="font-bold text-slate-800 mb-4">Recent Activity</h3>
+                        <h3 className="font-bold text-slate-800 mb-4">{t.recentActivity}</h3>
                         <div className="space-y-4">
                             {state.transactions.slice(0, 5).map(tx => (
                                 <div key={tx.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
@@ -321,17 +354,17 @@ const FinanceManager: React.FC<FinanceManagerProps> = ({ backend, lang }) => {
                                 >
                                     {formData.type === 'INCOME' ? (
                                         <>
-                                            <option value="Sales">Sales</option>
-                                            <option value="Invest">Investment</option>
-                                            <option value="Other">Other</option>
+                                            <option value="Sales">{t.categorySales}</option>
+                                            <option value="Invest">{t.categoryInvest}</option>
+                                            <option value="Other">{t.categoryOther}</option>
                                         </>
                                     ) : (
                                         <>
-                                            <option value="Cost of Goods">Cost of Goods</option>
-                                            <option value="Salary">Salary</option>
-                                            <option value="Rent">Rent</option>
-                                            <option value="Marketing">Marketing</option>
-                                            <option value="Other">Other</option>
+                                            <option value="Cost of Goods">{t.categoryCostOfGoods}</option>
+                                            <option value="Salary">{t.categorySalary}</option>
+                                            <option value="Rent">{t.categoryRent}</option>
+                                            <option value="Marketing">{t.categoryMarketing}</option>
+                                            <option value="Other">{t.categoryOther}</option>
                                         </>
                                     )}
                                 </select>
@@ -368,6 +401,15 @@ const FinanceManager: React.FC<FinanceManagerProps> = ({ backend, lang }) => {
                     </form>
                 </div>
             </div>
+        )}
+        </>
+        )}
+
+        {/* Vouchers Tab */}
+        {mainTab === 'vouchers' && (
+        <>
+        <VoucherManager backend={backend} lang={lang} />
+        </>
         )}
     </div>
   );

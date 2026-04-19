@@ -145,20 +145,20 @@ const StaffManager: React.FC<StaffManagerProps> = ({ backend, lang }) => {
                             U
                         </div>
                         
-                        <h2 className="text-2xl font-bold text-slate-900 mb-2">Welcome to UniShop!</h2>
+                        <h2 className="text-2xl font-bold text-slate-900 mb-2">Chào mừng đến với UniShop!</h2>
                         <p className="text-slate-500 mb-6 text-sm leading-relaxed">
-                            Hello <strong>{emailData.name}</strong>,<br/>
-                            An account has been created for you. Please use the temporary credentials below to access the system.
+                            Xin chào <strong>{emailData.name}</strong>,<br/>
+                            Tài khoản của bạn đã được tạo. Hãy dùng thông tin đăng nhập tạm thời bên dưới để truy cập hệ thống.
                         </p>
 
                         {/* Credential Box */}
                         <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-6 text-left">
                             <div className="mb-3">
-                                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Username</span>
+                                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Tên đăng nhập</span>
                                 <div className="text-slate-800 font-medium text-sm">{emailData.email}</div>
                             </div>
                             <div>
-                                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Temporary Password</span>
+                                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Mật khẩu tạm thời</span>
                                 <div className="flex justify-between items-center bg-white border border-slate-200 rounded-lg p-2 mt-1">
                                     <code className="text-rose-600 font-mono font-bold text-lg tracking-wide">{generatedPassword}</code>
                                     <button className="text-slate-400 hover:text-indigo-600" title="Copy"><Copy size={16}/></button>
@@ -171,11 +171,11 @@ const StaffManager: React.FC<StaffManagerProps> = ({ backend, lang }) => {
                             onClick={handleLoginClick}
                             className="bg-indigo-600 text-white px-8 py-3 rounded-lg font-bold text-sm hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-200 w-full mb-4"
                         >
-                            Login & Change Password
+                            Đăng nhập & Đổi mật khẩu
                         </button>
                         
                         <p className="text-xs text-slate-400">
-                            For security, please change your password immediately after logging in.
+                            Vì lý do bảo mật, hãy đổi mật khẩu ngay sau lần đăng nhập đầu tiên.
                         </p>
                     </div>
                     
@@ -215,14 +215,14 @@ const StaffManager: React.FC<StaffManagerProps> = ({ backend, lang }) => {
                         <div className="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mb-4 mx-auto">
                             <ShieldCheck size={24} />
                         </div>
-                        <h3 className="text-center text-xl font-bold text-slate-900 mb-2">Set New Password</h3>
+                        <h3 className="text-center text-xl font-bold text-slate-900 mb-2">{t.newPassword}</h3>
                         <p className="text-center text-sm text-slate-500 mb-6">
-                            Secure your account by creating a strong password.
+                            {lang === 'vi' ? 'Bảo mật tài khoản bằng cách tạo mật khẩu mạnh.' : 'Secure your account by creating a strong password.'}
                         </p>
 
                         <div className="space-y-4">
                             <div>
-                                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">New Password</label>
+                                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">{t.newPassword}</label>
                                 <input 
                                     type="password" required minLength={6}
                                     className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
@@ -231,7 +231,7 @@ const StaffManager: React.FC<StaffManagerProps> = ({ backend, lang }) => {
                                 />
                             </div>
                             <div>
-                                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">Confirm Password</label>
+                                <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">{t.confirmPassword}</label>
                                 <input 
                                     type="password" required minLength={6}
                                     className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
@@ -245,7 +245,7 @@ const StaffManager: React.FC<StaffManagerProps> = ({ backend, lang }) => {
                             type="submit"
                             className="mt-8 w-full bg-slate-900 text-white py-3 rounded-xl font-bold hover:bg-slate-800 transition-colors"
                         >
-                            Update Password
+                            {t.updatePassword}
                         </button>
                     </form>
                 ) : (
@@ -253,8 +253,8 @@ const StaffManager: React.FC<StaffManagerProps> = ({ backend, lang }) => {
                         <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mb-4 animate-bounce">
                             <Check size={32} />
                         </div>
-                        <h3 className="text-xl font-bold text-slate-900">All Set!</h3>
-                        <p className="text-slate-500 text-sm mt-2">Your password has been updated securely.</p>
+                        <h3 className="text-xl font-bold text-slate-900">{t.allSet}</h3>
+                        <p className="text-slate-500 text-sm mt-2">{t.passwordUpdatedSecure}</p>
                     </div>
                 )}
             </div>
@@ -340,15 +340,15 @@ const StaffManager: React.FC<StaffManagerProps> = ({ backend, lang }) => {
                     <thead className="bg-slate-50 text-slate-500 font-medium uppercase text-xs border-b border-slate-200">
                         <tr>
                             <th className="px-6 py-4">{t.date}</th>
-                            <th className="px-6 py-4">Employee</th>
-                            <th className="px-6 py-4">Action</th>
-                            <th className="px-6 py-4">Module</th>
+                            <th className="px-6 py-4">{t.employeeLabel}</th>
+                            <th className="px-6 py-4">{t.actionLabel}</th>
+                            <th className="px-6 py-4">{t.moduleLabel}</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
                         {state.activityLogs.length === 0 ? (
                             <tr>
-                                <td colSpan={4} className="px-6 py-8 text-center text-slate-400">No activity recorded yet.</td>
+                                <td colSpan={4} className="px-6 py-8 text-center text-slate-400">{t.noActivityYet}</td>
                             </tr>
                         ) : (
                             [...state.activityLogs].reverse().map(log => (
@@ -457,14 +457,14 @@ const StaffManager: React.FC<StaffManagerProps> = ({ backend, lang }) => {
                                     onClick={handleResetPassword}
                                     className="text-sm text-indigo-600 font-bold hover:underline flex items-center gap-1"
                                 >
-                                    <Key size={16}/> {t.resetPassword} & Send Email
+                                    <Key size={16}/> {t.resetPasswordSendEmail}
                                 </button>
                             </div>
                         ) : (
                             <div className="bg-blue-50 border border-blue-100 rounded-lg p-3 flex gap-3 items-start">
                                 <ShieldCheck size={18} className="text-blue-600 mt-0.5 shrink-0"/>
                                 <div className="text-xs text-blue-700">
-                                    <span className="font-bold">Security Note:</span> A random password will be generated and sent to this email upon creation. The user will be prompted to change it on first login.
+                                    <span className="font-bold">{t.securityNote}:</span> {lang === 'vi' ? 'Mật khẩu ngẫu nhiên sẽ được tạo và gửi đến email này. Nhân viên sẽ được yêu cầu đổi mật khẩu khi đăng nhập lần đầu.' : 'A random password will be generated and sent to this email upon creation. The user will be prompted to change it on first login.'}
                                 </div>
                             </div>
                         )}
@@ -480,7 +480,7 @@ const StaffManager: React.FC<StaffManagerProps> = ({ backend, lang }) => {
                                 type="submit"
                                 className="px-6 py-2 bg-indigo-600 text-white hover:bg-indigo-700 rounded-lg text-sm font-bold shadow-md flex items-center gap-2"
                             >
-                                <Save size={16} /> {editingId ? t.save : 'Create Account'}
+                                <Save size={16} /> {editingId ? t.save : t.createAccountLabel}
                             </button>
                         </div>
                     </form>
@@ -498,7 +498,7 @@ const StaffManager: React.FC<StaffManagerProps> = ({ backend, lang }) => {
         {showResetToast && (
             <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-[80] bg-slate-900 text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 animate-fade-in-up">
                 <Check size={20} className="text-emerald-400"/>
-                <span className="font-medium">Password updated successfully!</span>
+                <span className="font-medium">{t.passwordUpdatedSuccess}</span>
             </div>
         )}
     </div>

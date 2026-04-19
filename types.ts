@@ -38,6 +38,32 @@ export interface Product {
   variants: ProductVariant[];
 }
 
+export interface ProductHistory {
+  id: string;
+  productId: string;
+  productName: string;
+  changeType: 'price' | 'stock' | 'info' | 'visibility';
+  oldValue: string | number;
+  newValue: string | number;
+  changedBy: string; // employee name or email
+  changedAt: string;
+  notes?: string;
+}
+
+export interface Review {
+  id: string;
+  productId: string;
+  customerId: string;
+  customerName: string;
+  rating: number; // 1-5 stars
+  comment: string;
+  reply?: string; // Admin reply
+  replyDate?: string;
+  isHidden: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface CartItem extends Product {
   quantity: number;
   selectedVariantId?: string;
@@ -81,13 +107,37 @@ export interface Order {
   customerEmail?: string;
   taxAmount: number;
   taxRate: number;
+  // Timeline & Tracking
+  timeline?: OrderTimelineEvent[];
+  shippingTracking?: string;
+  paymentStatus?: 'PENDING' | 'PAID' | 'FAILED' | 'REFUNDED';
+  paymentTransactionId?: string;
+  // Notes
+  internalNotes?: string; // Notes for internal staff
+  customerNotes?: string; // Notes from customer
+}
+
+export interface OrderTimelineEvent {
+  status: OrderStatus;
+  timestamp: string;
+  note?: string;
+  processedBy?: string;
 }
 
 export interface Category {
   id: string;
   name: string;
+  description?: string;
   order: number;
   parentId?: string;
+  isActive?: boolean;
+  image?: string;
+  banner?: string;
+  metaTitle?: string;
+  metaDescription?: string;
+  slug?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface Customer {
@@ -171,6 +221,28 @@ export interface ActivityLog {
   details?: string;
 }
 
+export type RefundStatus = 'PENDING' | 'APPROVED' | 'REJECTED' | 'PROCESSING' | 'COMPLETED' | 'CANCELLED';
+
+export interface Refund {
+  id: string;
+  orderId: string;
+  orderNumber: string;
+  customerId: string;
+  customerName: string;
+  customerPhone: string;
+  reason: string;
+  amount: number;
+  status: RefundStatus;
+  refundMethod: 'ORIGINAL' | 'BANKING' | 'CASH';
+  refundAccount?: string;
+  requestDate: string;
+  processedDate?: string;
+  completedDate?: string;
+  processedBy?: string;
+  notes?: string;
+  items: { productId: string; productName: string; quantity: number; price: number }[];
+}
+
 export interface StoreSettings {
   shopInfo: { name: string; phone: string; address: string; email: string };
   paymentMethods: { cod: boolean; banking: boolean; momo: boolean };
@@ -195,11 +267,16 @@ export interface BackendState {
   vouchers: Voucher[];
   employees: Employee[];
   activityLogs: ActivityLog[];
+  productHistory: ProductHistory[];
+  reviews: Review[];
+  refunds: Refund[];
   settings: StoreSettings;
 }
 
 export interface BackendContextType {
   state: BackendState;
+  productHistory: ProductHistory[];
+  reviews: Review[];
   // Auth
   login: (email: string, password: string) => boolean;
   logout: () => void;
@@ -221,6 +298,7 @@ export interface BackendContextType {
     usePoints?: boolean // New Param
   ) => Order;
   updateOrderStatus: (id: string, status: OrderStatus, userId?: string) => void;
+  updateOrderNotes: (id: string, internalNotes?: string, customerNotes?: string) => void;
   // Category Methods
   addCategory: (category: Omit<Category, 'id'>) => void;
   updateCategory: (id: string, updates: Partial<Category>) => void;
@@ -247,14 +325,35 @@ export interface BackendContextType {
   disableLevel2Password: (employeeId: string) => void; // New method to turn off L2
   verifyLevel2Password: (employeeId: string, password: string) => { success: boolean; attemptsLeft: number };
   resetLevel2PasswordAttempts: (employeeId: string) => void;
-  // System Methods
+  // Review Methods
+  addReview: (review: Omit<Review, 'id' | 'createdAt' | 'updatedAt'>) => void;
+  replyToReview: (reviewId: string, reply: string) => void;
+  toggleReviewHidden: (reviewId: string) => void;
+  // Settings
   updateSettings: (settings: Partial<StoreSettings>) => void;
   refresh: () => void;
+  // Refund Methods
+  createRefund: (refund: Omit<Refund, 'id' | 'requestDate'>) => void;
+  updateRefundStatus: (id: string, status: RefundStatus, processedBy?: string) => void;
+  deleteRefund: (id: string) => void;
 }
 
 export const formatCurrency = (value: number) => {
+  // Vietnamese format: 1.000.000đ (uses dots for thousands)
   return new Intl.NumberFormat('vi-VN', {
     style: 'currency',
     currency: 'VND',
-  }).format(value);
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(value).replace(/,/g, '.');
+};
+
+export const formatNumberInput = (value: string): string => {
+  const numericValue = value.replace(/\D/g, '');
+  if (!numericValue) return '';
+  return new Intl.NumberFormat('vi-VN').format(Number(numericValue));
+};
+
+export const parseFormattedNumber = (formatted: string): number => {
+  return Number(formatted.replace(/\./g, ''));
 };

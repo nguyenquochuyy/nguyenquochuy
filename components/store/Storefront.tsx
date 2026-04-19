@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BackendContextType, Product, CartItem, ProductVariant, Order, Employee, Customer } from '../../types';
+import { BackendContextType, Product, CartItem, ProductVariant, Order, Customer } from '../../types';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import CartDrawer from './CartDrawer';
@@ -17,7 +17,7 @@ import { Check, X } from 'lucide-react';
 interface StorefrontProps {
   backend: BackendContextType;
   onExit: () => void;
-  currentUser: Employee | Customer | null;
+  currentUser: Customer | null;
 }
 
 type ActiveView = 'HOME' | 'PRODUCT' | 'CHECKOUT' | 'ALL_PRODUCTS' | 'PROFILE' | 'WISHLIST';
@@ -39,11 +39,7 @@ const Storefront: React.FC<StorefrontProps> = ({ backend, onExit, currentUser })
   const [searchTerm, setSearchTerm] = useState('');
   const [showScrollTop, setShowScrollTop] = useState(false);
   
-  const isEmployee = currentUser && 'role' in currentUser;
-  // Safe cast for wishlist access
-  const customerWishlist = (!isEmployee && currentUser && 'wishlist' in currentUser) 
-    ? (currentUser as Customer).wishlist 
-    : [];
+  const customerWishlist = currentUser?.wishlist ?? [];
 
   React.useEffect(() => {
     const handleScroll = () => {
@@ -131,8 +127,8 @@ const Storefront: React.FC<StorefrontProps> = ({ backend, onExit, currentUser })
   };
 
   const handleToggleWishlist = (productId: string) => {
-      if (!currentUser || isEmployee) {
-          alert("Vui lòng đăng nhập tài khoản khách hàng để lưu sản phẩm.");
+      if (!currentUser) {
+          alert("Vui lòng đăng nhập để lưu sản phẩm.");
           return;
       }
       toggleWishlist(currentUser.id, productId);
@@ -154,10 +150,9 @@ const Storefront: React.FC<StorefrontProps> = ({ backend, onExit, currentUser })
         onCartClick={() => setIsCartOpen(true)}
         onHomeClick={() => { setCategoryFilter('All'); setSearchTerm(''); navigateHome(); }}
         onExit={onExit}
-        isEmployee={isEmployee || false}
         currentUser={currentUser}
         onProfileClick={navigateToProfile}
-        onWishlistClick={!isEmployee ? navigateToWishlist : undefined}
+        onWishlistClick={navigateToWishlist}
         onLoginClick={() => navigate('/login')}
       />
       
@@ -173,7 +168,7 @@ const Storefront: React.FC<StorefrontProps> = ({ backend, onExit, currentUser })
                 backend={backend}
                 onLogout={onExit}
             />
-        ) : activeView === 'WISHLIST' && !isEmployee ? (
+        ) : activeView === 'WISHLIST' ? (
             <WishlistPage
                 products={state.products}
                 wishlistIds={customerWishlist}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Product, Language, ProductVariant, Category } from '../../types';
+import { Product, Language, ProductVariant, Category, formatNumberInput, parseFormattedNumber } from '../../types';
 import { loadState } from '../../services/mockBackend';
 import { generateProductDescription } from '../../services/gemini';
 import { TRANSLATIONS } from '../../services/translations';
@@ -43,6 +43,10 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, onCancel, initialDa
   const [newImageUrl, setNewImageUrl] = useState('');
   const [confirmRemoveImageIndex, setConfirmRemoveImageIndex] = useState<number | null>(null);
   const [confirmRemoveVariantIndex, setConfirmRemoveVariantIndex] = useState<number | null>(null);
+  const [priceInput, setPriceInput] = useState(initialData?.price ? formatNumberInput(initialData.price.toString()) : '');
+  const [costPriceInput, setCostPriceInput] = useState(initialData?.costPrice ? formatNumberInput(initialData.costPrice.toString()) : '');
+  const [draggedImageIndex, setDraggedImageIndex] = useState<number | null>(null);
+  const [isDragOver, setIsDragOver] = useState(false);
 
   useEffect(() => {
       if (categories.length > 0 && !formData.category) {
@@ -93,6 +97,58 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, onCancel, initialDa
     if (fileInputRef.current) {
         fileInputRef.current.value = '';
     }
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      const files = Array.from(e.dataTransfer.files);
+      files.forEach((file: File) => {
+        if (file.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            if (typeof reader.result === 'string') {
+              setFormData(prev => ({
+                ...prev,
+                images: [...prev.images.filter(i => i), reader.result as string]
+              }));
+            }
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    }
+  };
+
+  const handleImageDragStart = (index: number) => {
+    setDraggedImageIndex(index);
+  };
+
+  const handleImageDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    if (draggedImageIndex !== null && draggedImageIndex !== index) {
+      const newImages = [...formData.images];
+      const draggedImage = newImages[draggedImageIndex];
+      newImages.splice(draggedImageIndex, 1);
+      newImages.splice(index, 0, draggedImage);
+      setFormData(prev => ({ ...prev, images: newImages }));
+      setDraggedImageIndex(index);
+    }
+  };
+
+  const handleImageDragEnd = () => {
+    setDraggedImageIndex(null);
   };
 
   const handleRemoveImage = (index: number) => {
@@ -146,7 +202,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, onCancel, initialDa
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4 sm:p-6 animate-fade-in">
-      <div className="bg-slate-50 w-full max-w-6xl h-[90vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+      <div className="bg-slate-50 w-full max-w-6xl max-h-[90vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden">
         
         {/* Header */}
         <div className="bg-white px-8 py-5 border-b border-gray-200 flex justify-between items-center shrink-0 z-10">
@@ -198,26 +254,37 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, onCancel, initialDa
                     </div>
                   </div>
 
-                  {/* Gallery Grid */}
+                  {/* Gallery Grid with Drag & Drop Reordering */}
                   {validImages.length > 1 && (
                      <div className="mb-4">
-                        <p className="text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wide">{t.gallery}</p>
+                        <p className="text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wide">{t.gallery} (kéo thả để sắp xếp)</p>
                         <div className="grid grid-cols-4 gap-2">
                             {validImages.slice(1).map((img, idx) => (
-                                <div key={idx} className="relative aspect-square rounded-lg overflow-hidden border border-gray-200 group bg-white shadow-sm">
+                                <div
+                                    key={idx}
+                                    draggable
+                                    onDragStart={() => handleImageDragStart(idx + 1)}
+                                    onDragOver={(e) => handleImageDragOver(e, idx + 1)}
+                                    onDragEnd={handleImageDragEnd}
+                                    className={`relative aspect-square rounded-lg overflow-hidden border cursor-move ${
+                                        draggedImageIndex === idx + 1
+                                            ? 'border-indigo-500 ring-2 ring-indigo-500'
+                                            : 'border-gray-200'
+                                    } group bg-white shadow-sm transition-all`}
+                                >
                                     <img src={img} className="w-full h-full object-cover" />
                                     {/* Overlay Actions */}
                                     <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2">
-                                        <button 
-                                            type="button" 
+                                        <button
+                                            type="button"
                                             onClick={() => handleSetMainImage(idx + 1)}
                                             className="p-1.5 bg-white/20 text-white rounded-full hover:bg-white hover:text-indigo-600 transition-colors"
                                             title="Set as Main"
                                         >
                                             <Star size={14} />
                                         </button>
-                                        <button 
-                                            type="button" 
+                                        <button
+                                            type="button"
                                             onClick={() => handleRemoveImage(idx + 1)}
                                             className="p-1.5 bg-white/20 text-white rounded-full hover:bg-red-500 hover:text-white transition-colors"
                                             title="Remove"
@@ -254,23 +321,30 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, onCancel, initialDa
                         <div className="h-px bg-gray-200 flex-1"></div>
                      </div>
 
-                     {/* Upload Button */}
-                     <input 
-                        type="file" 
-                        multiple 
-                        accept="image/*" 
-                        ref={fileInputRef} 
-                        className="hidden" 
+                     {/* Upload Button with Drag & Drop */}
+                     <input
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        ref={fileInputRef}
+                        className="hidden"
                         onChange={handleFileSelect}
                      />
-                     <button 
-                        type="button" 
+                     <div
+                        onDragOver={handleDragOver}
+                        onDragLeave={handleDragLeave}
+                        onDrop={handleDrop}
+                        className={`w-full py-6 border-2 border-dashed rounded-xl font-medium flex flex-col items-center justify-center gap-2 transition-all cursor-pointer ${
+                            isDragOver
+                                ? 'border-indigo-500 bg-indigo-100 text-indigo-700'
+                                : 'border-indigo-200 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 hover:border-indigo-300'
+                        }`}
                         onClick={() => fileInputRef.current?.click()}
-                        className="w-full py-2.5 border-2 border-dashed border-indigo-200 bg-indigo-50 text-indigo-600 rounded-xl hover:bg-indigo-100 hover:border-indigo-300 font-medium flex items-center justify-center gap-2 transition-all"
                      >
-                        <Upload size={18} />
-                        {t.uploadImage}
-                     </button>
+                        <Upload size={24} />
+                        <span>{t.uploadImage}</span>
+                        <span className="text-xs opacity-70">hoặc kéo thả ảnh vào đây</span>
+                     </div>
                   </div>
                </div>
 
@@ -361,12 +435,15 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, onCancel, initialDa
                        <label className={labelClass}>{t.price}</label>
                        <div className="relative">
                          <input
-                            type="number"
+                            type="text"
                             className={`${inputClass} pl-8`}
-                            min="0"
                             placeholder="0"
-                            value={formData.price === 0 ? '' : formData.price}
-                            onChange={e => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
+                            value={priceInput}
+                            onChange={e => {
+                              const formatted = formatNumberInput(e.target.value);
+                              setPriceInput(formatted);
+                              setFormData({ ...formData, price: parseFormattedNumber(formatted) });
+                            }}
                          />
                          <span className="absolute left-3 top-2.5 text-gray-400">₫</span>
                        </div>
@@ -375,12 +452,15 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, onCancel, initialDa
                        <label className={labelClass}>{t.costPrice}</label>
                        <div className="relative">
                          <input
-                            type="number"
+                            type="text"
                             className={`${inputClass} pl-8`}
-                            min="0"
                             placeholder="0"
-                            value={formData.costPrice === 0 ? '' : formData.costPrice}
-                            onChange={e => setFormData({ ...formData, costPrice: parseFloat(e.target.value) || 0 })}
+                            value={costPriceInput}
+                            onChange={e => {
+                              const formatted = formatNumberInput(e.target.value);
+                              setCostPriceInput(formatted);
+                              setFormData({ ...formData, costPrice: parseFormattedNumber(formatted) });
+                            }}
                          />
                          <span className="absolute left-3 top-2.5 text-gray-400">₫</span>
                        </div>
@@ -452,11 +532,11 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, onCancel, initialDa
                                 />
                                 <div className="relative flex-1">
                                     <input
-                                        type="number"
+                                        type="text"
                                         placeholder="Price"
                                         className={`${inputClass} pl-6 bg-white`}
-                                        value={variant.price === 0 ? '' : variant.price}
-                                        onChange={e => updateVariant(idx, 'price', parseFloat(e.target.value) || 0)}
+                                        value={variant.price === 0 ? '' : formatNumberInput(variant.price.toString())}
+                                        onChange={e => updateVariant(idx, 'price', parseFormattedNumber(e.target.value))}
                                     />
                                     <span className="absolute left-2.5 top-2.5 text-gray-400 text-xs">₫</span>
                                 </div>

@@ -40,6 +40,36 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
       return count;
   }, [state.products]);
 
+  // Low Stock Details
+  const lowStockDetails = useMemo(() => {
+      const items: Array<{name: string, variant?: string, stock: number, sku: string, image: string}> = [];
+      state.products.forEach(p => {
+          if (p.hasVariants) {
+              p.variants.forEach(v => {
+                  if (v.stock < 10) {
+                      items.push({
+                          name: p.name,
+                          variant: v.name,
+                          stock: v.stock,
+                          sku: v.sku,
+                          image: p.images[0]
+                      });
+                  }
+              });
+          } else {
+              if (p.stock < 10) {
+                  items.push({
+                      name: p.name,
+                      stock: p.stock,
+                      sku: p.sku,
+                      image: p.images[0]
+                  });
+              }
+          }
+      });
+      return items.sort((a, b) => a.stock - b.stock);
+  }, [state.products]);
+
   const totalInventoryValue = useMemo(() => {
       return state.products.reduce((acc, p) => {
           if (p.hasVariants) {
@@ -197,7 +227,8 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
 
       return (
           <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-              <table className="w-full text-left">
+              <div className="overflow-x-auto">
+                  <table className="w-full text-left">
                   <thead className="bg-slate-50 border-b border-slate-200 text-xs text-slate-500 uppercase font-semibold">
                       <tr>
                           <th className="px-6 py-4">{t.products}</th>
@@ -241,6 +272,7 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
                       ))}
                   </tbody>
               </table>
+                  </div>
           </div>
       );
   };
@@ -255,7 +287,8 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
 
       return (
           <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-              <table className="w-full text-left">
+              <div className="overflow-x-auto">
+                  <table className="w-full text-left">
                   <thead className="bg-slate-50 border-b border-slate-200 text-xs text-slate-500 uppercase font-semibold">
                       <tr>
                           <th className="px-6 py-4">{t.placedAt}</th>
@@ -300,6 +333,7 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
                       ))}
                   </tbody>
               </table>
+                  </div>
           </div>
       );
   };
@@ -353,6 +387,46 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
                 </button>
             </div>
         </div>
+
+        {/* Low Stock Alerts Panel */}
+        {lowStockDetails.length > 0 && (
+            <div className="bg-rose-50 border border-rose-200 rounded-2xl p-6 shadow-sm animate-fade-in">
+                <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                        <AlertTriangle size={24} className="text-rose-600" />
+                        <div>
+                            <h3 className="font-bold text-rose-900">Low Stock Alerts</h3>
+                            <p className="text-sm text-rose-700">{lowStockDetails.length} items need restocking</p>
+                        </div>
+                    </div>
+                    <button
+                        onClick={() => {
+                            // Scroll to first low stock item in stock list
+                            setActiveTab('stock');
+                        }}
+                        className="px-4 py-2 bg-rose-600 text-white rounded-lg text-sm font-bold hover:bg-rose-700 transition-colors"
+                    >
+                        View All
+                    </button>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {lowStockDetails.slice(0, 6).map((item, idx) => (
+                        <div key={idx} className="bg-white p-3 rounded-xl border border-rose-100 flex items-center gap-3">
+                            <img src={item.image} className="w-12 h-12 rounded-lg object-cover border border-slate-200" />
+                            <div className="flex-1 min-w-0">
+                                <p className="font-bold text-sm text-slate-800 truncate">{item.name}</p>
+                                {item.variant && <p className="text-xs text-slate-500">{item.variant}</p>}
+                                <p className="text-xs text-slate-400 font-mono">{item.sku}</p>
+                            </div>
+                            <div className="text-right">
+                                <p className="text-xl font-bold text-rose-600">{item.stock}</p>
+                                <p className="text-xs text-rose-500">left</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        )}
 
         {/* Toolbar */}
         <div className="flex flex-col sm:flex-row justify-between items-end gap-4 border-b border-slate-200 pb-2">
@@ -474,7 +548,7 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
                                 <input 
                                     type="text" 
                                     className="w-full p-2.5 bg-white text-slate-900 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
-                                    placeholder={transactionModalType === 'IN' ? "e.g. PO-2024-001" : "e.g. Damaged / Return"}
+                                    placeholder={transactionModalType === 'IN' ? t.placeholderIn || "e.g. PO-2024-001" : t.placeholderOut || "e.g. Damaged / Return"}
                                     value={reason}
                                     onChange={(e) => setReason(e.target.value)}
                                 />

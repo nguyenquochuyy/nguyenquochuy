@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { BackendContextType } from '../../types';
 import { LogIn, Mail, Lock, Loader2, AlertCircle, Eye, EyeOff } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { authStorage } from '../../services/authStorage';
-import { api } from '../../services/apiClient';
+import { adminAuthStorage } from '../../services/authStorage';
+import { api, tokenManager } from '../../services/apiClient';
 
 interface AdminLoginProps {
   backend: BackendContextType;
@@ -22,7 +22,7 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ backend, message, onClearMessag
 
   // Load saved credentials on mount
   useEffect(() => {
-    const credentials = authStorage.getCredentials();
+    const credentials = adminAuthStorage.getCredentials();
     if (credentials) {
       setEmail(credentials.email);
       setRememberMe(credentials.rememberMe);
@@ -34,42 +34,21 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ backend, message, onClearMessag
     setError('');
     setIsLoading(true);
 
-    const startTime = performance.now();
-
     try {
-      const response = await api.login(email, password);
-      const responseTime = performance.now() - startTime;
-      
-      if (response && response.success) {
-        const user = backend.getCurrentUser();
-        if (user) {
-          const isEmployee = 'role' in user;
-          if (!isEmployee) {
-            backend.logout();
-            setError('Tài khoản này không phải là tài khoản nhân viên.');
-          } else {
-            // Save credentials if remember me is checked
-            authStorage.saveCredentials(email, rememberMe);
-            
-            // Save session
-            authStorage.saveSession(user);
-            
-            navigate('/portal');
-          }
-        }
+      const response = await api.adminLogin(email, password);
+
+      if (response && response.success && response.user) {
+        backend.setCurrentUser(response.user);
+        adminAuthStorage.saveCredentials(email, rememberMe);
+        adminAuthStorage.saveSession(response.user, response.token, 8 * 60 * 60 * 1000);
+        navigate('/');
       } else {
-        // Handle specific error messages from backend
-        if (response?.isLocked) {
-          setError(response.message || 'Tài khoản đã bị khóa. Vui lòng liên hệ quản trị viên.');
-        } else if (response?.remainingAttempts !== undefined) {
-          setError(response.message || 'Email hoặc mật khẩu không hợp lệ.');
-        } else {
-          setError('Email hoặc mật khẩu không hợp lệ.');
-        }
+        tokenManager.clearAdmin();
+        setError(response?.message || 'Email hoặc mật khẩu không đúng.');
       }
     } catch (err) {
       console.error('Login error:', err);
-      const responseTime = performance.now() - startTime;
+      tokenManager.clearAdmin();
       setError('Không thể kết nối đến server.');
     } finally {
       setIsLoading(false);
@@ -86,7 +65,7 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ backend, message, onClearMessag
   }, [message, onClearMessage]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4 overflow-y-auto">
       <div className="w-full max-w-md">
         <div className="bg-slate-800 rounded-2xl shadow-2xl border border-slate-700 p-8">
           <div className="text-center mb-8">

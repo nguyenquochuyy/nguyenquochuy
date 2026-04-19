@@ -1,30 +1,55 @@
-
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { loadState, saveState } from '../services/mockBackend';
-import { api } from '../services/apiClient';
-import { BackendContextType, BackendState, Product, Order, OrderStatus, Category, Customer, InventoryLog, Transaction, Voucher, Employee, PaymentAccount, StoreSettings } from '../types';
+import { api, tokenManager } from '../services/apiClient';
+import { adminAuthStorage, storeAuthStorage } from '../services/authStorage';
+import { BackendContextType, BackendState, Product, Order, OrderStatus, Category, Customer, InventoryLog, Transaction, Voucher, Employee, PaymentAccount, StoreSettings, ProductHistory, Review, Refund } from '../types';
 import { formatCurrency } from '../types';
+import { useRealtime } from './useRealtime';
+import { toast } from '../services/toast';
 
 export const useBackend = () => {
   const [data, setData] = useState<BackendState>(loadState());
+  const [productHistory, setProductHistory] = useState<ProductHistory[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isOffline, setIsOffline] = useState(false);
   const [currentUser, setCurrentUser] = useState<Employee | Customer | null>(null);
+  const currentUserRef = useRef(currentUser);
+  currentUserRef.current = currentUser;
 
   // --- FETCH DATA ---
-  const refreshData = async () => {
+  const refreshData = useCallback(async () => {
       try {
           const remoteState = await api.getState();
-          setData(remoteState);
+          const safeState: BackendState = {
+              ...remoteState,
+              products: remoteState.products ?? [],
+              orders: remoteState.orders ?? [],
+              categories: remoteState.categories ?? [],
+              customers: remoteState.customers ?? [],
+              employees: remoteState.employees ?? [],
+              inventoryLogs: remoteState.inventoryLogs ?? [],
+              financeAccounts: remoteState.financeAccounts ?? [],
+              transactions: remoteState.transactions ?? [],
+              vouchers: remoteState.vouchers ?? [],
+              paymentAccounts: remoteState.paymentAccounts ?? [],
+              productHistory: remoteState.productHistory ?? [],
+              reviews: remoteState.reviews ?? [],
+              refunds: remoteState.refunds ?? [],
+          };
+          setData(safeState);
+          setProductHistory(safeState.productHistory);
+          setReviews(safeState.reviews);
           setIsOffline(false);
-          saveState(remoteState); 
+          saveState(safeState);
           
-          // Refresh current user data if logged in
-          if (currentUser) {
-              const updatedEmployee = remoteState.employees.find(e => e.id === currentUser.id);
+          // Refresh current user data if logged in (use ref to avoid stale closure)
+          const user = currentUserRef.current;
+          if (user) {
+              const updatedEmployee = remoteState.employees.find(e => e.id === user.id);
               if (updatedEmployee) setCurrentUser(updatedEmployee);
               else {
-                  const updatedCustomer = remoteState.customers.find(c => c.id === currentUser.id);
+                  const updatedCustomer = remoteState.customers.find(c => c.id === user.id);
                   if (updatedCustomer) setCurrentUser(updatedCustomer);
               }
           }
@@ -34,11 +59,20 @@ export const useBackend = () => {
       } finally {
           setIsLoading(false);
       }
-  };
-
-  useEffect(() => {
-    refreshData();
   }, []);
+
+  // Initial load
+  useEffect(() => { refreshData(); }, []);
+
+  // Polling fallback: refresh every 30s when tab is visible (covers SSE gap)
+  useEffect(() => {
+    const tick = () => { if (!document.hidden) refreshData(); };
+    const id = setInterval(tick, 30_000);
+    return () => clearInterval(id);
+  }, [refreshData]);
+
+  // Real-time SSE: instant refresh on data_changed events
+  useRealtime(useCallback(() => { refreshData(); }, [refreshData]));
 
   const updateBackend = (newState: BackendState) => {
     setData(newState);
@@ -66,6 +100,13 @@ export const useBackend = () => {
         setCurrentUser(user);
     },
     logout: () => {
+        if (currentUser && 'role' in currentUser) {
+            tokenManager.clearAdmin();
+            adminAuthStorage.clearSession();
+        } else {
+            tokenManager.clearStore();
+            storeAuthStorage.clearSession();
+        }
         setCurrentUser(null);
     },
     register: async (customerData) => {
@@ -81,8 +122,69 @@ export const useBackend = () => {
       updateBackend({ ...data, products: [...data.products, { ...product, id: `p${Date.now()}` }] });
     },
     updateProduct: async (id, updates) => {
-      if (!isOffline) { try { await api.updateProduct(id, updates); refreshData(); return; } catch (e) { setIsOffline(true); } }
-      updateBackend({ ...data, products: data.products.map(p => p.id === id ? { ...p, ...updates } : p) });
+      const oldProduct = data.products.find(p => p.id === id);
+      
+      // Determine change type and values
+      let changeType: 'price' | 'stock' | 'visibility' | 'info' = 'info';
+      let oldValue: string | number = '';
+      let newValue: string | number = '';
+      let notes = '';
+
+      if (updates.price !== undefined && updates.price !== oldProduct?.price) {
+        changeType = 'price';
+        oldValue = oldProduct?.price || 0;
+        newValue = updates.price;
+        notes = `Price changed from ${formatCurrency(oldValue)} to ${formatCurrency(newValue)}`;
+      } else if (updates.stock !== undefined && updates.stock !== oldProduct?.stock) {
+        changeType = 'stock';
+        oldValue = oldProduct?.stock || 0;
+        newValue = updates.stock;
+        notes = `Stock changed from ${oldValue} to ${newValue}`;
+      } else if (updates.isVisible !== undefined && updates.isVisible !== oldProduct?.isVisible) {
+        changeType = 'visibility';
+        oldValue = oldProduct?.isVisible ? 'visible' : 'hidden';
+        newValue = updates.isVisible ? 'visible' : 'hidden';
+        notes = `Visibility changed from ${oldValue} to ${newValue}`;
+      } else {
+        changeType = 'info';
+        oldValue = oldProduct?.name || '';
+        newValue = updates.name || 'updated';
+        notes = `Product updated: ${Object.keys(updates).join(', ')}`;
+      }
+
+      const historyEntry: ProductHistory = {
+        id: `hist_${Date.now()}`,
+        productId: id,
+        productName: oldProduct?.name || 'Unknown Product',
+        changeType,
+        oldValue,
+        newValue,
+        changedBy: currentUser?.name || 'admin',
+        changedAt: new Date().toISOString(),
+        notes
+      };
+
+      if (!isOffline) {
+        try { 
+          await api.updateProduct(id, updates); 
+          // Update product in data and add to separate productHistory state
+          updateBackend({ 
+            ...data, 
+            products: data.products.map(p => p.id === id ? { ...p, ...updates } : p),
+          });
+          setProductHistory([historyEntry, ...productHistory]);
+          return; 
+        } catch (e) { 
+          setIsOffline(true); 
+        }
+      }
+      
+      // Offline mode
+      updateBackend({ 
+        ...data, 
+        products: data.products.map(p => p.id === id ? { ...p, ...updates } : p),
+      });
+      setProductHistory([historyEntry, ...productHistory]);
     },
     deleteProduct: async (id) => {
         if (!isOffline) { try { await api.deleteProduct(id); refreshData(); return; } catch (e) { setIsOffline(true); } }
@@ -100,16 +202,16 @@ export const useBackend = () => {
     },
     placeOrder: (customerInfo, items, paymentMethod, shippingInfo, voucherCode, usePoints) => {
         const subtotal = items.reduce((sum, item) => {
-             let price = item.price;
-             if(item.selectedVariantId) {
-                 const v = item.variants.find(v => v.id === item.selectedVariantId);
-                 if(v) price = v.price;
-             }
-             if (item.discount > 0) {
-                 if (item.discountType === 'FIXED') price = Math.max(0, price - item.discount);
-                 else price = Math.max(0, price * (1 - item.discount / 100));
-             }
-             return sum + (price * item.quantity);
+              let price = item.price;
+              if(item.selectedVariantId) {
+                  const v = item.variants.find(v => v.id === item.selectedVariantId);
+                  if(v) price = v.price;
+              }
+              if (item.discount > 0) {
+                  if (item.discountType === 'FIXED') price = Math.max(0, price - item.discount);
+                  else price = Math.max(0, price * (1 - item.discount / 100));
+              }
+              return sum + (price * item.quantity);
         }, 0);
 
         let voucherDiscount = 0;
@@ -160,11 +262,20 @@ export const useBackend = () => {
             api.placeOrder(newOrder).then(() => refreshData()).catch(() => setIsOffline(true));
         }
         updateBackend({ ...data, orders: [...data.orders, newOrder], vouchers: updatedVouchers });
+        toast.success('Đặt hàng thành công! Mã đơn: ' + newOrder.id);
         return newOrder;
     },
     updateOrderStatus: async (id, status, userId) => {
         if (!isOffline) { try { await api.updateOrderStatus(id, status, userId); refreshData(); return; } catch (e) { setIsOffline(true); } }
         updateBackend({ ...data, orders: data.orders.map(o => o.id === id ? { ...o, status, processedBy: userId } : o) });
+        toast.info(`Đơn hàng #${id} → ${status}`);
+    },
+    updateOrderNotes: async (id, internalNotes, customerNotes) => {
+        if (!isOffline) { try { await api.updateOrderNotes(id, internalNotes, customerNotes); refreshData(); return; } catch (e) { setIsOffline(true); } }
+        // Offline fallback
+        const updatedOrders = data.orders.map(o => o.id === id ? { ...o, internalNotes, customerNotes, updatedAt: new Date().toISOString() } : o);
+        updateBackend({ ...data, orders: updatedOrders });
+        toast.success('Đã lưu ghi chú đơn hàng');
     },
     addCategory: async (category) => {
         if (!isOffline) { try { await api.addCategory(category); refreshData(); return; } catch (e) { setIsOffline(true); } }
@@ -271,7 +382,68 @@ export const useBackend = () => {
         }
         updateBackend({ ...data, settings: { ...data.settings, ...settings } });
     },
-    refresh: refreshData
+    addReview: async (review: Omit<Review, 'id' | 'createdAt' | 'updatedAt'>) => {
+      const newReview: Review = {
+        ...review,
+        id: `rev_${Date.now()}`,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      if (!isOffline) { try { await api.addReview(newReview); refreshData(); return; } catch (e) { setIsOffline(true); } }
+      setReviews([newReview, ...reviews]);
+    },
+    replyToReview: async (reviewId: string, reply: string) => {
+      if (!isOffline) { try { await api.replyToReview(reviewId, reply); refreshData(); return; } catch (e) { setIsOffline(true); } }
+      setReviews(reviews.map(r => 
+        r.id === reviewId 
+          ? { ...r, reply, replyDate: new Date().toISOString(), updatedAt: new Date().toISOString() }
+          : r
+      ));
+    },
+    toggleReviewHidden: async (reviewId: string) => {
+      if (!isOffline) { try { await api.toggleReviewHidden(reviewId); refreshData(); return; } catch (e) { setIsOffline(true); } }
+      setReviews(reviews.map(r =>
+        r.id === reviewId
+          ? { ...r, isHidden: !r.isHidden, updatedAt: new Date().toISOString() }
+          : r
+      ));
+    },
+    createRefund: async (refund: Omit<Refund, 'id' | 'requestDate'>) => {
+      const newRefund: Refund = {
+        ...refund,
+        id: `ref_${Date.now()}`,
+        requestDate: new Date().toISOString()
+      };
+      if (!isOffline) { try { await api.createRefund(newRefund); refreshData(); return; } catch (e) { setIsOffline(true); } }
+      updateBackend({ ...data, refunds: [newRefund, ...data.refunds] });
+    },
+    updateRefundStatus: async (id: string, status: Refund['status'], processedBy?: string) => {
+      if (!isOffline) { try { await api.updateRefundStatus(id, status, processedBy); refreshData(); return; } catch (e) { setIsOffline(true); } }
+      const updatedRefunds = data.refunds.map(ref => {
+        if (ref.id === id) {
+          const updates: Partial<Refund> = { status };
+          if (status === 'PROCESSING' && !ref.processedDate) {
+            updates.processedDate = new Date().toISOString();
+          }
+          if (status === 'COMPLETED' && !ref.completedDate) {
+            updates.completedDate = new Date().toISOString();
+          }
+          if (processedBy) {
+            updates.processedBy = processedBy;
+          }
+          return { ...ref, ...updates };
+        }
+        return ref;
+      });
+      updateBackend({ ...data, refunds: updatedRefunds });
+    },
+    deleteRefund: async (id: string) => {
+      if (!isOffline) { try { await api.deleteRefund(id); refreshData(); return; } catch (e) { setIsOffline(true); } }
+      updateBackend({ ...data, refunds: data.refunds.filter(ref => ref.id !== id) });
+    },
+    refresh: refreshData,
+    productHistory,
+    reviews
   };
 
   return { backend, isLoading, isOffline, currentUser, setCurrentUser };

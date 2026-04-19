@@ -2,11 +2,10 @@
 
 <div align="center">
   <h1>UniShop</h1>
-  <p>Modern e-commerce platform built with React, Node.js, and MongoDB</p>
+  <p>Modern e-commerce platform built with React and a Go backend</p>
   
   ![React](https://img.shields.io/badge/React-18.2.0-blue)
-  ![Node.js](https://img.shields.io/badge/Node.js-18-green)
-  ![MongoDB](https://img.shields.io/badge/MongoDB-6.0-green)
+  ![Go](https://img.shields.io/badge/Go-1.22%2B-00ADD8)
   ![Vercel](https://img.shields.io/badge/Deploy-Vercel-black)
 </div>
 
@@ -30,23 +29,16 @@
 - **Recharts** - Analytics
 
 ### Backend
-- **Node.js** - Runtime
-- **Express.js** - API Framework
-- **MongoDB** - Database
-- **Mongoose** - ODM
-- **Nodemailer** - Email Service
-- **bcrypt** - Password Hashing
+- **Go** - API server (`backend-go/`)
 
 ### Deployment
-- **Vercel** - Frontend & Serverless Functions
-- **MongoDB Atlas** - Database Hosting
+- **Vercel** - Frontend (static)
 
 ## 📦 Installation
 
 ### Prerequisites
 - Node.js 18+
-- MongoDB Atlas account
-- Gmail account (for email service)
+- Go 1.22+
 
 ### Local Setup
 
@@ -69,8 +61,8 @@ cp .env.example .env
 
 4. **Start development servers**
 ```bash
-# Terminal 1 - Backend
-npm run server
+# Terminal 1 - Backend (Go)
+npm run backend
 
 # Terminal 2 - Frontend  
 npm run dev
@@ -79,16 +71,8 @@ npm run dev
 ## 🔧 Environment Variables
 
 ```env
-# Database
-MONGODB_URI=mongodb://localhost:27017/unishop
-
-# Email Service
-EMAIL_USER=your-email@gmail.com
-EMAIL_PASS=your-app-password
-
-# Server
+# Frontend-only / local development
 NODE_ENV=development
-PORT=5000
 ```
 
 ## 📱 Usage
@@ -142,11 +126,8 @@ unishop/
 │   ├── auth/           # Authentication components
 │   ├── store/          # Store components
 │   └── admin/          # Admin components
-├── server/             # Backend server
-│   ├── controllers/    # API controllers
-│   ├── models/         # Database models
-│   ├── routes/         # API routes
-│   └── config/         # Server config
+├── backend-go/          # Go backend (new)
+├── docs/                # Documentation
 ├── services/           # Utility services
 ├── hooks/              # Custom React hooks
 ├── types.ts            # TypeScript types

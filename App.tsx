@@ -1,68 +1,42 @@
-
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { useBackend } from './hooks/useBackend';
-import { Customer, Employee } from './types';
+import { Customer } from './types';
 import Storefront from './components/store/Storefront';
-import AdminDashboard from './components/admin/AdminDashboard';
-import PortalPage from './components/PortalPage';
-import LoginPage from './components/auth/LoginPage';
-import AdminLogin from './components/auth/AdminLogin';
 import StoreLogin from './components/auth/StoreLogin';
 import RegisterPage from './components/auth/RegisterPage';
 import ForgotPasswordPage from './components/auth/ForgotPasswordPage';
 import VerifyEmailPage from './components/auth/VerifyEmailPage';
-import Level2PasswordModal from './components/auth/Level2PasswordModal';
 import { Loader2, WifiOff } from 'lucide-react';
+import ToastContainer from './components/ui/ToastContainer';
 import { api } from './services/apiClient';
-import { authStorage } from './services/authStorage';
+import { storeAuthStorage } from './services/authStorage';
 
 // --- MAIN APP CONTROLLER ---
 const AppController: React.FC = () => {
   const { backend, isLoading, isOffline, currentUser, setCurrentUser } = useBackend();
   const [loginMessage, setLoginMessage] = useState<{type: 'success' | 'error', text: string} | null>(null);
   const [pendingRegistration, setPendingRegistration] = useState<Omit<Customer, 'id' | 'joinedAt' | 'status'> | null>(null);
-  
-  // Admin Specific State
-  const [isL2AuthRequired, setIsL2AuthRequired] = useState(false);
 
-  // Check for existing session on mount
+  // Restore ONLY customer sessions (store users)
   useEffect(() => {
-    const session = authStorage.getSession();
-    if (session && !currentUser) {
+    const session = storeAuthStorage.getSession();
+    if (session?.user && !('role' in session.user) && !currentUser) {
       setCurrentUser(session.user);
     }
-  }, [currentUser, setCurrentUser]);
+  }, []);
 
-  // Setup tab close listener for session cleanup
   useEffect(() => {
-    const cleanup = authStorage.setupTabCloseListener(() => {
-      backend.logout();
-    });
-    
+    const cleanup = storeAuthStorage.setupTabCloseListener(backend.logout);
     return cleanup;
   }, [backend]);
 
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Handle L2 Auth Check for Admin
+  // Navigate to store after login
   React.useEffect(() => {
-      if (currentUser && 'role' in currentUser && location.pathname.startsWith('/admin')) {
-          const emp = currentUser as Employee;
-          if ((emp.level2PasswordAttempts || 0) < 5 && emp.level2Password) {
-             // Logic to show L2 modal is handled in the AdminRoute wrapper or below
-             // Tạm thời tắt yêu cầu nhập MK cấp 2
-             // setIsL2AuthRequired(true);
-          }
-      }
-  }, [currentUser, location]);
-
-  // Navigate to Portal after Login
-  React.useEffect(() => {
-    if (currentUser && location.pathname === '/admin/login') {
-      navigate('/portal');
-    } else if (currentUser && location.pathname === '/login') {
+    if (currentUser && location.pathname === '/login') {
       navigate('/store');
     }
   }, [currentUser, location.pathname, navigate]);
@@ -76,41 +50,14 @@ const AppController: React.FC = () => {
       );
   }
 
-  const isEmployee = currentUser && 'role' in currentUser;
-
-  // --- Protected Route Wrappers ---
   const ProtectedRoute = ({ children }: { children: React.ReactElement }) => {
       if (!currentUser) return <Navigate to="/login" replace />;
-        return children;
-  };
-
-  const AdminRoute = ({ children }: { children: React.ReactElement }) => {
-      if (!currentUser) return <Navigate to="/login" replace />;
-      if (!isEmployee) return <Navigate to="/portal" replace />;
-      
-      // L2 Auth Intercept
-      if (isL2AuthRequired) {
-          return (
-            <Level2PasswordModal 
-                user={currentUser as Employee}
-                backend={backend}
-                onSuccess={() => {
-                    backend.resetLevel2PasswordAttempts(currentUser.id);
-                    setIsL2AuthRequired(false);
-                }}
-                onFailure={() => {
-                    setIsL2AuthRequired(false);
-                    backend.logout();
-                }}
-                onCancel={() => navigate('/portal')}
-            />
-          );
-      }
       return children;
   };
 
   return (
     <>
+      <ToastContainer />
       {isOffline && (
           <div className="bg-amber-100 text-amber-800 px-4 py-2 text-sm text-center font-bold flex justify-center items-center gap-2 sticky top-0 z-[100] shadow-sm">
               <WifiOff size={16} /> Chế độ Offline: Không thể kết nối đến máy chủ.
@@ -120,15 +67,7 @@ const AppController: React.FC = () => {
       <Routes>
         {/* === PUBLIC ROUTES === */}
         <Route path="/" element={<Navigate to="/store" replace />} />
-        
-        <Route path="/admin/login" element={
-            <AdminLogin 
-                backend={backend} 
-                message={loginMessage} 
-                onClearMessage={() => setLoginMessage(null)}
-            />
-        } />
-        
+
         <Route path="/login" element={
             <StoreLogin 
                 backend={backend} 
@@ -184,41 +123,17 @@ const AppController: React.FC = () => {
         
         <Route path="/forgot-password" element={<ForgotPasswordPage onNavigate={() => navigate('/login')} />} />
 
-        {/* === PORTAL (Logged In) === */}
-        <Route path="/portal" element={
-            <ProtectedRoute>
-                <PortalPage 
-                    user={currentUser!} 
-                    onNavigate={(path) => navigate(path)}
-                    onLogout={backend.logout}
-                />
-            </ProtectedRoute>
-        } />
-
-        {/* === ADMIN APP === */}
-        <Route path="/admin/*" element={
-            <AdminRoute>
-                <AdminDashboard 
-                    backend={backend} 
-                    onExit={() => navigate('/portal')} 
-                />
-            </AdminRoute>
-        } />
-
-        {/* === STOREFRONT (Public but aware of user) === */}
+        {/* === STOREFRONT === */}
         <Route path="/store/*" element={
-            <Storefront 
-                backend={backend} 
-                onExit={() => {
-                    // If employee, go back to portal. If customer, logout.
-                    if (isEmployee) navigate('/portal');
-                    else backend.logout();
-                }} 
-                currentUser={currentUser}
+            <Storefront
+                backend={backend}
+                onExit={backend.logout}
+                currentUser={currentUser as Customer | null}
             />
         } />
 
         {/* Fallback */}
+        <Route path="/" element={<Navigate to="/store" replace />} />
         <Route path="*" element={<Navigate to="/store" replace />} />
       </Routes>
     </>
@@ -227,7 +142,7 @@ const AppController: React.FC = () => {
 
 const App: React.FC = () => {
     return (
-        <BrowserRouter>
+        <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
             <AppController />
         </BrowserRouter>
     );

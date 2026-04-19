@@ -2,12 +2,50 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(100%); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.25s ease-out forwards;
+}
+
+@layer base {
+  html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    min-height: 100dvh;
+    overflow-x: hidden;
+  }
+}
+
+/* Scale nhẹ cho 4K, không scale 2K */
+@media (min-width: 3840px) {
+  html { zoom: 1.5; }
+}
+
 @layer utilities {
-    .scrollbar-hide::-webkit-scrollbar {
-        display: none;
-    }
-    .scrollbar-hide {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-    }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Fluid container that grows on large screens */
+  .container-fluid {
+    width: 100%;
+    max-width: min(1400px, 90vw);
+    margin-inline: auto;
+    padding-inline: clamp(1rem, 3vw, 3rem);
+  }
 }
