@@ -25,6 +25,9 @@ func Setup(r *gin.Engine, db *mongo.Database, cfg *config.Config) {
 	reviewH := handlers.NewReviewHandler(db)
 	emailCampaignH := handlers.NewEmailCampaignHandler(db)
 	forecastH := handlers.NewForecastHandler(db)
+	supplierH := handlers.NewSupplierHandler(db)
+	purchaseOrderH := handlers.NewPurchaseOrderHandler(db)
+	warehouseH := handlers.NewWarehouseHandler(db)
 
 	api := r.Group("/api")
 
@@ -53,6 +56,7 @@ func Setup(r *gin.Engine, db *mongo.Database, cfg *config.Config) {
 
 	// Public product & category reads
 	api.GET("/products", productH.List)
+	api.GET("/products/barcode/:code", productH.GetByBarcode)
 	api.GET("/products/:id", productH.GetByID)
 	api.GET("/categories", categoryH.List)
 	api.GET("/categories/:id", categoryH.GetByID)
@@ -116,6 +120,9 @@ func Setup(r *gin.Engine, db *mongo.Database, cfg *config.Config) {
 
 		// Inventory
 		protected.POST("/inventory/adjust", inventoryH.Adjust)
+		protected.POST("/inventory/transfer", inventoryH.Transfer)
+		protected.POST("/inventory/stock-take", inventoryH.RecordStockTake)
+		protected.GET("/inventory/discrepancies", inventoryH.Discrepancies)
 		protected.GET("/inventory/logs", inventoryH.Logs)
 		protected.GET("/inventory/forecast", forecastH.GetForecast)
 		protected.POST("/inventory/daily-sales", forecastH.RecordDailySales)
@@ -151,5 +158,22 @@ func Setup(r *gin.Engine, db *mongo.Database, cfg *config.Config) {
 		protected.POST("/email-campaigns/create", emailCampaignH.Create)
 		protected.POST("/email-campaigns/:id/send", emailCampaignH.Send)
 		protected.DELETE("/email-campaigns/:id", emailCampaignH.Delete)
+
+		// Suppliers
+		protected.GET("/suppliers", supplierH.List)
+		protected.POST("/suppliers", supplierH.Create)
+		protected.PUT("/suppliers/:id", supplierH.Update)
+		protected.DELETE("/suppliers/:id", supplierH.Delete)
+
+		// Purchase Orders
+		protected.GET("/purchase-orders", purchaseOrderH.List)
+		protected.POST("/purchase-orders", purchaseOrderH.Create)
+		protected.PUT("/purchase-orders/:id/status", purchaseOrderH.UpdateStatus)
+
+		// Warehouses
+		protected.GET("/warehouses", warehouseH.List)
+		protected.POST("/warehouses", warehouseH.Create)
+		protected.PUT("/warehouses/:id", warehouseH.Update)
+		protected.DELETE("/warehouses/:id", warehouseH.Delete)
 	}
 }

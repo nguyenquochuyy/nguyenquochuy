@@ -46,6 +46,10 @@ func (h *StateHandler) Get(c *gin.Context) {
 	reviews := []models.Review{}
 	refunds := []models.Refund{}
 	productHistory := []models.ProductHistory{}
+	suppliers := []models.Supplier{}
+	purchaseOrders := []models.PurchaseOrder{}
+	warehouses := []models.Warehouse{}
+	stockTakes := []models.StockTake{}
 	var settings models.StoreSettings
 
 	_ = fetch("products", &products)
@@ -60,6 +64,10 @@ func (h *StateHandler) Get(c *gin.Context) {
 	_ = fetch("reviews", &reviews)
 	_ = fetch("refunds", &refunds)
 	_ = fetch("productHistory", &productHistory)
+	_ = fetch("suppliers", &suppliers)
+	_ = fetch("purchase_orders", &purchaseOrders)
+	_ = fetch("warehouses", &warehouses)
+	_ = fetch("stock_takes", &stockTakes)
 	_ = h.db.Collection("settings").FindOne(ctx, bson.M{}).Decode(&settings)
 
 	utils.OK(c, gin.H{
@@ -75,6 +83,10 @@ func (h *StateHandler) Get(c *gin.Context) {
 		"reviews":         reviews,
 		"refunds":         refunds,
 		"productHistory":  productHistory,
+		"suppliers":       suppliers,
+		"purchaseOrders":  purchaseOrders,
+		"warehouses":      warehouses,
+		"stockTakes":      stockTakes,
 		"settings":        settings,
 	})
 }

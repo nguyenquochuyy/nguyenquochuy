@@ -9,9 +9,15 @@ import (
 type ProductVariant struct {
 	ID    string  `bson:"id" json:"id"`
 	Name  string  `bson:"name" json:"name"`
-	SKU   string  `bson:"sku" json:"sku"`
-	Price float64 `bson:"price" json:"price"`
-	Stock int     `bson:"stock" json:"stock"`
+	SKU     string  `bson:"sku" json:"sku"`
+	Barcode string  `bson:"barcode" json:"barcode"`
+	Price   float64 `bson:"price" json:"price"`
+	Stock   int     `bson:"stock" json:"stock"`
+}
+
+type ProductInventory struct {
+	WarehouseID string `bson:"warehouseId" json:"warehouseId"`
+	Quantity    int    `bson:"quantity" json:"quantity"`
 }
 
 type Product struct {
@@ -25,7 +31,9 @@ type Product struct {
 	DiscountType string             `bson:"discountType" json:"discountType"` // PERCENT | FIXED
 	Stock        int                `bson:"stock" json:"stock"`
 	SKU          string             `bson:"sku" json:"sku"`
+	Barcode      string             `bson:"barcode" json:"barcode"`
 	Description  string             `bson:"description" json:"description"`
+	Inventory    []ProductInventory `bson:"inventory" json:"inventory"`
 	Images       []string           `bson:"images" json:"images"`
 	IsVisible    bool               `bson:"isVisible" json:"isVisible"`
 	HasVariants  bool               `bson:"hasVariants" json:"hasVariants"`

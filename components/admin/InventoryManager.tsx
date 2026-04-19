@@ -2,9 +2,13 @@ import React, { useState, useMemo } from 'react';
 import { BackendContextType, Language, formatCurrency, Product } from '../../types';
 import { TRANSLATIONS } from '../../services/translations';
 import StockForecasting from './StockForecasting';
+import BarcodeScanner from './BarcodeScanner';
+import SupplierManager from './SupplierManager';
+import WarehouseManager from './WarehouseManager';
+import StockTakeManager from './StockTakeManager';
 import { 
     Package, Search, Plus, Filter, FileText, ArrowDown, ArrowUp, AlertTriangle, 
-    Download, Calendar, History, Box, ChevronDown, Check, FileDown, ArrowRight, TrendingDown
+    Download, Calendar, History, Box, ChevronDown, Check, FileDown, ArrowRight, TrendingDown, ScanLine, Truck, Building2, ClipboardCheck
 } from 'lucide-react';
 
 interface InventoryManagerProps {
@@ -16,8 +20,9 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
   const t = TRANSLATIONS[lang];
   const { state, adjustStock } = backend;
   
-  const [activeTab, setActiveTab] = useState<'stock' | 'history'>('stock');
+  const [activeTab, setActiveTab] = useState<'stock' | 'history' | 'suppliers' | 'warehouses' | 'stocktake'>('stock');
   const [showForecast, setShowForecast] = useState(false);
+  const [showScanner, setShowScanner] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState<'ALL' | 'IN' | 'OUT'>('ALL');
   
@@ -302,8 +307,8 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
                       </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 text-sm">
-                      {filteredLogs.map(log => (
-                          <tr key={log.id} className="hover:bg-slate-50">
+                      {filteredLogs.map((log, idx) => (
+                          <tr key={log.id || `log-${idx}`} className="hover:bg-slate-50">
                               <td className="px-6 py-4 text-slate-500">
                                   {new Date(log.createdAt).toLocaleString()}
                               </td>
@@ -451,9 +456,38 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
                     <TrendingDown size={18} /> Dự Báo Tồn Kho
                     {lowStockItems > 0 && <span className="absolute -top-1 -right-2 w-4 h-4 bg-rose-500 text-white text-[10px] rounded-full flex items-center justify-center font-bold">{lowStockItems}</span>}
                 </button>
+                <button 
+                    onClick={() => setActiveTab('suppliers')}
+                    className={`pb-3 font-bold text-sm flex items-center gap-2 transition-all relative ${activeTab === 'suppliers' ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-700'}`}
+                >
+                    <Truck size={18} /> Nhà cung cấp
+                    {activeTab === 'suppliers' && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 rounded-t-full"></div>}
+                </button>
+                <button 
+                    onClick={() => setActiveTab('warehouses')}
+                    className={`pb-3 font-bold text-sm flex items-center gap-2 transition-all relative ${activeTab === 'warehouses' ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-700'}`}
+                >
+                    <Building2 size={18} /> Kho hàng
+                    {activeTab === 'warehouses' && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 rounded-t-full"></div>}
+                </button>
+                <button 
+                    onClick={() => setActiveTab('stocktake')}
+                    className={`pb-3 font-bold text-sm flex items-center gap-2 transition-all relative ${activeTab === 'stocktake' ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-700'}`}
+                >
+                    <ClipboardCheck size={18} /> Kiểm kê
+                    {activeTab === 'stocktake' && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 rounded-t-full"></div>}
+                </button>
             </div>
 
+            {activeTab !== 'suppliers' && activeTab !== 'warehouses' && activeTab !== 'stocktake' && (
             <div className="flex gap-3 w-full sm:w-auto">
+                <button
+                    onClick={() => setShowScanner(true)}
+                    className="flex items-center gap-2 px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg border border-slate-200 transition-colors font-bold text-sm"
+                    title="Quét mã vạch"
+                >
+                    <ScanLine size={16} /> Quét
+                </button>
                 <div className="relative flex-1 sm:w-64">
                     <Search className="absolute left-3 top-2.5 text-slate-400" size={16} />
                     <input 
@@ -479,6 +513,7 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
                     </div>
                 )}
             </div>
+            )}
         </div>
 
         {/* Content */}
@@ -585,8 +620,77 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
             </div>
         )}
 
+        {/* Suppliers Tab */}
+        {activeTab === 'suppliers' && (
+            <SupplierManager 
+                suppliers={state.suppliers || []} 
+                purchaseOrders={state.purchaseOrders || []} 
+                products={state.products || []}
+                onAddSupplier={async (data) => {
+                    await fetch('/api/suppliers', { method: 'POST', body: JSON.stringify(data), headers: {'Content-Type': 'application/json'} });
+                }}
+                onUpdateSupplier={async (id, data) => {
+                    await fetch(`/api/suppliers/${id}`, { method: 'PUT', body: JSON.stringify(data), headers: {'Content-Type': 'application/json'} });
+                }}
+                onDeleteSupplier={async (id) => {
+                    await fetch(`/api/suppliers/${id}`, { method: 'DELETE' });
+                }}
+                onCreatePO={async (data) => {
+                    await fetch('/api/purchase-orders', { method: 'POST', body: JSON.stringify(data), headers: {'Content-Type': 'application/json'} });
+                }}
+                onUpdatePOStatus={async (id, status) => {
+                    await fetch(`/api/purchase-orders/${id}/status`, { method: 'PUT', body: JSON.stringify({ status }), headers: {'Content-Type': 'application/json'} });
+                }}
+            />
+        )}
+
+        {/* Warehouses Tab */}
+        {activeTab === 'warehouses' && (
+            <WarehouseManager 
+                warehouses={state.warehouses || []}
+                products={state.products || []}
+                onAddWarehouse={async (data) => {
+                    await fetch('/api/warehouses', { method: 'POST', body: JSON.stringify(data), headers: {'Content-Type': 'application/json'} });
+                }}
+                onUpdateWarehouse={async (id, data) => {
+                    await fetch(`/api/warehouses/${id}`, { method: 'PUT', body: JSON.stringify(data), headers: {'Content-Type': 'application/json'} });
+                }}
+                onDeleteWarehouse={async (id) => {
+                    await fetch(`/api/warehouses/${id}`, { method: 'DELETE' });
+                }}
+                onTransfer={async (data) => {
+                    await fetch('/api/inventory/transfer', { method: 'POST', body: JSON.stringify(data), headers: {'Content-Type': 'application/json'} });
+                }}
+            />
+        )}
+
+        {/* Stock Take Tab */}
+        {activeTab === 'stocktake' && (
+            <StockTakeManager 
+                stockTakes={state.stockTakes || []}
+                products={state.products || []}
+                onRecordStockTake={async (data) => {
+                    await fetch('/api/inventory/stock-take', { 
+                        method: 'POST', 
+                        body: JSON.stringify({...data, performedBy: 'admin'}), 
+                        headers: {'Content-Type': 'application/json'} 
+                    });
+                }}
+            />
+        )}
+
         {/* Stock Forecasting Modal */}
         {showForecast && <StockForecasting onClose={() => setShowForecast(false)} />}
+
+        {/* Barcode Scanner Modal */}
+        {showScanner && (
+            <BarcodeScanner 
+                onClose={() => setShowScanner(false)} 
+                onProductFound={(product) => {
+                    setSearchTerm(product.barcode || product.sku || product.name);
+                }} 
+            />
+        )}
     </div>
   );
 };

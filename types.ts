@@ -17,6 +17,7 @@ export interface ProductVariant {
   id: string;
   name: string;
   sku: string;
+  barcode?: string;
   price: number;
   stock: number;
 }
@@ -31,6 +32,7 @@ export interface Product {
   discountType: 'PERCENT' | 'FIXED';
   stock: number;
   sku: string;
+  barcode?: string;
   description: string;
   images: string[];
   isVisible: boolean;
@@ -255,6 +257,64 @@ export interface StoreSettings {
   staff: { allowDelete: boolean; maxDiscount: number };
 }
 
+export interface Supplier {
+  id: string;
+  name: string;
+  contact: string;
+  email: string;
+  phone: string;
+  address: string;
+  status: 'ACTIVE' | 'INACTIVE';
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PurchaseOrderItem {
+  productId: string;
+  productName: string;
+  quantity: number;
+  unitCost: number;
+  totalCost: number;
+}
+
+export interface PurchaseOrder {
+  id: string;
+  supplierId: string;
+  supplierName: string;
+  items: PurchaseOrderItem[];
+  totalAmount: number;
+  status: 'PENDING' | 'PROCESSING' | 'COMPLETED' | 'CANCELLED';
+  notes: string;
+  expectedDate?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Warehouse {
+  id: string;
+  name: string;
+  address: string;
+  manager: string;
+  phone: string;
+  status: 'ACTIVE' | 'INACTIVE';
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface StockTake {
+  id: string;
+  productId: string;
+  variantId?: string;
+  productName: string;
+  variantName?: string;
+  expected: number;
+  actual: number;
+  difference: number;
+  note: string;
+  performedBy: string;
+  createdAt: string;
+}
+
 export interface BackendState {
   products: Product[];
   orders: Order[];
@@ -270,6 +330,10 @@ export interface BackendState {
   productHistory: ProductHistory[];
   reviews: Review[];
   refunds: Refund[];
+  suppliers: Supplier[];
+  purchaseOrders: PurchaseOrder[];
+  warehouses: Warehouse[];
+  stockTakes: StockTake[];
   settings: StoreSettings;
 }
 

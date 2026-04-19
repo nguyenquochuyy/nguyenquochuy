@@ -139,6 +139,26 @@ func (h *ProductHandler) GetByID(c *gin.Context) {
 	utils.OK(c, product)
 }
 
+// GET /api/products/barcode/:code
+func (h *ProductHandler) GetByBarcode(c *gin.Context) {
+	code := c.Param("code")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	var product models.Product
+	err := h.col.FindOne(ctx, bson.M{"barcode": code}).Decode(&product)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			utils.NotFound(c, "Không tìm thấy sản phẩm với mã vạch này")
+			return
+		}
+		utils.InternalError(c, err)
+		return
+	}
+	utils.OK(c, product)
+}
+
 // POST /api/products
 func (h *ProductHandler) Create(c *gin.Context) {
 	var product models.Product
