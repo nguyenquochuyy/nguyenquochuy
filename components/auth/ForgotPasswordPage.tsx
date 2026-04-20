@@ -42,7 +42,7 @@ const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({ onNavigate }) =
             </p>
           </div>
           
-          <div className="space-y-4">
+          <div className="space-y-[15px]">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
                 <Send size={20} />
@@ -102,7 +102,7 @@ const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({ onNavigate }) =
                 </p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-[15px]">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">{t.email}</label>
                   <div className="relative">

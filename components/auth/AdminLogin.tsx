@@ -82,7 +82,7 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ backend, message, onClearMessag
             </div>
           )}
 
-          <form onSubmit={handleLogin} className="space-y-6">
+          <form onSubmit={handleLogin} className="space-y-[15px]">
             <div>
               <label className="block text-sm font-medium text-slate-300 mb-2">Email</label>
               <div className="relative">

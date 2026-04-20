@@ -41,7 +41,7 @@ const WishlistPage: React.FC<WishlistPageProps> = ({
                     </button>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-[15px]">
                     {wishlistProducts.map(product => {
                         const finalPrice = product.discount 
                             ? (product.discountType === 'FIXED' ? product.price - product.discount : product.price * (1 - product.discount / 100))

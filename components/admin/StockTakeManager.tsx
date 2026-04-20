@@ -66,7 +66,7 @@ const StockTakeManager: React.FC<Props> = ({ stockTakes, products, onRecordStock
             )}
             
             {(selectedProduct && (!product?.hasVariants || selectedVariant)) ? (
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-3 gap-[15px]">
                 <div className="bg-slate-50 p-3 rounded-lg border border-slate-200 text-center">
                   <span className="block text-xs text-slate-500 font-semibold mb-1">Tồn lý thuyết</span>
                   <span className="text-lg font-bold text-slate-800">{expectedStock}</span>
@@ -110,7 +110,7 @@ const StockTakeManager: React.FC<Props> = ({ stockTakes, products, onRecordStock
     <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 flex flex-col h-full animate-fade-in">
       <div className="flex justify-between items-center mb-6 border-b border-slate-200 pb-4">
         <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2"><ClipboardCheck className="text-indigo-600"/> Lịch sử Kiểm kê & Lệch kho</h2>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-[15px]">
             <div className="relative w-64">
                 <Search className="absolute left-3 top-2.5 text-slate-400" size={16} />
                 <input type="text" placeholder="Tìm tên sản phẩm, ghi chú..." className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm" value={search} onChange={e => setSearch(e.target.value)} />

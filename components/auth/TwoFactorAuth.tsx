@@ -139,7 +139,7 @@ const TwoFactorAuth: React.FC<TwoFactorAuthProps> = ({ user, onSuccess, onBack }
           )}
 
           {isCodeSent && (
-            <form onSubmit={handleVerify} className="space-y-6">
+            <form onSubmit={handleVerify} className="space-y-[15px]">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Mã xác thực 6 số</label>
                 <div className="relative">

@@ -114,7 +114,7 @@ const SettingsManager: React.FC<SettingsManagerProps> = ({ backend, lang }) => {
 
   const ToggleSwitch = ({ checked, onChange, label, subLabel, icon: Icon }: any) => (
       <div className={toggleContainerClass}>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-[15px]">
               {Icon && <div className="p-2.5 bg-slate-50 rounded-lg border border-slate-100 text-slate-600"><Icon size={24} /></div>}
               <div>
                   <p className="font-bold text-slate-800 text-base">{label}</p>
@@ -132,9 +132,9 @@ const SettingsManager: React.FC<SettingsManagerProps> = ({ backend, lang }) => {
       switch (activeTab) {
           case 'info':
               return (
-                  <div className="space-y-6 max-w-2xl">
+                  <div className="space-y-[15px] max-w-2xl">
                       <h3 className="text-lg font-bold text-slate-800 border-b border-slate-100 pb-2">{t.shopInfo}</h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-[15px]">
                           <div>
                               <label className={labelClass}>{t.shopName}</label>
                               <input type="text" className={inputClass} value={localSettings.shopInfo.name} onChange={e => updateSection('shopInfo', { name: e.target.value })} />
@@ -156,14 +156,14 @@ const SettingsManager: React.FC<SettingsManagerProps> = ({ backend, lang }) => {
               );
           case 'payment':
               return (
-                  <div className="space-y-8 max-w-2xl">
+                  <div className="space-y-[15px] max-w-2xl">
                       <div>
                           <h3 className="text-lg font-bold text-slate-800 border-b border-slate-100 pb-2 mb-4">{t.payment}</h3>
-                          <div className="space-y-4">
+                          <div className="space-y-[15px]">
                               <ToggleSwitch checked={localSettings.paymentMethods.cod} onChange={(e: any) => updateSection('paymentMethods', { cod: e.target.checked })} label={t.cashOnDelivery} subLabel={t.codSubLabel} icon={CreditCard} />
                               <ToggleSwitch checked={localSettings.paymentMethods.banking} onChange={(e: any) => updateSection('paymentMethods', { banking: e.target.checked })} label={t.bankTransfer} subLabel={t.bankTransferSubLabel} icon={DollarSign} />
                               <div className={toggleContainerClass}>
-                                  <div className="flex items-center gap-4">
+                                  <div className="flex items-center gap-[15px]">
                                       <div className="p-2.5 bg-pink-50 rounded-lg border border-pink-100"><div className="w-6 h-6 bg-pink-600 rounded flex items-center justify-center text-white text-[10px] font-bold">Mo</div></div>
                                       <div><p className="font-bold text-slate-800 text-base">{t.momoWallet}</p><p className="text-xs text-slate-500 font-medium">{t.momoSubLabel}</p></div>
                                   </div>
@@ -180,7 +180,7 @@ const SettingsManager: React.FC<SettingsManagerProps> = ({ backend, lang }) => {
                               <div className="space-y-3">
                                   {paymentAccounts.map(acc => (
                                       <div key={acc.id} className="p-4 bg-slate-50 border border-slate-200 rounded-xl flex justify-between items-center group hover:border-indigo-200 transition-all">
-                                          <div className="flex items-center gap-4">
+                                          <div className="flex items-center gap-[15px]">
                                               <div className="p-2 bg-white rounded-lg border border-slate-100 text-indigo-600"><Landmark size={20}/></div>
                                               <div><p className="font-bold text-slate-800 text-sm">{acc.bank}</p><p className="text-xs text-slate-500 font-mono mt-0.5">{acc.number}</p><p className="text-[10px] text-slate-400 uppercase font-bold mt-0.5">{acc.holder}</p></div>
                                           </div>
@@ -212,13 +212,13 @@ const SettingsManager: React.FC<SettingsManagerProps> = ({ backend, lang }) => {
                       )}
                   </div>
               );
-          case 'shipping': return (<div className="space-y-6 max-w-2xl"><h3 className="text-lg font-bold text-slate-800 border-b border-slate-100 pb-2">{t.shipping}</h3><div className="grid grid-cols-1 md:grid-cols-2 gap-6"><div><label className={labelClass}>{t.standardShippingFee}</label><div className="relative"><input type="number" className={inputClass} value={localSettings.shipping.standardFee} onChange={e => updateSection('shipping', { standardFee: parseInt(e.target.value) || 0 })} /><span className="absolute right-3 top-2.5 text-slate-400 text-sm font-bold">₫</span></div></div><div><label className={labelClass}>{t.freeShippingThreshold}</label><div className="relative"><input type="number" className={inputClass} value={localSettings.shipping.freeShipThreshold} onChange={e => updateSection('shipping', { freeShipThreshold: parseInt(e.target.value) || 0 })} /><span className="absolute right-3 top-2.5 text-slate-400 text-sm font-bold">₫</span></div></div></div></div>);
-          case 'inventory': return (<div className="space-y-6 max-w-2xl"><h3 className="text-lg font-bold text-slate-800 border-b border-slate-100 pb-2">{t.inventory}</h3><div className="grid grid-cols-1 gap-6"><div><label className={labelClass}>{t.lowStockThreshold}</label><input type="number" className={inputClass} value={localSettings.inventory.lowStockThreshold} onChange={e => updateSection('inventory', { lowStockThreshold: parseInt(e.target.value) || 0 })} /><p className="text-xs text-slate-500 mt-1">{t.lowStockAlert}</p></div><ToggleSwitch checked={localSettings.inventory.showOutOfStock} onChange={(e: any) => updateSection('inventory', { showOutOfStock: e.target.checked })} label={t.showOutOfStock} subLabel={t.showOutOfStockSubLabel} icon={Package}/></div></div>);
-          case 'orders': return (<div className="space-y-6 max-w-2xl"><h3 className="text-lg font-bold text-slate-800 border-b border-slate-100 pb-2">{t.orders}</h3><div className="space-y-6"><ToggleSwitch checked={localSettings.orders.autoConfirm} onChange={(e: any) => updateSection('orders', { autoConfirm: e.target.checked })} label={t.autoConfirmOrders} subLabel={t.autoConfirmSubLabel} icon={CheckCircle}/><div className="grid grid-cols-1 md:grid-cols-2 gap-6"><div><label className={labelClass}>{t.invoicePrefix}</label><input type="text" className={inputClass} value={localSettings.orders.invoicePrefix} onChange={e => updateSection('orders', { invoicePrefix: e.target.value })} /></div></div></div></div>);
+          case 'shipping': return (<div className="space-y-[15px] max-w-2xl"><h3 className="text-lg font-bold text-slate-800 border-b border-slate-100 pb-2">{t.shipping}</h3><div className="grid grid-cols-1 md:grid-cols-2 gap-[15px]"><div><label className={labelClass}>{t.standardShippingFee}</label><div className="relative"><input type="number" className={inputClass} value={localSettings.shipping.standardFee} onChange={e => updateSection('shipping', { standardFee: parseInt(e.target.value) || 0 })} /><span className="absolute right-3 top-2.5 text-slate-400 text-sm font-bold">₫</span></div></div><div><label className={labelClass}>{t.freeShippingThreshold}</label><div className="relative"><input type="number" className={inputClass} value={localSettings.shipping.freeShipThreshold} onChange={e => updateSection('shipping', { freeShipThreshold: parseInt(e.target.value) || 0 })} /><span className="absolute right-3 top-2.5 text-slate-400 text-sm font-bold">₫</span></div></div></div></div>);
+          case 'inventory': return (<div className="space-y-[15px] max-w-2xl"><h3 className="text-lg font-bold text-slate-800 border-b border-slate-100 pb-2">{t.inventory}</h3><div className="grid grid-cols-1 gap-[15px]"><div><label className={labelClass}>{t.lowStockThreshold}</label><input type="number" className={inputClass} value={localSettings.inventory.lowStockThreshold} onChange={e => updateSection('inventory', { lowStockThreshold: parseInt(e.target.value) || 0 })} /><p className="text-xs text-slate-500 mt-1">{t.lowStockAlert}</p></div><ToggleSwitch checked={localSettings.inventory.showOutOfStock} onChange={(e: any) => updateSection('inventory', { showOutOfStock: e.target.checked })} label={t.showOutOfStock} subLabel={t.showOutOfStockSubLabel} icon={Package}/></div></div>);
+          case 'orders': return (<div className="space-y-[15px] max-w-2xl"><h3 className="text-lg font-bold text-slate-800 border-b border-slate-100 pb-2">{t.orders}</h3><div className="space-y-[15px]"><ToggleSwitch checked={localSettings.orders.autoConfirm} onChange={(e: any) => updateSection('orders', { autoConfirm: e.target.checked })} label={t.autoConfirmOrders} subLabel={t.autoConfirmSubLabel} icon={CheckCircle}/><div className="grid grid-cols-1 md:grid-cols-2 gap-[15px]"><div><label className={labelClass}>{t.invoicePrefix}</label><input type="text" className={inputClass} value={localSettings.orders.invoicePrefix} onChange={e => updateSection('orders', { invoicePrefix: e.target.value })} /></div></div></div></div>);
           case 'finance': return (
-              <div className="space-y-6 max-w-2xl">
+              <div className="space-y-[15px] max-w-2xl">
                   <h3 className="text-lg font-bold text-slate-800 border-b border-slate-100 pb-2">{t.taxFinanceSettings}</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-[15px] p-4 bg-slate-50 rounded-xl border border-slate-200">
                       <div>
                           <label className={labelClass}>{t.taxRate}</label>
                           <div className="relative">
@@ -230,11 +230,11 @@ const SettingsManager: React.FC<SettingsManagerProps> = ({ backend, lang }) => {
                   </div>
               </div>
             );
-          case 'staff': return (<div className="space-y-6 max-w-2xl"><h3 className="text-lg font-bold text-slate-800 border-b border-slate-100 pb-2">{t.staff}</h3><div className="space-y-6"><ToggleSwitch checked={localSettings.staff.allowDelete} onChange={(e: any) => updateSection('staff', { allowDelete: e.target.checked })} label={t.allowStaffDelete} subLabel="Danger Zone: Enable staff to delete records." icon={Shield}/><div><label className={labelClass}>{t.maxStaffDiscount}</label><input type="number" className={inputClass} value={localSettings.staff.maxDiscount} onChange={e => updateSection('staff', { maxDiscount: parseInt(e.target.value) || 0 })} /></div></div></div>);
-          case 'notifications': return (<div className="space-y-6 max-w-2xl"><h3 className="text-lg font-bold text-slate-800 border-b border-slate-100 pb-2">{t.notifications}</h3><div className="space-y-4"><ToggleSwitch checked={localSettings.notifications.emailOnOrder} onChange={(e: any) => updateSection('notifications', { emailOnOrder: e.target.checked })} label={t.emailOnOrder} subLabel="Receive an email for every new order placed." icon={Mail}/><ToggleSwitch checked={localSettings.notifications.pushLowStock} onChange={(e: any) => updateSection('notifications', { pushLowStock: e.target.checked })} label={t.pushLowStock} subLabel="Get notified when items run low." icon={Smartphone}/></div></div>);
+          case 'staff': return (<div className="space-y-[15px] max-w-2xl"><h3 className="text-lg font-bold text-slate-800 border-b border-slate-100 pb-2">{t.staff}</h3><div className="space-y-[15px]"><ToggleSwitch checked={localSettings.staff.allowDelete} onChange={(e: any) => updateSection('staff', { allowDelete: e.target.checked })} label={t.allowStaffDelete} subLabel="Danger Zone: Enable staff to delete records." icon={Shield}/><div><label className={labelClass}>{t.maxStaffDiscount}</label><input type="number" className={inputClass} value={localSettings.staff.maxDiscount} onChange={e => updateSection('staff', { maxDiscount: parseInt(e.target.value) || 0 })} /></div></div></div>);
+          case 'notifications': return (<div className="space-y-[15px] max-w-2xl"><h3 className="text-lg font-bold text-slate-800 border-b border-slate-100 pb-2">{t.notifications}</h3><div className="space-y-[15px]"><ToggleSwitch checked={localSettings.notifications.emailOnOrder} onChange={(e: any) => updateSection('notifications', { emailOnOrder: e.target.checked })} label={t.emailOnOrder} subLabel="Receive an email for every new order placed." icon={Mail}/><ToggleSwitch checked={localSettings.notifications.pushLowStock} onChange={(e: any) => updateSection('notifications', { pushLowStock: e.target.checked })} label={t.pushLowStock} subLabel="Get notified when items run low." icon={Smartphone}/></div></div>);
           case 'security': return (
             <div className="space-y-12 max-w-3xl">
-                <div className="space-y-6">
+                <div className="space-y-[15px]">
                     <h3 className="text-lg font-bold text-slate-800 border-b border-slate-100 pb-2">{t.accountSecurity}</h3>
                     <ToggleSwitch checked={localSettings.security.enable2FA} onChange={(e: any) => updateSection('security', { enable2FA: e.target.checked })} label={t.enable2FA} subLabel="Require verification code on login." icon={Lock}/>
                     <div>
@@ -245,7 +245,7 @@ const SettingsManager: React.FC<SettingsManagerProps> = ({ backend, lang }) => {
                 </div>
                 
                 {currentUser.role === 'OWNER' && (
-                    <div className="space-y-6">
+                    <div className="space-y-[15px]">
                         <h3 className="text-lg font-bold text-slate-800 border-b border-slate-100 pb-2 flex items-center gap-2">
                             <ShieldAlert size={20} /> {t.level2Password}
                         </h3>

@@ -220,7 +220,7 @@ const StaffManager: React.FC<StaffManagerProps> = ({ backend, lang }) => {
                             {lang === 'vi' ? 'Bảo mật tài khoản bằng cách tạo mật khẩu mạnh.' : 'Secure your account by creating a strong password.'}
                         </p>
 
-                        <div className="space-y-4">
+                        <div className="space-y-[15px]">
                             <div>
                                 <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">{t.newPassword}</label>
                                 <input 
@@ -263,10 +263,10 @@ const StaffManager: React.FC<StaffManagerProps> = ({ backend, lang }) => {
   };
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto animate-fade-in-up">
+    <div className="space-y-[15px] max-w-7xl mx-auto animate-fade-in-up">
         {/* Header & Tabs */}
-        <div className="flex flex-col md:flex-row justify-between items-end gap-4 border-b border-slate-200 pb-2">
-            <div className="flex gap-6">
+        <div className="flex flex-col md:flex-row justify-between items-end gap-[15px] border-b border-slate-200 pb-2">
+            <div className="flex gap-[15px]">
                 <button 
                     onClick={() => setActiveTab('list')}
                     className={`pb-3 font-bold text-sm flex items-center gap-2 transition-all relative ${activeTab === 'list' ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-700'}`}
@@ -292,11 +292,11 @@ const StaffManager: React.FC<StaffManagerProps> = ({ backend, lang }) => {
 
         {/* LIST VIEW */}
         {activeTab === 'list' && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[15px]">
                 {state.employees.map(emp => (
                     <div key={emp.id} className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 relative overflow-hidden group hover:shadow-md transition-shadow">
                         <div className="flex justify-between items-start mb-4">
-                            <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-[15px]">
                                 <div className="w-12 h-12 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 font-bold text-lg border border-indigo-100">
                                     {emp.name.charAt(0)}
                                 </div>
@@ -384,8 +384,8 @@ const StaffManager: React.FC<StaffManagerProps> = ({ backend, lang }) => {
                         <h3 className="font-bold text-lg text-slate-900">{editingId ? t.editStaff : t.addStaff}</h3>
                         <button onClick={() => setIsModalOpen(false)}><X size={20} className="text-slate-400 hover:text-slate-600" /></button>
                     </div>
-                    <form onSubmit={handleSubmit} className="p-6 space-y-4">
-                        <div className="grid grid-cols-2 gap-4">
+                    <form onSubmit={handleSubmit} className="p-6 space-y-[15px]">
+                        <div className="grid grid-cols-2 gap-[15px]">
                              <div>
                                 <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">{t.name}</label>
                                 <div className="relative">
@@ -424,7 +424,7 @@ const StaffManager: React.FC<StaffManagerProps> = ({ backend, lang }) => {
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-2 gap-[15px]">
                             <div>
                                 <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">{t.role}</label>
                                 <select 

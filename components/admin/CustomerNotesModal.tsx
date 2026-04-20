@@ -88,7 +88,7 @@ const CustomerNotesModal: React.FC<CustomerNotesModalProps> = ({ isOpen, onClose
                 </div>
 
                 {/* Body */}
-                <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-white">
+                <div className="flex-1 overflow-y-auto p-6 space-y-[15px] bg-white">
                     {/* Add Note Form */}
                     <div className="bg-slate-50 rounded-xl p-4">
                         <textarea

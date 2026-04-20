@@ -102,7 +102,7 @@ const PrintLabelsModal: React.FC<PrintLabelsModalProps> = ({ orderId, onClose })
   };
 
   const renderShippingLabel = () => (
-    <div className="space-y-4">
+    <div className="space-y-[15px]">
       <div className="border-2 border-dashed border-slate-300 p-6 rounded-lg">
         <div className="flex justify-between items-start mb-4">
           <div>
@@ -133,7 +133,7 @@ const PrintLabelsModal: React.FC<PrintLabelsModalProps> = ({ orderId, onClose })
   );
 
   const renderPackingList = () => (
-    <div className="space-y-4">
+    <div className="space-y-[15px]">
       <div className="border-2 border-slate-300 p-6 rounded-lg">
         <div className="flex justify-between items-start mb-4 border-b pb-4">
           <div>
@@ -186,7 +186,7 @@ const PrintLabelsModal: React.FC<PrintLabelsModalProps> = ({ orderId, onClose })
   );
 
   const renderInvoice = () => (
-    <div className="space-y-4">
+    <div className="space-y-[15px]">
       <div className="border-2 border-slate-300 p-6 rounded-lg">
         <div className="flex justify-between items-start mb-6 border-b pb-4">
           <div>
@@ -201,7 +201,7 @@ const PrintLabelsModal: React.FC<PrintLabelsModalProps> = ({ orderId, onClose })
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 mb-6">
+        <div className="grid grid-cols-2 gap-[15px] mb-6">
           <div className="bg-slate-50 p-4 rounded">
             <h4 className="font-bold text-slate-900 mb-2">Thông tin khách hàng</h4>
             <p className="font-semibold">{labelData?.customerName}</p>

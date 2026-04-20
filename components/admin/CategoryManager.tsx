@@ -403,7 +403,7 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({ backend, lang }) => {
              )}
 
              {/* Stats Cards */}
-             <div className="grid grid-cols-2 gap-4 mb-8">
+             <div className="grid grid-cols-2 gap-[15px] mb-8">
                 <div className="bg-blue-50 p-4 rounded-xl border border-blue-100">
                    <div className="flex items-center gap-2 text-blue-600 mb-1">
                       <Box size={18} />
@@ -487,9 +487,9 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({ backend, lang }) => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6 animate-fade-in-up">
+    <div className="max-w-7xl mx-auto space-y-[15px] animate-fade-in-up">
        {/* Header */}
-       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-[15px]">
           <div>
               <h2 className="text-2xl font-bold text-slate-900">{t.categoryMgmt}</h2>
               <p className="text-slate-500 text-sm mt-1">{state.categories.length} {t.categoriesSubtitle} • {state.products.length} {t.productsAssigned}</p>
@@ -532,7 +532,7 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({ backend, lang }) => {
          </div>
        </div>
 
-       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+       <div className="grid grid-cols-1 lg:grid-cols-3 gap-[15px]">
           {/* Main Content: Category List */}
           <div className="lg:col-span-2">
              <div className="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">

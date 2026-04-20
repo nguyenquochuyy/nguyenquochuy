@@ -50,7 +50,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
       <div className="bg-white rounded-2xl w-full max-w-sm shadow-2xl p-6 transform transition-all scale-100">
-        <div className="flex items-start gap-4">
+        <div className="flex items-start gap-[15px]">
             <div className={`w-12 h-12 flex-shrink-0 ${selectedColor.bg} ${selectedColor.text} rounded-full flex items-center justify-center`}>
                 <AlertTriangle size={24} />
             </div>

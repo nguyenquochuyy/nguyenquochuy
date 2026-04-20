@@ -2,9 +2,11 @@ import React, { useState, useMemo } from 'react';
 import { BackendContextType, Language, formatCurrency, Transaction, Voucher } from '../../types';
 import { TRANSLATIONS } from '../../services/translations';
 import VoucherManager from './VoucherManager';
+import AdvancedFinanceReport from './AdvancedFinanceReport';
+import InvoiceManager from './InvoiceManager';
 import {
   DollarSign, TrendingUp, TrendingDown, Calendar, CreditCard, Plus, Filter,
-  ArrowUpRight, ArrowDownRight, Wallet, Banknote, Landmark, X, Save, BarChart3, Ticket
+  ArrowUpRight, ArrowDownRight, Wallet, Banknote, Landmark, X, Save, BarChart3, Ticket, FileText
 } from 'lucide-react';
 import { 
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, 
@@ -20,8 +22,8 @@ const FinanceManager: React.FC<FinanceManagerProps> = ({ backend, lang }) => {
   const t = TRANSLATIONS[lang];
   const { state, addTransaction, addVoucher, updateVoucher, deleteVoucher } = backend;
 
-  const [mainTab, setMainTab] = useState<'finance' | 'vouchers'>('finance');
-  const [activeTab, setActiveTab] = useState<'overview' | 'transactions' | 'accounts'>('overview');
+  const [mainTab, setMainTab] = useState<'finance' | 'vouchers' | 'invoices'>('finance');
+  const [activeTab, setActiveTab] = useState<'overview' | 'transactions' | 'accounts' | 'reports'>('overview');
   const [isModalOpen, setIsModalOpen] = useState(false);
   
   // Transaction Form State
@@ -92,7 +94,7 @@ const FinanceManager: React.FC<FinanceManagerProps> = ({ backend, lang }) => {
   };
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto animate-fade-in-up">
+    <div className="space-y-[15px] max-w-7xl mx-auto animate-fade-in-up">
         {/* Main Tab Switcher */}
         <div className="flex gap-2 border-b border-slate-200">
           <button
@@ -119,14 +121,26 @@ const FinanceManager: React.FC<FinanceManagerProps> = ({ backend, lang }) => {
               <Ticket size={18} /> Mã Giảm Giá
             </div>
           </button>
+          <button
+            onClick={() => setMainTab('invoices')}
+            className={`px-4 py-2 font-medium transition-colors border-b-2 ${
+              mainTab === 'invoices'
+                ? 'border-indigo-600 text-indigo-600'
+                : 'border-transparent text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              <FileText size={18} /> Hóa Đơn
+            </div>
+          </button>
         </div>
 
         {/* Finance Tab */}
         {mainTab === 'finance' && (
         <>
         {/* Header & Tabs */}
-        <div className="flex flex-col md:flex-row justify-between items-end gap-4 border-b border-slate-200 pb-2">
-            <div className="flex gap-6">
+        <div className="flex flex-col md:flex-row justify-between items-end gap-[15px] border-b border-slate-200 pb-2">
+            <div className="flex gap-[15px]">
                 <button 
                     onClick={() => setActiveTab('overview')}
                     className={`pb-3 font-bold text-sm flex items-center gap-2 transition-all relative ${activeTab === 'overview' ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-700'}`}
@@ -148,20 +162,29 @@ const FinanceManager: React.FC<FinanceManagerProps> = ({ backend, lang }) => {
                     <CreditCard size={18} /> {t.accounts}
                     {activeTab === 'accounts' && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 rounded-t-full"></div>}
                 </button>
+                <button 
+                    onClick={() => setActiveTab('reports')}
+                    className={`pb-3 font-bold text-sm flex items-center gap-2 transition-all relative ${activeTab === 'reports' ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-700'}`}
+                >
+                    <BarChart size={18} /> Báo cáo nâng cao
+                    {activeTab === 'reports' && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 rounded-t-full"></div>}
+                </button>
             </div>
-            <button 
-                onClick={() => setIsModalOpen(true)}
-                className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-indigo-700 transition-colors flex items-center gap-2 shadow-lg shadow-indigo-200"
-            >
-                <Plus size={16} /> {t.addTransaction}
-            </button>
+            {activeTab !== 'reports' && (
+                <button 
+                    onClick={() => setIsModalOpen(true)}
+                    className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-indigo-700 transition-colors flex items-center gap-2 shadow-lg shadow-indigo-200"
+                >
+                    <Plus size={16} /> {t.addTransaction}
+                </button>
+            )}
         </div>
 
         {/* Content */}
         {activeTab === 'overview' && (
-            <div className="space-y-6">
+            <div className="space-y-[15px]">
                 {/* KPI Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-[15px]">
                     <div className="bg-white p-6 rounded-2xl shadow-sm border border-emerald-100 flex items-center justify-between">
                         <div>
                             <p className="text-xs font-bold text-emerald-600 uppercase tracking-wide">{t.income}</p>
@@ -192,7 +215,7 @@ const FinanceManager: React.FC<FinanceManagerProps> = ({ backend, lang }) => {
                 </div>
 
                 {/* Charts */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-[15px]">
                     <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                         <h3 className="font-bold text-slate-800 mb-4">{t.cashFlow} {t.breakdownLabel}</h3>
                         <div className="h-64">
@@ -219,7 +242,7 @@ const FinanceManager: React.FC<FinanceManagerProps> = ({ backend, lang }) => {
                     </div>
                     <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                         <h3 className="font-bold text-slate-800 mb-4">{t.recentActivity}</h3>
-                        <div className="space-y-4">
+                        <div className="space-y-[15px]">
                             {state.transactions.slice(0, 5).map(tx => (
                                 <div key={tx.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
                                     <div className="flex items-center gap-3">
@@ -274,13 +297,13 @@ const FinanceManager: React.FC<FinanceManagerProps> = ({ backend, lang }) => {
         )}
 
         {activeTab === 'accounts' && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[15px]">
                 {state.financeAccounts.map(acc => (
                     <div key={acc.id} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 relative overflow-hidden group hover:shadow-md transition-all">
                         <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:scale-110 transition-transform">
                             <AccountIcon type={acc.type} />
                         </div>
-                        <div className="flex items-center gap-4 mb-4">
+                        <div className="flex items-center gap-[15px] mb-4">
                             <div className="p-3 bg-slate-50 rounded-xl">
                                 <AccountIcon type={acc.type} />
                             </div>
@@ -298,6 +321,10 @@ const FinanceManager: React.FC<FinanceManagerProps> = ({ backend, lang }) => {
             </div>
         )}
 
+        {activeTab === 'reports' && (
+            <AdvancedFinanceReport />
+        )}
+
         {/* Add Transaction Modal */}
         {isModalOpen && (
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in">
@@ -307,8 +334,8 @@ const FinanceManager: React.FC<FinanceManagerProps> = ({ backend, lang }) => {
                         <h3 className="font-bold text-lg text-slate-900">{t.addTransaction}</h3>
                         <button onClick={() => setIsModalOpen(false)}><X size={20} className="text-slate-400 hover:text-slate-600" /></button>
                     </div>
-                    <form onSubmit={handleSubmit} className="p-6 space-y-4">
-                        <div className="flex gap-4 p-1 bg-slate-100 rounded-xl">
+                    <form onSubmit={handleSubmit} className="p-6 space-y-[15px]">
+                        <div className="flex gap-[15px] p-1 bg-slate-100 rounded-xl">
                             <button
                                 type="button"
                                 onClick={() => setFormData({...formData, type: 'INCOME'})}
@@ -335,14 +362,17 @@ const FinanceManager: React.FC<FinanceManagerProps> = ({ backend, lang }) => {
                             />
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-2 gap-[15px]">
                             <div>
                                 <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">{t.amount}</label>
                                 <input 
-                                    type="number" required min="0"
+                                    type="text" required
                                     className="w-full p-2.5 bg-white text-slate-900 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
-                                    value={formData.amount}
-                                    onChange={e => setFormData({...formData, amount: parseFloat(e.target.value) || 0})}
+                                    value={formData.amount === 0 ? '' : new Intl.NumberFormat('vi-VN').format(formData.amount).replace(/,/g, '.')}
+                                    onChange={e => {
+                                        const val = e.target.value.replace(/\D/g, '');
+                                        setFormData({...formData, amount: parseFloat(val) || 0});
+                                    }}
                                 />
                             </div>
                             <div>
@@ -410,6 +440,11 @@ const FinanceManager: React.FC<FinanceManagerProps> = ({ backend, lang }) => {
         <>
         <VoucherManager backend={backend} lang={lang} />
         </>
+        )}
+
+        {/* Invoices Tab */}
+        {mainTab === 'invoices' && (
+          <InvoiceManager backend={backend} lang={lang} />
         )}
     </div>
   );

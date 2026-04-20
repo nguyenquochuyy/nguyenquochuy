@@ -2,20 +2,23 @@ package main
 
 import (
 	"context"
-	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.uber.org/zap"
 
 	"unishop/backend/internal/config"
+	"unishop/backend/internal/logger"
+	"unishop/backend/internal/middleware"
 	"unishop/backend/internal/routes"
 	"unishop/backend/pkg/db"
 )
@@ -96,40 +99,32 @@ func ensureIndexes(database *mongo.Database) {
 	for col, idxs := range indexes {
 		_, err := database.Collection(col).Indexes().CreateMany(ctx, idxs)
 		if err != nil {
-			log.Printf("Warning: failed to create indexes for %s: %v", col, err)
+			logger.Log.Warn("Failed to create indexes", zap.String("collection", col), zap.Error(err))
 		}
 	}
-	log.Println("✅ MongoDB indexes ensured")
-}
-
-func CORSMiddleware() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
-		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
-		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, DELETE, PATCH")
-
-		if c.Request.Method == "OPTIONS" {
-			c.AbortWithStatus(204)
-			return
-		}
-
-		c.Next()
-	}
+	logger.Log.Info("✅ MongoDB indexes ensured")
 }
 
 func main() {
 	if err := godotenv.Load(); err != nil {
-		log.Println("No .env file, using system env vars")
+		// Just a fallback logic, we don't log fatal because in prod it might not exist
 	}
 
 	cfg := config.Load()
+	logger.Init(cfg.Env)
+	defer logger.Sync()
+
+	logger.Log.Info("Starting application", zap.String("env", cfg.Env))
 
 	mongoClient, err := db.Connect(cfg.MongoURI)
 	if err != nil {
-		log.Fatalf("MongoDB connection failed: %v", err)
+		logger.Log.Fatal("MongoDB connection failed", zap.Error(err))
 	}
-	defer mongoClient.Disconnect(context.Background())
+	defer func() {
+		if err = mongoClient.Disconnect(context.Background()); err != nil {
+			logger.Log.Error("Error disconnecting from MongoDB", zap.Error(err))
+		}
+	}()
 
 	database := mongoClient.Database(cfg.DBName)
 
@@ -140,20 +135,39 @@ func main() {
 		gin.SetMode(gin.ReleaseMode)
 	}
 
-	router := gin.Default()
-	router.Use(CORSMiddleware())
+	// Use Gin without default loggers
+	router := gin.New()
+	
+	// Add Zap Logger & Recovery
+	router.Use(middleware.ZapLogger(), gin.Recovery())
+	
+	// Apply rate limiting
+	router.Use(middleware.RateLimit())
+
+	// Apply robust CORS setup
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "Authorization", "X-CSRF-Token", "Accept-Encoding", "X-Requested-With"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
+
 	routes.Setup(router, database, cfg)
 
 	srv := &http.Server{
 		Addr:              ":" + cfg.Port,
 		Handler:           router,
 		ReadHeaderTimeout: 10 * time.Second,
+		WriteTimeout:      30 * time.Second,
+		IdleTimeout:       120 * time.Second,
 	}
 
 	go func() {
-		log.Printf("UniShop Go backend running on :%s (env=%s)", cfg.Port, cfg.Env)
+		logger.Log.Info("UniShop Go backend running", zap.String("port", cfg.Port), zap.String("env", cfg.Env))
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Fatalf("Server error: %v", err)
+			logger.Log.Fatal("Server error", zap.Error(err))
 		}
 	}()
 
@@ -161,8 +175,13 @@ func main() {
 	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
 	<-quit
 
-	log.Println("Shutting down...")
+	logger.Log.Info("Shutting down gracefully...")
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	_ = srv.Shutdown(ctx)
+	
+	if err := srv.Shutdown(ctx); err != nil {
+		logger.Log.Fatal("Server forced to shutdown", zap.Error(err))
+	}
+
+	logger.Log.Info("Server exiting")
 }

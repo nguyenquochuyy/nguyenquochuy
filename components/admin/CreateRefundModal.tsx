@@ -84,8 +84,8 @@ const CreateRefundModal: React.FC<CreateRefundModalProps> = ({ onClose, onRefund
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto">
-          <div className="grid grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="p-6 space-y-[15px] overflow-y-auto">
+          <div className="grid grid-cols-2 gap-[15px]">
             <div>
               <label className="block text-xs font-medium text-slate-700 mb-1">Đơn hàng *</label>
               <select
@@ -116,7 +116,7 @@ const CreateRefundModal: React.FC<CreateRefundModalProps> = ({ onClose, onRefund
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-[15px]">
             <div>
               <label className="block text-xs font-medium text-slate-700 mb-1">Phương thức hoàn tiền *</label>
               <select

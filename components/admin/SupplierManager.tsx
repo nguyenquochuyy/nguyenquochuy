@@ -90,7 +90,7 @@ const SupplierManager: React.FC<Props> = ({ suppliers, purchaseOrders, products,
             <h3 className="font-bold text-slate-800">Tạo Đơn Nhập Hàng</h3>
             <button onClick={() => setShowPOModal(false)} className="text-slate-400 hover:text-slate-600"><X size={20}/></button>
           </div>
-          <div className="p-6 overflow-y-auto flex-1 space-y-4">
+          <div className="p-6 overflow-y-auto flex-1 space-y-[15px]">
             <div>
               <label className="block text-sm font-semibold text-slate-700 mb-1">Nhà cung cấp</label>
               <select className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm" value={selectedSupplier} onChange={e => setSelectedSupplier(e.target.value)}>
@@ -124,14 +124,16 @@ const SupplierManager: React.FC<Props> = ({ suppliers, purchaseOrders, products,
                       <option value="">Chọn sản phẩm...</option>
                       {products.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
                     </select>
-                    <input type="number" min="1" className="w-24 px-3 py-2 border border-slate-200 rounded-lg text-sm" placeholder="SL" value={item.quantity} onChange={e => {
+                    <input type="text" className="w-24 px-3 py-2 border border-slate-200 rounded-lg text-sm" placeholder="SL" value={item.quantity === 0 ? '' : new Intl.NumberFormat('vi-VN').format(item.quantity).replace(/,/g, '.')} onChange={e => {
                       const newItems = [...items];
-                      newItems[index].quantity = parseInt(e.target.value) || 0;
+                      const val = e.target.value.replace(/\D/g, '');
+                      newItems[index].quantity = parseInt(val) || 0;
                       setItems(newItems);
                     }}/>
-                    <input type="number" min="0" className="w-32 px-3 py-2 border border-slate-200 rounded-lg text-sm" placeholder="Giá nhập" value={item.unitCost} onChange={e => {
+                    <input type="text" className="w-32 px-3 py-2 border border-slate-200 rounded-lg text-sm" placeholder="Giá nhập" value={item.unitCost === 0 ? '' : new Intl.NumberFormat('vi-VN').format(item.unitCost).replace(/,/g, '.')} onChange={e => {
                       const newItems = [...items];
-                      newItems[index].unitCost = parseInt(e.target.value) || 0;
+                      const val = e.target.value.replace(/\D/g, '');
+                      newItems[index].unitCost = parseInt(val) || 0;
                       setItems(newItems);
                     }}/>
                     <button onClick={() => {
@@ -161,7 +163,7 @@ const SupplierManager: React.FC<Props> = ({ suppliers, purchaseOrders, products,
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 flex flex-col h-full">
       {/* Tab header */}
-      <div className="flex gap-6 border-b border-slate-200 mb-6">
+      <div className="flex gap-[15px] border-b border-slate-200 mb-6">
         <button 
             onClick={() => setActiveTab('suppliers')}
             className={`pb-3 font-bold text-sm flex items-center gap-2 transition-all relative ${activeTab === 'suppliers' ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-700'}`}
@@ -276,7 +278,7 @@ const SupplierManager: React.FC<Props> = ({ suppliers, purchaseOrders, products,
               <h3 className="font-bold text-slate-800">{editingSupplier ? 'Sửa Nhà Cung Cấp' : 'Thêm Nhà Cung Cấp'}</h3>
               <button type="button" onClick={() => setShowSupplierModal(false)} className="text-slate-400 hover:text-slate-600"><X size={20}/></button>
             </div>
-            <div className="p-6 space-y-4">
+            <div className="p-6 space-y-[15px]">
               <div><label className="block text-sm font-semibold text-slate-700 mb-1">Tên công ty</label><input required name="name" defaultValue={editingSupplier?.name} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm" /></div>
               <div><label className="block text-sm font-semibold text-slate-700 mb-1">Người liên hệ</label><input name="contact" defaultValue={editingSupplier?.contact} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm" /></div>
               <div><label className="block text-sm font-semibold text-slate-700 mb-1">Email</label><input type="email" name="email" defaultValue={editingSupplier?.email} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm" /></div>

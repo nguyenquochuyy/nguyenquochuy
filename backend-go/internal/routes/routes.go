@@ -28,6 +28,7 @@ func Setup(r *gin.Engine, db *mongo.Database, cfg *config.Config) {
 	supplierH := handlers.NewSupplierHandler(db)
 	purchaseOrderH := handlers.NewPurchaseOrderHandler(db)
 	warehouseH := handlers.NewWarehouseHandler(db)
+	invoiceH := handlers.NewInvoiceHandler(db)
 
 	api := r.Group("/api")
 
@@ -130,6 +131,7 @@ func Setup(r *gin.Engine, db *mongo.Database, cfg *config.Config) {
 		// Finance
 		protected.GET("/transactions", financeH.ListTransactions)
 		protected.POST("/transactions", financeH.AddTransaction)
+		protected.GET("/finance/reports/advanced", financeH.AdvancedReports)
 
 		// Vouchers
 		protected.GET("/vouchers", voucherH.List)
@@ -152,6 +154,11 @@ func Setup(r *gin.Engine, db *mongo.Database, cfg *config.Config) {
 		protected.POST("/reviews", reviewH.Create)
 		protected.PUT("/reviews/:id/reply", reviewH.Reply)
 		protected.PUT("/reviews/:id/toggle-hidden", reviewH.ToggleHidden)
+
+		// Invoices
+		protected.GET("/invoices", invoiceH.GetAll)
+		protected.POST("/invoices", invoiceH.Create)
+		protected.PUT("/invoices/:id/status", invoiceH.UpdateStatus)
 
 		// Email Campaigns
 		protected.GET("/email-campaigns", emailCampaignH.List)

@@ -44,7 +44,7 @@ const ReviewsManagement: React.FC<ReviewsManagementProps> = ({ backend, lang }) 
   };
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto animate-fade-in-up">
+    <div className="space-y-[15px] max-w-7xl mx-auto animate-fade-in-up">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
@@ -54,7 +54,7 @@ const ReviewsManagement: React.FC<ReviewsManagementProps> = ({ backend, lang }) 
       </div>
 
       {/* Filters */}
-      <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-wrap gap-4">
+      <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-wrap gap-[15px]">
         <div className="flex items-center gap-2">
           <Filter size={16} className="text-slate-400" />
           <span className="text-sm font-medium text-slate-700">{t.rating}:</span>
@@ -86,7 +86,7 @@ const ReviewsManagement: React.FC<ReviewsManagementProps> = ({ backend, lang }) 
       </div>
 
       {/* Reviews List */}
-      <div className="space-y-4">
+      <div className="space-y-[15px]">
         {filteredReviews.length === 0 ? (
           <div className="text-center py-12 text-slate-400">
             <MessageSquare size={48} className="mx-auto mb-3 opacity-20" />
@@ -100,7 +100,7 @@ const ReviewsManagement: React.FC<ReviewsManagementProps> = ({ backend, lang }) 
                 review.isHidden ? 'border-slate-200 opacity-60' : 'border-slate-200 shadow-sm'
               }`}
             >
-              <div className="flex justify-between items-start gap-4">
+              <div className="flex justify-between items-start gap-[15px]">
                 <div className="flex-1">
                   {/* Header */}
                   <div className="flex items-center gap-3 mb-3">

@@ -129,6 +129,11 @@ export const loadState = (): BackendState => {
     productHistory: [],
     reviews: [],
     refunds: INITIAL_REFUNDS,
+    suppliers: [],
+    purchaseOrders: [],
+    warehouses: [],
+    stockTakes: [],
+    invoices: [],
     settings: DEFAULT_SETTINGS,
   };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(initialState));

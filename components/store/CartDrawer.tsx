@@ -108,9 +108,9 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose, cart, setCart,
             </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-slate-50/50">
+          <div className="flex-1 overflow-y-auto p-6 space-y-[15px] bg-slate-50/50">
             {cart.length === 0 ? (
-              <div className="h-full flex flex-col items-center justify-center text-slate-400 space-y-4">
+              <div className="h-full flex flex-col items-center justify-center text-slate-400 space-y-[15px]">
                 <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-sm border border-slate-100">
                     <ShoppingBag size={40} className="text-slate-300" />
                 </div>
@@ -121,7 +121,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose, cart, setCart,
               cart.map(item => {
                 const price = calculateItemPrice(item);
                 return (
-                <div key={item.selectedVariantId ? `${item.id}-${item.selectedVariantId}` : item.id} className="flex gap-4 p-3 bg-white rounded-xl border border-slate-200 shadow-sm">
+                <div key={item.selectedVariantId ? `${item.id}-${item.selectedVariantId}` : item.id} className="flex gap-[15px] p-3 bg-white rounded-xl border border-slate-200 shadow-sm">
                   <div className="w-20 h-20 bg-slate-100 rounded-lg overflow-hidden flex-shrink-0 border border-slate-100">
                     <img src={item.images[0]} alt={item.name} className="w-full h-full object-cover" />
                   </div>
@@ -152,7 +152,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose, cart, setCart,
           </div>
 
           {cart.length > 0 && (
-            <div className="border-t border-slate-200 p-6 bg-white space-y-4 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] z-10">
+            <div className="border-t border-slate-200 p-6 bg-white space-y-[15px] shadow-[0_-4px_20px_rgba(0,0,0,0.05)] z-10">
               
               {/* Voucher Input */}
               <div className="bg-slate-50 border border-slate-200 p-3 rounded-xl">

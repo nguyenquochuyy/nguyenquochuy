@@ -48,7 +48,7 @@ const MockVNPay: React.FC<MockVNPayProps> = ({ amount, orderInfo, onSuccess, onC
 
       <div className="max-w-md w-full mx-auto px-4 mt-16">
         {step === 'LOADING' && (
-          <div className="flex flex-col items-center gap-4 text-blue-600 my-20">
+          <div className="flex flex-col items-center gap-[15px] text-blue-600 my-20">
              <Loader2 size={48} className="animate-spin" />
              <p className="font-medium text-lg text-slate-600">Đang kết nối cổng thanh toán VNPAY...</p>
           </div>
@@ -62,7 +62,7 @@ const MockVNPay: React.FC<MockVNPayProps> = ({ amount, orderInfo, onSuccess, onC
                <p className="text-xs text-slate-400 mt-2">Mã ĐH: <span className="font-mono text-slate-600">{orderInfo}</span></p>
             </div>
             
-            <div className="p-6 space-y-6">
+            <div className="p-6 space-y-[15px]">
                 <div className="flex items-center gap-2 text-sm text-green-600 bg-green-50 p-3 rounded-lg border border-green-100 font-medium">
                     <ShieldCheck size={18} />
                     Môi trường thanh toán (Sandbox Demo)
@@ -71,7 +71,7 @@ const MockVNPay: React.FC<MockVNPayProps> = ({ amount, orderInfo, onSuccess, onC
                 <div className="space-y-3">
                     <p className="font-semibold text-slate-700">Chọn phương thức:</p>
                     
-                    <button className="w-full flex items-center gap-4 p-4 border border-blue-600 bg-blue-50 rounded-xl">
+                    <button className="w-full flex items-center gap-[15px] p-4 border border-blue-600 bg-blue-50 rounded-xl">
                         <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm">
                             <Landmark size={20} className="text-blue-600" />
                         </div>
@@ -82,7 +82,7 @@ const MockVNPay: React.FC<MockVNPayProps> = ({ amount, orderInfo, onSuccess, onC
                         <div className="w-4 h-4 rounded-full border-4 border-blue-600"></div>
                     </button>
                     
-                    <button disabled className="w-full flex items-center gap-4 p-4 border border-slate-200 bg-slate-50 rounded-xl opacity-60">
+                    <button disabled className="w-full flex items-center gap-[15px] p-4 border border-slate-200 bg-slate-50 rounded-xl opacity-60">
                         <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm">
                             <CreditCard size={20} className="text-slate-400" />
                         </div>
@@ -109,7 +109,7 @@ const MockVNPay: React.FC<MockVNPayProps> = ({ amount, orderInfo, onSuccess, onC
         )}
 
         {step === 'PROCESSING' && (
-          <div className="flex flex-col items-center gap-4 text-blue-600 my-20">
+          <div className="flex flex-col items-center gap-[15px] text-blue-600 my-20">
              <div className="relative">
                 <Loader2 size={64} className="animate-spin text-blue-600" />
                 <Landmark size={28} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-blue-500" />
@@ -120,7 +120,7 @@ const MockVNPay: React.FC<MockVNPayProps> = ({ amount, orderInfo, onSuccess, onC
         )}
 
         {step === 'SUCCESS' && (
-          <div className="flex flex-col items-center gap-4 my-20 animate-fade-in-up">
+          <div className="flex flex-col items-center gap-[15px] my-20 animate-fade-in-up">
              <div className="w-24 h-24 bg-green-100 text-green-500 rounded-full flex items-center justify-center mb-2">
                  <CheckCircle size={48} />
              </div>
@@ -130,7 +130,7 @@ const MockVNPay: React.FC<MockVNPayProps> = ({ amount, orderInfo, onSuccess, onC
         )}
 
         {step === 'FAILED' && (
-          <div className="flex flex-col items-center gap-4 my-20 animate-fade-in-up">
+          <div className="flex flex-col items-center gap-[15px] my-20 animate-fade-in-up">
              <div className="w-24 h-24 bg-rose-100 text-rose-500 rounded-full flex items-center justify-center mb-2">
                  <XCircle size={48} />
              </div>

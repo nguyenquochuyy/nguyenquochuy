@@ -55,7 +55,7 @@ const OrderTimeline: React.FC<OrderTimelineProps> = ({ order, lang }) => {
   const currentIndex = statusOrder.indexOf(order.status as OrderStatus);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-[15px]">
       {/* Status Timeline */}
       <div>
         <h4 className="text-xs font-bold text-slate-800 mb-3 flex items-center gap-2">

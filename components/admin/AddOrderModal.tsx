@@ -123,10 +123,10 @@ const AddOrderModal: React.FC<AddOrderModalProps> = ({ onClose, lang, onOrderCre
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-6 overflow-y-auto">
-          <div className="grid grid-cols-2 gap-6">
+        <form onSubmit={handleSubmit} className="p-6 space-y-[15px] overflow-y-auto">
+          <div className="grid grid-cols-2 gap-[15px]">
             {/* Cột trái: Thông tin khách hàng */}
-            <div className="space-y-4">
+            <div className="space-y-[15px]">
               <div>
                 <h3 className="text-sm font-bold text-slate-800 mb-3">Thông tin khách hàng</h3>
                 <div className="space-y-3">
@@ -217,7 +217,7 @@ const AddOrderModal: React.FC<AddOrderModalProps> = ({ onClose, lang, onOrderCre
             </div>
 
             {/* Cột phải: Chọn sản phẩm */}
-            <div className="space-y-4">
+            <div className="space-y-[15px]">
               <div>
                 <h3 className="text-sm font-bold text-slate-800 mb-3">Sản phẩm</h3>
                 <div className="relative mb-3">

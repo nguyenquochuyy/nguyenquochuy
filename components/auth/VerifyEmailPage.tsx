@@ -85,7 +85,7 @@ const VerifyEmailPage: React.FC<VerifyEmailPageProps> = ({ email, onNavigate, on
             </p>
           </div>
           
-          <div className="space-y-4">
+          <div className="space-y-[15px]">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
                 <Key size={20} />
@@ -136,7 +136,7 @@ const VerifyEmailPage: React.FC<VerifyEmailPageProps> = ({ email, onNavigate, on
               </p>
             </div>
 
-            <form onSubmit={handleVerify} className="space-y-6">
+            <form onSubmit={handleVerify} className="space-y-[15px]">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">{t.verificationCode}</label>
                 <div className="relative">

@@ -69,3 +69,90 @@ func (h *FinanceHandler) ListTransactions(c *gin.Context) {
 	}
 	utils.OK(c, txs)
 }
+
+// GET /api/finance/reports/advanced
+func (h *FinanceHandler) AdvancedReports(c *gin.Context) {
+	startDateStr := c.Query("startDate")
+	endDateStr := c.Query("endDate")
+	compareStartDateStr := c.Query("compareStartDate")
+	compareEndDateStr := c.Query("compareEndDate")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	// Helper function to build date filter
+	buildDateFilter := func(start, end string) bson.M {
+		filter := bson.M{}
+		if start != "" {
+			t, err := time.Parse(time.RFC3339, start)
+			if err == nil {
+				filter["$gte"] = t
+			}
+		}
+		if end != "" {
+			t, err := time.Parse(time.RFC3339, end)
+			if err == nil {
+				filter["$lte"] = t
+			}
+		}
+		return filter
+	}
+
+	// Helper function to aggregate
+	aggregatePeriod := func(dateFilter bson.M) (float64, float64, map[string]float64, map[string]float64) {
+		match := bson.M{}
+		if len(dateFilter) > 0 {
+			match["date"] = dateFilter
+		}
+
+		cursor, err := h.transactions.Find(ctx, match)
+		if err != nil {
+			return 0, 0, nil, nil
+		}
+		defer cursor.Close(ctx)
+
+		var txs []models.Transaction
+		cursor.All(ctx, &txs)
+
+		var income, expense float64
+		incomeByCategory := make(map[string]float64)
+		expenseByCategory := make(map[string]float64)
+
+		for _, tx := range txs {
+			if tx.Type == "INCOME" {
+				income += tx.Amount
+				incomeByCategory[tx.Category] += tx.Amount
+			} else {
+				expense += tx.Amount
+				expenseByCategory[tx.Category] += tx.Amount
+			}
+		}
+
+		return income, expense, incomeByCategory, expenseByCategory
+	}
+
+	currentIncome, currentExpense, currentIncomeCat, currentExpenseCat := aggregatePeriod(buildDateFilter(startDateStr, endDateStr))
+	var compareIncome, compareExpense float64
+	var compareIncomeCat, compareExpenseCat map[string]float64
+
+	if compareStartDateStr != "" && compareEndDateStr != "" {
+		compareIncome, compareExpense, compareIncomeCat, compareExpenseCat = aggregatePeriod(buildDateFilter(compareStartDateStr, compareEndDateStr))
+	}
+
+	utils.OK(c, gin.H{
+		"current": gin.H{
+			"income":            currentIncome,
+			"expense":           currentExpense,
+			"profit":            currentIncome - currentExpense,
+			"incomeByCategory":  currentIncomeCat,
+			"expenseByCategory": currentExpenseCat,
+		},
+		"comparison": gin.H{
+			"income":            compareIncome,
+			"expense":           compareExpense,
+			"profit":            compareIncome - compareExpense,
+			"incomeByCategory":  compareIncomeCat,
+			"expenseByCategory": compareExpenseCat,
+		},
+	})
+}

@@ -241,7 +241,7 @@ const OrderManager: React.FC<OrderManagerProps> = memo(({ backend, lang }) => {
   }, []);
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto animate-fade-in-up">
+    <div className="space-y-[15px] max-w-7xl mx-auto animate-fade-in-up">
        <div>
           <h2 className="text-2xl font-bold text-slate-900">{t.orderMgmt}</h2>
           <p className="text-slate-500 text-sm mt-1">{filteredOrders.length} {t.ordersProcessed}</p>
@@ -280,7 +280,7 @@ const OrderManager: React.FC<OrderManagerProps> = memo(({ backend, lang }) => {
        <>
 
        {/* Toolbar */}
-       <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-4 justify-between">
+       <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-[15px] justify-between">
            <div className="relative flex-1 w-full">
                <Search className="absolute left-3 top-2.5 text-slate-400" size={18} />
                <input
@@ -331,7 +331,7 @@ const OrderManager: React.FC<OrderManagerProps> = memo(({ backend, lang }) => {
        {/* Bộ lọc nâng cao */}
        {showAdvancedFilters && (
            <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm animate-fade-in">
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-[15px]">
                    <div>
                        <label className="block text-xs font-bold text-slate-500 mb-2">Từ ngày</label>
                        <input
@@ -365,7 +365,7 @@ const OrderManager: React.FC<OrderManagerProps> = memo(({ backend, lang }) => {
        {/* Thanh hành động hàng loạt */}
        {selectedOrders.size > 0 && (
            <div className="bg-indigo-50 border border-indigo-200 p-4 rounded-xl flex items-center justify-between animate-fade-in">
-               <div className="flex items-center gap-4">
+               <div className="flex items-center gap-[15px]">
                    <span className="text-sm font-bold text-indigo-900">{selectedOrders.size} đã chọn</span>
                    <button
                        onClick={() => setSelectedOrders(new Set())}
@@ -400,7 +400,7 @@ const OrderManager: React.FC<OrderManagerProps> = memo(({ backend, lang }) => {
                        {bulkActionType === 'delete' ? 'Hủy đơn hàng đã chọn' : 'Cập nhật trạng thái đơn hàng'}
                    </h3>
                    {bulkActionType === 'status' && (
-                       <div className="space-y-4">
+                       <div className="space-y-[15px]">
                            <select
                                value={bulkStatus}
                                onChange={(e) => setBulkStatus(e.target.value as OrderStatus)}
@@ -514,7 +514,7 @@ const OrderManager: React.FC<OrderManagerProps> = memo(({ backend, lang }) => {
        {/* Tab Hoàn tiền */}
        {activeTab === 'refunds' && (
        <>
-       <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-4 justify-between">
+       <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-[15px] justify-between">
          <div className="relative flex-1 w-full">
            <Search className="absolute left-3 top-2.5 text-slate-400" size={18} />
            <input

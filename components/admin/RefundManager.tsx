@@ -80,7 +80,7 @@ const RefundManager: React.FC<RefundManagerProps> = ({ backend, lang }) => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-[15px]">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
@@ -96,8 +96,8 @@ const RefundManager: React.FC<RefundManagerProps> = ({ backend, lang }) => {
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-xl p-4 border border-slate-200 space-y-4">
-        <div className="flex flex-col sm:flex-row gap-4">
+      <div className="bg-white rounded-xl p-4 border border-slate-200 space-y-[15px]">
+        <div className="flex flex-col sm:flex-row gap-[15px]">
           {/* Search */}
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
@@ -263,7 +263,7 @@ const RefundManager: React.FC<RefundManagerProps> = ({ backend, lang }) => {
                 <XCircle size={20} />
               </button>
             </div>
-            <div className="p-6 overflow-y-auto space-y-6">
+            <div className="p-6 overflow-y-auto space-y-[15px]">
               {/* Status Badge */}
               <div className="flex justify-between items-center">
                 <span className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold uppercase border ${getStatusColor(selectedRefund.status)}`}>
@@ -280,7 +280,7 @@ const RefundManager: React.FC<RefundManagerProps> = ({ backend, lang }) => {
                 <h3 className="font-bold text-slate-900 flex items-center gap-2">
                   <User size={18} /> Thông Tin Khách Hàng
                 </h3>
-                <div className="grid grid-cols-2 gap-4 text-sm">
+                <div className="grid grid-cols-2 gap-[15px] text-sm">
                   <div>
                     <span className="text-slate-500">Tên:</span>
                     <span className="ml-2 font-medium text-slate-900">{selectedRefund.customerName}</span>
@@ -297,7 +297,7 @@ const RefundManager: React.FC<RefundManagerProps> = ({ backend, lang }) => {
                 <h3 className="font-bold text-slate-900 flex items-center gap-2">
                   <DollarSign size={18} /> Thông Tin Đơn Hàng
                 </h3>
-                <div className="grid grid-cols-2 gap-4 text-sm">
+                <div className="grid grid-cols-2 gap-[15px] text-sm">
                   <div>
                     <span className="text-slate-500">Mã đơn:</span>
                     <span className="ml-2 font-medium text-slate-900">{selectedRefund.orderNumber}</span>
@@ -360,7 +360,7 @@ const RefundManager: React.FC<RefundManagerProps> = ({ backend, lang }) => {
                   <h3 className="font-bold text-slate-900 flex items-center gap-2">
                     <Clock size={18} /> Thông Tin Xử Lý
                   </h3>
-                  <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div className="grid grid-cols-2 gap-[15px] text-sm">
                     {selectedRefund.processedBy && (
                       <div>
                         <span className="text-slate-600">Người xử lý:</span>

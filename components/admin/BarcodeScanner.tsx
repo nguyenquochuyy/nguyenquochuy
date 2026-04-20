@@ -93,7 +93,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onClose, onProductFound
                     </div>
 
                     {scannedCode && (
-                        <div className="flex flex-col items-center justify-center py-6 space-y-4">
+                        <div className="flex flex-col items-center justify-center py-6 space-y-[15px]">
                             <div className="text-center">
                                 <p className="text-sm text-slate-500 mb-1">Mã đã quét</p>
                                 <p className="font-mono text-lg font-bold text-slate-800 bg-slate-100 px-4 py-2 rounded-lg border border-slate-200">

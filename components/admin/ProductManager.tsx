@@ -260,8 +260,8 @@ const ProductManager: React.FC<ProductManagerProps> = ({ backend, lang }) => {
                     </div>
 
                     <div className="p-6 overflow-y-auto">
-                        <div className="flex flex-col md:flex-row gap-8">
-                            <div className="w-full md:w-1/3 space-y-4">
+                        <div className="flex flex-col md:flex-row gap-[15px]">
+                            <div className="w-full md:w-1/3 space-y-[15px]">
                                 <div className="aspect-square rounded-xl overflow-hidden bg-gray-50 border border-gray-200">
                                     <img src={product.images[0]} alt={product.name} className="w-full h-full object-cover" />
                                 </div>
@@ -274,7 +274,7 @@ const ProductManager: React.FC<ProductManagerProps> = ({ backend, lang }) => {
                                 </div>
                             </div>
 
-                            <div className="w-full md:w-2/3 space-y-6">
+                            <div className="w-full md:w-2/3 space-y-[15px]">
                                 <div>
                                     <div className="flex items-center gap-2 mb-2">
                                         <span className="text-xs font-bold uppercase tracking-wider text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md">
@@ -286,7 +286,7 @@ const ProductManager: React.FC<ProductManagerProps> = ({ backend, lang }) => {
                                     <p className="text-sm text-gray-500 mt-1 font-mono">{t.skuLabel}: {product.sku}</p>
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                                <div className="grid grid-cols-2 gap-[15px] bg-slate-50 p-4 rounded-xl border border-slate-100">
                                     <div>
                                         <span className="text-xs text-slate-500 uppercase font-bold">{t.price}</span>
                                         <p className="text-lg font-bold text-slate-900">{formatCurrency(product.price)}</p>
@@ -355,7 +355,7 @@ const ProductManager: React.FC<ProductManagerProps> = ({ backend, lang }) => {
     }
 
     return (
-        <div className="space-y-6 max-w-7xl mx-auto animate-fade-in-up">
+        <div className="space-y-[15px] max-w-7xl mx-auto animate-fade-in-up">
             {/* Main Tab Switcher */}
             <div className="flex gap-2 border-b border-slate-200">
               <button
@@ -400,7 +400,7 @@ const ProductManager: React.FC<ProductManagerProps> = ({ backend, lang }) => {
             {mainTab === 'products' && (
             <>
             {/* Header */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-[15px]">
                 <div>
                     <h2 className="text-2xl font-bold text-slate-900">{t.productMgmt}</h2>
                     <p className="text-slate-500 text-sm mt-1">{t.manageCatalog}</p>
@@ -415,7 +415,7 @@ const ProductManager: React.FC<ProductManagerProps> = ({ backend, lang }) => {
             </div>
 
             {/* Toolbar */}
-            <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-4 justify-between">
+            <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-[15px] justify-between">
                 <div className="relative flex-1 w-full">
                     <Search className="absolute left-3 top-2.5 text-slate-400" size={18} />
                     <input
@@ -463,7 +463,7 @@ const ProductManager: React.FC<ProductManagerProps> = ({ backend, lang }) => {
             {/* Bulk Actions Bar */}
             {selectedProducts.size > 0 && (
                 <div className="bg-indigo-50 border border-indigo-200 p-4 rounded-xl flex items-center justify-between animate-fade-in">
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-[15px]">
                         <span className="text-sm font-bold text-indigo-900">{selectedProducts.size} selected</span>
                         <button
                             onClick={() => setSelectedProducts(new Set())}
@@ -506,8 +506,8 @@ const ProductManager: React.FC<ProductManagerProps> = ({ backend, lang }) => {
                              'Update Category'}
                         </h3>
                         {bulkActionType === 'visibility' && (
-                            <div className="space-y-4">
-                                <div className="flex gap-4">
+                            <div className="space-y-[15px]">
+                                <div className="flex gap-[15px]">
                                     <label className="flex items-center gap-2 cursor-pointer">
                                         <input
                                             type="radio"
@@ -534,7 +534,7 @@ const ProductManager: React.FC<ProductManagerProps> = ({ backend, lang }) => {
                             </div>
                         )}
                         {bulkActionType === 'category' && (
-                            <div className="space-y-4">
+                            <div className="space-y-[15px]">
                                 <select
                                     value={bulkCategory}
                                     onChange={(e) => setBulkCategory(e.target.value)}
@@ -604,7 +604,7 @@ const ProductManager: React.FC<ProductManagerProps> = ({ backend, lang }) => {
                                         />
                                     </td>
                                     <td className="px-6 py-4">
-                                        <div className="flex items-center gap-4">
+                                        <div className="flex items-center gap-[15px]">
                                             <div className="relative w-12 h-12 rounded-lg bg-slate-100 overflow-hidden border border-slate-200 shrink-0">
                                                 <img src={product.images[0]} className="w-full h-full object-cover" />
                                                 {!product.isVisible && <div className="absolute inset-0 bg-slate-900/50 flex items-center justify-center"><Eye size={16} className="text-white"/></div>}
@@ -654,7 +654,7 @@ const ProductManager: React.FC<ProductManagerProps> = ({ backend, lang }) => {
 
                 {/* Pagination */}
                 {totalPages > 1 && (
-                    <div className="px-6 py-4 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-4 bg-slate-50">
+                    <div className="px-6 py-4 border-t border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-[15px] bg-slate-50">
                         <button
                             onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                             disabled={currentPage === 1}

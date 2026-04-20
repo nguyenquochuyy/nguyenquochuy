@@ -346,9 +346,9 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
   };
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto animate-fade-in-up">
+    <div className="space-y-[15px] max-w-7xl mx-auto animate-fade-in-up">
         {/* Header Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-[15px]">
             <div className="bg-gradient-to-br from-indigo-600 to-indigo-700 rounded-2xl p-6 text-white shadow-lg shadow-indigo-200">
                 <div className="flex items-center gap-3 mb-2 opacity-90">
                     <Box size={20} />
@@ -413,7 +413,7 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
                         Xem tất cả
                     </button>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[15px]">
                     {lowStockDetails.slice(0, 6).map((item, idx) => (
                         <div key={idx} className="bg-white p-3 rounded-xl border border-rose-100 flex items-center gap-3">
                             <img src={item.image} className="w-12 h-12 rounded-lg object-cover border border-slate-200" />
@@ -433,8 +433,8 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
         )}
 
         {/* Toolbar */}
-        <div className="flex flex-col sm:flex-row justify-between items-end gap-4 border-b border-slate-200 pb-2">
-            <div className="flex gap-6">
+        <div className="flex flex-col sm:flex-row justify-between items-end gap-[15px] border-b border-slate-200 pb-2">
+            <div className="flex gap-[15px]">
                 <button 
                     onClick={() => setActiveTab('stock')}
                     className={`pb-3 font-bold text-sm flex items-center gap-2 transition-all relative ${activeTab === 'stock' ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-700'}`}
@@ -532,7 +532,7 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
                         <button onClick={() => setTransactionModalType(null)}><span className="text-slate-400 hover:text-slate-600">✕</span></button>
                     </div>
                     
-                    <form onSubmit={handleTransactionSubmit} className="p-6 space-y-4">
+                    <form onSubmit={handleTransactionSubmit} className="p-6 space-y-[15px]">
                         <div>
                             <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">{t.selectProduct}</label>
                             <select 
@@ -565,17 +565,19 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
                             </div>
                         )}
 
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-2 gap-[15px]">
                             <div>
                                 <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">{t.quantity}</label>
                                 <div className="relative">
                                     <input 
-                                        type="number" 
-                                        required min="1"
-                                        max={transactionModalType === 'OUT' ? getCurrentSelectedStock() : undefined}
+                                        type="text" 
+                                        required
                                         className="w-full p-2.5 bg-white text-slate-900 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
-                                        value={quantity === 0 ? '' : quantity}
-                                        onChange={(e) => setQuantity(parseInt(e.target.value) || 0)}
+                                        value={quantity === 0 ? '' : new Intl.NumberFormat('vi-VN').format(quantity).replace(/,/g, '.')}
+                                        onChange={(e) => {
+                                            const val = e.target.value.replace(/\D/g, '');
+                                            setQuantity(parseInt(val) || 0);
+                                        }}
                                     />
                                     {transactionModalType === 'OUT' && selectedProduct && (
                                         <div className="absolute right-0 -bottom-5 text-[10px] text-slate-500">

@@ -1,42 +1,37 @@
 package handlers
 
 import (
-	"io"
-	"time"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
 	"unishop/backend/internal/events"
 )
 
-// GET /api/events — SSE stream
+var upgrader = websocket.Upgrader{
+	CheckOrigin: func(r *http.Request) bool {
+		return true // allow all origins for now (CORS is handled at middleware layer)
+	},
+}
+
+// GET /api/events — WebSocket stream
 func StreamEvents(c *gin.Context) {
-	c.Header("Content-Type", "text/event-stream")
-	c.Header("Cache-Control", "no-cache")
-	c.Header("Connection", "keep-alive")
-	c.Header("X-Accel-Buffering", "no")
-	c.Header("Access-Control-Allow-Origin", "*")
+	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
+	if err != nil {
+		return
+	}
 
-	client := make(chan string, 16)
-	events.Global.Register(client)
-	defer events.Global.Unregister(client)
+	// Register the new websocket client
+	events.Global.Register(conn)
+	defer events.Global.Unregister(conn)
 
-	// Heartbeat ticker to keep connection alive
-	ticker := time.NewTicker(25 * time.Second)
-	defer ticker.Stop()
-
-	c.Stream(func(w io.Writer) bool {
-		select {
-		case msg, ok := <-client:
-			if !ok {
-				return false
-			}
-			c.SSEvent("message", msg)
-			return true
-		case <-ticker.C:
-			c.SSEvent("heartbeat", "ping")
-			return true
-		case <-c.Request.Context().Done():
-			return false
+	// Keep the connection open and read messages
+	// This read pump is necessary to detect when the client disconnects
+	for {
+		_, _, err := conn.ReadMessage()
+		if err != nil {
+			// Error or client closed connection
+			break
 		}
-	})
+	}
 }

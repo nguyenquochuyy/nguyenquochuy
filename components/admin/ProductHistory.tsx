@@ -70,10 +70,10 @@ const ProductHistoryModal: React.FC<ProductHistoryModalProps> = ({ history, lang
               <p>No history recorded</p>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-[15px]">
               {history.map((entry) => (
                 <div key={entry.id} className={`p-4 rounded-xl border ${getChangeColor(entry.changeType)}`}>
-                  <div className="flex items-start justify-between gap-4">
+                  <div className="flex items-start justify-between gap-[15px]">
                     <div className="flex items-start gap-3 flex-1">
                       <div className="p-2 bg-white rounded-lg shadow-sm">
                         {getChangeIcon(entry.changeType)}
@@ -81,7 +81,7 @@ const ProductHistoryModal: React.FC<ProductHistoryModalProps> = ({ history, lang
                       <div className="flex-1">
                         <p className="font-bold text-sm text-gray-900">{entry.productName}</p>
                         <p className="text-xs text-gray-600 mt-1">{entry.notes}</p>
-                        <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
+                        <div className="flex items-center gap-[15px] mt-2 text-xs text-gray-500">
                           <span className="flex items-center gap-1">
                             <Clock size={12} />
                             {new Date(entry.changedAt).toLocaleString()}

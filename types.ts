@@ -315,6 +315,18 @@ export interface StockTake {
   createdAt: string;
 }
 
+export interface Invoice {
+  id: string;
+  invoiceId: string;
+  orderId: string;
+  customerId: string;
+  amount: number;
+  status: 'PENDING' | 'PAID' | 'OVERDUE' | 'CANCELLED';
+  dueDate: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface BackendState {
   products: Product[];
   orders: Order[];
@@ -334,6 +346,7 @@ export interface BackendState {
   purchaseOrders: PurchaseOrder[];
   warehouses: Warehouse[];
   stockTakes: StockTake[];
+  invoices: Invoice[];
   settings: StoreSettings;
 }
 
@@ -400,6 +413,9 @@ export interface BackendContextType {
   createRefund: (refund: Omit<Refund, 'id' | 'requestDate'>) => void;
   updateRefundStatus: (id: string, status: RefundStatus, processedBy?: string) => void;
   deleteRefund: (id: string) => void;
+  // Invoice Methods
+  addInvoice: (invoice: Omit<Invoice, 'id' | 'invoiceId' | 'createdAt' | 'updatedAt'>) => Promise<void>;
+  updateInvoiceStatus: (id: string, status: Invoice['status']) => Promise<void>;
 }
 
 export const formatCurrency = (value: number) => {
@@ -412,10 +428,22 @@ export const formatCurrency = (value: number) => {
   }).format(value).replace(/,/g, '.');
 };
 
-export const formatNumberInput = (value: string): string => {
-  const numericValue = value.replace(/\D/g, '');
+export const formatNumberInput = (value: string | number): string => {
+  const strValue = String(value);
+  // Loại bỏ mọi ký tự không phải số
+  const numericValue = strValue.replace(/\D/g, '');
   if (!numericValue) return '';
-  return new Intl.NumberFormat('vi-VN').format(Number(numericValue));
+  
+  // Loại bỏ các số 0 vô nghĩa ở đầu (ví dụ: '0100' -> '100')
+  const cleanValue = numericValue.replace(/^0+/, '');
+  if (!cleanValue) return '0';
+  
+  // Định dạng với dấu chấm phân cách hàng nghìn
+  return new Intl.NumberFormat('vi-VN').format(Number(cleanValue)).replace(/,/g, '.');
+};
+
+export const parseNumberInput = (value: string): number => {
+  return Number(value.replace(/\D/g, '')) || 0;
 };
 
 export const parseFormattedNumber = (formatted: string): number => {

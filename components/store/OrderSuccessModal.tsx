@@ -25,7 +25,7 @@ const OrderSuccessModal: React.FC<OrderSuccessModalProps> = ({ order, onClose })
             <p className="text-slate-500 mt-3 max-w-md mx-auto">Cảm ơn bạn đã tin tưởng và mua sắm tại UniShop. Đơn hàng của bạn đã được ghi nhận.</p>
 
             {/* Order Summary */}
-            <div className="mt-8 text-left bg-white p-6 rounded-2xl border border-slate-200 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="mt-8 text-left bg-white p-6 rounded-2xl border border-slate-200 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-[15px]">
                 <div>
                     <h3 className="font-bold text-slate-900 mb-2 flex items-center gap-2"><Package size={16} className="text-indigo-500"/> Tóm Tắt Đơn Hàng</h3>
                     <div className="space-y-2 text-sm">

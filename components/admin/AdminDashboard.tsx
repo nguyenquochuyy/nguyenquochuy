@@ -136,7 +136,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ backend, onExit, lang }
                   </h1>
               </div>
               
-              <div className="flex items-center gap-3 md:gap-4">
+              <div className="flex items-center gap-3 md:gap-[15px]">
                   <div className="text-right hidden sm:block">
                     <p className="font-bold text-sm text-slate-800">{currentUser?.name}</p>
                     <p className="text-xs text-slate-500">{currentUser?.role}</p>

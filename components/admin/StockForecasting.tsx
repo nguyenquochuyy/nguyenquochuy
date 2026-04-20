@@ -131,7 +131,7 @@ const StockForecasting: React.FC<StockForecastingProps> = ({ onClose }) => {
             </span>
           ))}
         </div>
-        <div className="flex flex-wrap gap-4 mt-2 text-xs text-slate-500">
+        <div className="flex flex-wrap gap-[15px] mt-2 text-xs text-slate-500">
           <span className="flex items-center gap-1.5"><span className="inline-block w-5 h-0.5 bg-indigo-500 rounded" />Tồn kho thực tế</span>
           <span className="flex items-center gap-1.5"><span className="inline-block w-5 h-0.5 bg-rose-400 rounded" />Dự báo tương lai</span>
           <span className="flex items-center gap-1.5"><span className="inline-block w-5 h-0.5 bg-amber-400 rounded" />Ngưỡng tái đặt hàng</span>
@@ -250,7 +250,7 @@ const StockForecasting: React.FC<StockForecastingProps> = ({ onClose }) => {
                 <div className="p-5 space-y-5">
 
                   {/* Product header */}
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-[15px]">
                     {product.productImage
                       ? <img src={product.productImage} alt={product.productName} className="w-16 h-16 rounded-2xl object-cover border border-slate-200 shadow-md" />
                       : <div className="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center border border-slate-200">

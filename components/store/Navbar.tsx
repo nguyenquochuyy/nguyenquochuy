@@ -35,7 +35,7 @@ const Navbar: React.FC<NavbarProps> = ({
       </div>
 
       <div className="w-full max-w-[1600px] 3xl:max-w-[2000px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12">
-        <div className="flex justify-between items-center h-16 sm:h-20 gap-3 sm:gap-6">
+        <div className="flex justify-between items-center h-16 sm:h-20 gap-3 sm:gap-[15px]">
 
           {/* Logo */}
           <div className="flex items-center gap-2 cursor-pointer group shrink-0" onClick={onHomeClick}>

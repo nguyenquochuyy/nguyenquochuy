@@ -125,10 +125,10 @@ const OrderTrackingPage: React.FC<OrderTrackingPageProps> = ({ order, onBack, la
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
+      <div className="max-w-4xl mx-auto px-4 py-8 space-y-[15px]">
         {/* Order Header */}
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-[15px]">
             <div>
               <h1 className="text-2xl font-bold text-slate-900 mb-2">
                 {lang === 'vi' ? 'Đơn hàng #' : 'Order #'}{order.id.slice(-8).toUpperCase()}
@@ -150,9 +150,9 @@ const OrderTrackingPage: React.FC<OrderTrackingPageProps> = ({ order, onBack, la
               <Clock size={20} className="text-indigo-600" />
               {lang === 'vi' ? 'Theo dõi đơn hàng' : 'Order Tracking'}
             </h2>
-            <div className="space-y-4">
+            <div className="space-y-[15px]">
               {timeline.map((item, idx) => (
-                <div key={idx} className="flex items-start gap-4">
+                <div key={idx} className="flex items-start gap-[15px]">
                   <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center border-2 ${
                     item.completed 
                       ? 'bg-emerald-500 border-emerald-500 text-white' 
@@ -185,7 +185,7 @@ const OrderTrackingPage: React.FC<OrderTrackingPageProps> = ({ order, onBack, la
             <MapPin size={20} className="text-indigo-600" />
             {lang === 'vi' ? 'Thông tin giao hàng' : 'Shipping Information'}
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-[15px]">
             <div className="space-y-3">
               <div className="flex items-start gap-3">
                 <User size={18} className="text-slate-400 mt-1" />
@@ -232,7 +232,7 @@ const OrderTrackingPage: React.FC<OrderTrackingPageProps> = ({ order, onBack, la
             <Package size={20} className="text-indigo-600" />
             {lang === 'vi' ? 'Sản phẩm' : 'Order Items'}
           </h2>
-          <div className="space-y-4">
+          <div className="space-y-[15px]">
             {order.items.map((item, idx) => {
               let price = item.price;
               let variantName = '';
@@ -241,7 +241,7 @@ const OrderTrackingPage: React.FC<OrderTrackingPageProps> = ({ order, onBack, la
                 if (v) { price = v.price; variantName = v.name; }
               }
               return (
-                <div key={idx} className="flex items-center gap-4 pb-4 border-b border-slate-100 last:border-0 last:pb-0">
+                <div key={idx} className="flex items-center gap-[15px] pb-4 border-b border-slate-100 last:border-0 last:pb-0">
                   <img src={item.images[0]} alt={item.name} className="w-20 h-20 rounded-lg object-cover border border-slate-200" />
                   <div className="flex-1">
                     <p className="font-bold text-slate-900">{item.name}</p>

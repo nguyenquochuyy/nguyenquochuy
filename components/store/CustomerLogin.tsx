@@ -144,7 +144,7 @@ const CustomerLogin: React.FC<CustomerLoginProps> = ({ backend, message, onClear
             </p>
           </div>
           
-          <div className="space-y-4">
+          <div className="space-y-[15px]">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
                 <CheckCircle size={20} />
@@ -199,7 +199,7 @@ const CustomerLogin: React.FC<CustomerLoginProps> = ({ backend, message, onClear
               </div>
             )}
 
-            <form onSubmit={handleLogin} className="space-y-6">
+            <form onSubmit={handleLogin} className="space-y-[15px]">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">{t.email}</label>
                 <div className="relative">
@@ -294,7 +294,7 @@ const CustomerLogin: React.FC<CustomerLoginProps> = ({ backend, message, onClear
           {/* Trust badges */}
           <div className="mt-8 text-center text-sm text-gray-500">
             <p>{t.agreementPrompt}</p>
-            <div className="flex justify-center gap-4 mt-2">
+            <div className="flex justify-center gap-[15px] mt-2">
               <button className="text-indigo-600 hover:underline">{t.termsOfUse}</button>
               <span>&</span>
               <button className="text-indigo-600 hover:underline">{t.privacyPolicy}</button>

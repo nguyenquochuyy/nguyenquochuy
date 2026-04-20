@@ -219,8 +219,8 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
                   
                   {/* LEFT COLUMN: Gallery (7 Cols) */}
-                  <div className="lg:col-span-7 flex flex-col gap-6">
-                      <div className="flex flex-col-reverse md:flex-row gap-4">
+                  <div className="lg:col-span-7 flex flex-col gap-[15px]">
+                      <div className="flex flex-col-reverse md:flex-row gap-[15px]">
                           {/* Vertical Thumbnails (Desktop) */}
                           <div className="hidden md:flex flex-col gap-3 w-20 flex-shrink-0 max-h-[600px] overflow-y-auto scrollbar-hide">
                               {product.images.map((img, idx) => (
@@ -274,8 +274,8 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
                               <h3 className="font-bold text-slate-900 mb-4 flex items-center gap-2">
                                   <Gift size={20} className="text-indigo-600"/> Thường được mua cùng
                               </h3>
-                              <div className="flex flex-col sm:flex-row items-center gap-4 md:gap-8">
-                                  <div className="flex items-center gap-4">
+                              <div className="flex flex-col sm:flex-row items-center gap-[15px] md:gap-[15px]">
+                                  <div className="flex items-center gap-[15px]">
                                       <div className="w-20 h-20 rounded-lg border border-slate-200 overflow-hidden bg-white">
                                           <img src={product.images[0]} className="w-full h-full object-cover"/>
                                       </div>
@@ -306,7 +306,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
 
                   {/* RIGHT COLUMN: Info & Actions (5 Cols - Sticky) */}
                   <div className="lg:col-span-5">
-                      <div className="sticky top-32 space-y-6">
+                      <div className="sticky top-32 space-y-[15px]">
                           
                           {/* Basic Info */}
                           <div>
@@ -320,7 +320,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
                               </div>
                               <h1 className="text-2xl md:text-3xl font-black text-slate-900 mb-2 leading-tight">{product.name}</h1>
                               
-                              <div className="flex items-center gap-4 text-sm mb-4">
+                              <div className="flex items-center gap-[15px] text-sm mb-4">
                                   <div className="flex items-center gap-1 text-amber-400">
                                       <span className="font-bold text-slate-900 mr-1">{averageRating}</span>
                                       {[...Array(5)].map((_, i) => <Star key={i} size={14} fill={i < Math.round(Number(averageRating)) ? "currentColor" : "none"} />)}
@@ -393,9 +393,9 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
                           )}
 
                           {/* Actions */}
-                          <div className="space-y-4 pt-2">
+                          <div className="space-y-[15px] pt-2">
                               {/* Quantity */}
-                              <div className="flex items-center gap-4">
+                              <div className="flex items-center gap-[15px]">
                                   <div className="flex items-center border border-slate-300 rounded-xl h-12 w-fit">
                                       <button onClick={() => setQty(Math.max(1, qty - 1))} className="w-10 h-full flex items-center justify-center text-slate-500 hover:bg-slate-50 rounded-l-xl" disabled={isOutOfStock}><Minus size={18}/></button>
                                       <input type="number" value={qty} readOnly className="w-12 text-center text-lg font-bold text-slate-900 bg-transparent outline-none"/>
@@ -472,7 +472,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
                           <div className="prose prose-slate max-w-none text-slate-600 leading-relaxed">
                               <p className="whitespace-pre-line">{product.description}</p>
                               {/* Upsell Mock in Desc */}
-                              <div className="my-8 p-6 bg-indigo-50 rounded-2xl flex items-center gap-4 border border-indigo-100 not-prose">
+                              <div className="my-8 p-6 bg-indigo-50 rounded-2xl flex items-center gap-[15px] border border-indigo-100 not-prose">
                                   <Zap className="text-indigo-600 flex-shrink-0" size={32}/>
                                   <div>
                                       <h4 className="font-bold text-slate-900 text-lg">Điểm nổi bật</h4>
@@ -498,7 +498,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
 
                       {activeTab === 'reviews' && (
                           <div id="reviews-section">
-                              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
+                              <div className="grid grid-cols-1 md:grid-cols-3 gap-[15px] mb-10">
                                   {/* Summary */}
                                   <div className="bg-slate-50 rounded-2xl p-6 text-center border border-slate-200">
                                       <div className="text-5xl font-black text-slate-900 mb-2">{averageRating}</div>
@@ -523,7 +523,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
                               </div>
 
                               {/* Filter & Write */}
-                              <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8">
+                              <div className="flex flex-col sm:flex-row justify-between items-center gap-[15px] mb-8">
                                   <div className="flex gap-2">
                                       {['all', 'with_images', '5_star'].map(f => (
                                           <button 
@@ -553,7 +553,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
                                               ))}
                                           </div>
                                       </div>
-                                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                      <div className="grid grid-cols-1 md:grid-cols-2 gap-[15px] mb-4">
                                           <input type="text" required className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm" placeholder="Tên hiển thị" value={newReview.name} onChange={e => setNewReview({...newReview, name: e.target.value})} />
                                           <div className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl flex items-center gap-2 text-slate-400 cursor-pointer hover:text-indigo-600 hover:border-indigo-300 transition-colors">
                                               <Camera size={18}/> <span>Thêm ảnh (Tùy chọn)</span>
@@ -567,7 +567,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
                               )}
 
                               {/* List */}
-                              <div className="space-y-6">
+                              <div className="space-y-[15px]">
                                   {filteredReviews.map(review => (
                                       <div key={review.id} className="border-b border-slate-100 pb-6 last:border-0 animate-fade-in">
                                           <div className="flex justify-between items-start mb-2">
@@ -595,7 +595,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
                                                   ))}
                                               </div>
                                           )}
-                                          <div className="pl-[52px] flex items-center gap-4">
+                                          <div className="pl-[52px] flex items-center gap-[15px]">
                                               <button className="text-xs text-slate-400 font-bold hover:text-indigo-600 flex items-center gap-1 group transition-colors">
                                                   <ThumbsUp size={14} className="group-hover:-translate-y-0.5 transition-transform"/> Hữu ích ({review.helpful})
                                               </button>
@@ -616,7 +616,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
                               <h3 className="text-2xl font-black text-slate-900">Sản Phẩm Tương Tự</h3>
                               <button className="text-sm font-bold text-indigo-600 hover:underline">Xem tất cả</button>
                           </div>
-                          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-[15px]">
                               {relatedProducts.map(p => <SimpleProductCard key={p.id} p={p}/>)}
                           </div>
                       </div>
@@ -628,7 +628,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
                               <div className="p-2 bg-indigo-50 rounded-lg text-indigo-600"><Clock size={20}/></div>
                               <h3 className="text-2xl font-black text-slate-900">Đã Xem Gần Đây</h3>
                           </div>
-                          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-[15px]">
                               {recentlyViewedProducts.map(p => <SimpleProductCard key={p.id} p={p}/>)}
                           </div>
                       </div>

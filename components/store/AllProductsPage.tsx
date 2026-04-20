@@ -182,14 +182,14 @@ const AllProductsPage: React.FC<AllProductsPageProps> = ({
           <span className="font-bold text-slate-700">Tất Cả Sản Phẩm</span>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-[15px]">
           <aside className="lg:col-span-1 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 self-start lg:sticky top-28">
             <div className="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
               <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2"><Filter size={18} /> Bộ lọc</h2>
               <button onClick={handleResetFilters} className="text-xs font-bold text-indigo-600 hover:underline">Xóa hết</button>
             </div>
             
-            <div className="space-y-6">
+            <div className="space-y-[15px]">
               <div>
                 <label className="text-sm font-bold text-slate-900 mb-2 block">Tìm kiếm</label>
                 <div className="relative">
@@ -273,7 +273,7 @@ const AllProductsPage: React.FC<AllProductsPageProps> = ({
             </div>
             
             {paginatedProducts.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-[15px]">
                     {paginatedProducts.map(p => <ProductCard key={p.id} product={p} />)}
                 </div>
             ) : (

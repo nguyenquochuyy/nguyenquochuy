@@ -321,4 +321,14 @@ export const api = {
   toggleReviewHidden: async (id: string) => {
     await fetch(`${API_URL}/reviews/${id}/toggle-hidden`, { method: 'PUT', headers: adminHeaders() });
   },
+  
+  // --- INVOICES (admin token) ---
+  addInvoice: async (invoice: any) => {
+    const res = await fetch(`${API_URL}/invoices`, { method: 'POST', headers: adminHeaders(), body: JSON.stringify(invoice) });
+    return res.json();
+  },
+  updateInvoiceStatus: async (id: string, status: string) => {
+    const res = await fetch(`${API_URL}/invoices/${id}/status`, { method: 'PUT', headers: adminHeaders(), body: JSON.stringify({ status }) });
+    return res.json();
+  },
 };

@@ -55,7 +55,7 @@ const Level2PasswordModal: React.FC<Level2PasswordModalProps> = ({ user, backend
             <p className="text-xs text-slate-400 mt-2">Gợi ý: Quản trị viên có thể sử dụng mã mặc định nếu quên mật khẩu.</p>
         </div>
         
-        <form onSubmit={handleSubmit} className="px-8 pb-8 space-y-4">
+        <form onSubmit={handleSubmit} className="px-8 pb-8 space-y-[15px]">
             <div>
                 <label className="sr-only">Mật khẩu cấp 2</label>
                 <input 

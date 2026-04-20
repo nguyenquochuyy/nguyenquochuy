@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { loadState, saveState } from '../services/mockBackend';
 import { api, tokenManager } from '../services/apiClient';
 import { adminAuthStorage, storeAuthStorage } from '../services/authStorage';
-import { BackendContextType, BackendState, Product, Order, OrderStatus, Category, Customer, InventoryLog, Transaction, Voucher, Employee, PaymentAccount, StoreSettings, ProductHistory, Review, Refund } from '../types';
+import { BackendContextType, BackendState, Product, Order, OrderStatus, Category, Customer, InventoryLog, Transaction, Voucher, Employee, PaymentAccount, StoreSettings, ProductHistory, Review, Refund, Invoice } from '../types';
 import { formatCurrency } from '../types';
 import { useRealtime } from './useRealtime';
 import { toast } from '../services/toast';
@@ -36,6 +36,7 @@ export const useBackend = () => {
               productHistory: remoteState.productHistory ?? [],
               reviews: remoteState.reviews ?? [],
               refunds: remoteState.refunds ?? [],
+              invoices: remoteState.invoices ?? [],
           };
           setData(safeState);
           setProductHistory(safeState.productHistory);
@@ -440,6 +441,24 @@ export const useBackend = () => {
     deleteRefund: async (id: string) => {
       if (!isOffline) { try { await api.deleteRefund(id); refreshData(); return; } catch (e) { setIsOffline(true); } }
       updateBackend({ ...data, refunds: data.refunds.filter(ref => ref.id !== id) });
+    },
+    // Invoices
+    addInvoice: async (invoice) => {
+      if (!isOffline) { try { await api.addInvoice(invoice); refreshData(); return; } catch (e) { setIsOffline(true); } }
+      const newInv: Invoice = { 
+        ...invoice, 
+        id: `inv_${Date.now()}`, 
+        invoiceId: `INV-${new Date().toISOString().slice(0,10).replace(/-/g,'')}-${Math.floor(Math.random()*1000)}`,
+        createdAt: new Date().toISOString(), 
+        updatedAt: new Date().toISOString() 
+      };
+      updateBackend({ ...data, invoices: [newInv, ...data.invoices] });
+      toast.success('Hóa đơn đã được tạo');
+    },
+    updateInvoiceStatus: async (id, status) => {
+      if (!isOffline) { try { await api.updateInvoiceStatus(id, status); refreshData(); return; } catch (e) { setIsOffline(true); } }
+      updateBackend({ ...data, invoices: data.invoices.map(inv => inv.id === id ? { ...inv, status, updatedAt: new Date().toISOString() } : inv) });
+      toast.info(`Cập nhật trạng thái hóa đơn #${id}`);
     },
     refresh: refreshData,
     productHistory,

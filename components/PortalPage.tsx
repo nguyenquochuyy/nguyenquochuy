@@ -36,7 +36,7 @@ const PortalPage: React.FC<PortalPageProps> = ({ user, onNavigate, onLogout }) =
         </div>
 
         {/* Selection Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16 px-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-[15px] mb-16 px-4">
           
           {/* Store Card */}
           <div 
@@ -56,7 +56,7 @@ const PortalPage: React.FC<PortalPageProps> = ({ user, onNavigate, onLogout }) =
                 Truy cập giao diện mua sắm, xem sản phẩm, tạo đơn hàng mới và quản lý giỏ hàng của bạn.
               </p>
               <div className="mt-auto">
-                <span className="inline-flex items-center gap-2 font-bold text-indigo-600 group-hover:gap-4 transition-all bg-indigo-50 px-6 py-3 rounded-xl group-hover:bg-indigo-600 group-hover:text-white">
+                <span className="inline-flex items-center gap-2 font-bold text-indigo-600 group-hover:gap-[15px] transition-all bg-indigo-50 px-6 py-3 rounded-xl group-hover:bg-indigo-600 group-hover:text-white">
                   Vào Cửa Hàng <ArrowRight size={18} />
                 </span>
               </div>
@@ -82,7 +82,7 @@ const PortalPage: React.FC<PortalPageProps> = ({ user, onNavigate, onLogout }) =
                   Quản lý sản phẩm, tồn kho, đơn hàng, tài chính và cấu hình hệ thống toàn diện.
                 </p>
                 <div className="mt-auto">
-                  <span className="inline-flex items-center gap-2 font-bold text-white group-hover:gap-4 transition-all bg-white/10 px-6 py-3 rounded-xl group-hover:bg-white group-hover:text-slate-900 backdrop-blur-md">
+                  <span className="inline-flex items-center gap-2 font-bold text-white group-hover:gap-[15px] transition-all bg-white/10 px-6 py-3 rounded-xl group-hover:bg-white group-hover:text-slate-900 backdrop-blur-md">
                     Vào Admin <ArrowRight size={18} />
                   </span>
                 </div>

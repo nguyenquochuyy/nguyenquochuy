@@ -108,8 +108,8 @@ const UserProfile: React.FC<UserProfileProps> = ({ currentUser, orders, backend,
                     <p className="text-slate-500 mt-1">Chào mừng trở lại, {currentUser.name}!</p>
                 </div>
                 
-                <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-                    <aside className="lg:col-span-1 self-start lg:sticky top-28 space-y-6">
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-[15px]">
+                    <aside className="lg:col-span-1 self-start lg:sticky top-28 space-y-[15px]">
                         {/* Loyalty Card */}
                         <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden">
                             <div className="absolute top-0 right-0 -mr-6 -mt-6 w-24 h-24 bg-white/10 rounded-full blur-2xl"></div>
@@ -138,7 +138,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ currentUser, orders, backend,
                         </div>
                     </aside>
 
-                    <main className="lg:col-span-3 space-y-8">
+                    <main className="lg:col-span-3 space-y-[15px]">
                         {activeTab === 'profile' && (
                             <>
                                 <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
@@ -149,7 +149,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ currentUser, orders, backend,
                                                 {infoSaveStatus === 'saving' ? <><Loader2 size={16} className="animate-spin"/> Đang lưu...</> : infoSaveStatus === 'saved' ? <><CheckCircle size={16}/> Đã lưu</> : 'Lưu thay đổi'}
                                             </button>
                                         </div>
-                                        <div className="space-y-4">
+                                        <div className="space-y-[15px]">
                                             <div><label className={labelClass}>Họ và tên</label><input type="text" name="name" value={formData.name} onChange={handleInfoChange} className={inputClass}/></div>
                                             <div><label className={labelClass}>Email</label><input type="email" name="email" value={currentUser.email} readOnly className={`${inputClass} bg-slate-50 cursor-not-allowed`}/></div>
                                             <div><label className={labelClass}>Số điện thoại</label><input type="tel" name="phone" value={formData.phone} onChange={handleInfoChange} className={inputClass}/></div>
@@ -165,7 +165,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ currentUser, orders, backend,
                                                 {passwordSaveStatus === 'saving' ? <><Loader2 size={16} className="animate-spin"/> Đang lưu...</> : passwordSaveStatus === 'saved' ? <><CheckCircle size={16}/> Đã đổi</> : 'Cập nhật'}
                                             </button>
                                         </div>
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-[15px]">
                                             <div><label className={labelClass}>Mật khẩu mới</label><div className="relative"><input type={showNewPassword ? 'text' : 'password'} name="newPassword" value={passwordData.newPassword} onChange={handlePasswordChange} className={inputClass}/><button type="button" onClick={() => setShowNewPassword(p => !p)} className="absolute right-3 top-3 text-slate-400 hover:text-slate-600"><Eye size={16}/></button></div></div>
                                             <div><label className={labelClass}>Xác nhận mật khẩu</label><div className="relative"><input type={showConfirmPassword ? 'text' : 'password'} name="confirmPassword" value={passwordData.confirmPassword} onChange={handlePasswordChange} className={inputClass}/><button type="button" onClick={() => setShowConfirmPassword(p => !p)} className="absolute right-3 top-3 text-slate-400 hover:text-slate-600"><Eye size={16}/></button></div></div>
                                         </div>

@@ -91,7 +91,7 @@ const RefundDetailModal: React.FC<RefundDetailModalProps> = ({ refund, onClose, 
           </button>
         </div>
 
-        <div className="p-6 space-y-4 overflow-y-auto">
+        <div className="p-6 space-y-[15px] overflow-y-auto">
           {/* Status Badge */}
           <div className="flex items-center justify-between">
             <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase border ${getStatusColor(refund.status)}`}>

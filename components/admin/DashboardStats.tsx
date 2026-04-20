@@ -427,10 +427,10 @@ const DashboardStats: React.FC<DashboardStatsProps> = ({
   );
 
   return (
-    <div className="space-y-4 animate-fade-in-up pb-10">
+    <div className="space-y-[15px] animate-fade-in-up pb-10">
         
         {/* 1. Header & Controls */}
-        <div className="flex flex-col md:flex-row justify-between items-end gap-4">
+        <div className="flex flex-col md:flex-row justify-between items-end gap-[15px]">
             <div>
                 <h1 className="text-2xl font-bold text-slate-900">{t.businessOverview}</h1>
                 <p className="text-slate-500 text-sm mt-1">
@@ -483,7 +483,7 @@ const DashboardStats: React.FC<DashboardStatsProps> = ({
         {/* Advanced Filters Panel */}
         {advancedFilters.showFilters && (
             <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm animate-fade-in">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-[15px]">
                     <div>
                         <label className="block text-xs font-bold text-slate-500 mb-2">Category</label>
                         <select
@@ -526,7 +526,7 @@ const DashboardStats: React.FC<DashboardStatsProps> = ({
         {/* Widget Customization Panel */}
         {advancedFilters.showWidgets && (
             <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm animate-fade-in">
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-[15px]">
                     {[
                         { key: 'kpiCards', label: 'KPI Cards' },
                         { key: 'mainChart', label: 'Main Chart' },
@@ -551,7 +551,7 @@ const DashboardStats: React.FC<DashboardStatsProps> = ({
 
         {/* 2. KPI Grid (More Comprehensive) */}
         {widgetConfig.kpiCards && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-[15px]">
                 <KPICard
                     title={t.totalRevenue}
                     value={formatCurrency(currentMetrics.revenue)}
@@ -593,7 +593,7 @@ const DashboardStats: React.FC<DashboardStatsProps> = ({
 
         {/* 3. Main Analytics Chart */}
         {widgetConfig.mainChart && (
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[400px]">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-[15px] h-[400px]">
                 <div className="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col">
                     <div className="flex justify-between items-center mb-6">
                         <div>
@@ -692,7 +692,7 @@ const DashboardStats: React.FC<DashboardStatsProps> = ({
         )}
 
         {/* 4. Bottom Section: Top Products & Operations */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-[15px]">
 
             {/* Top Products Table */}
             {widgetConfig.topProducts && (
@@ -750,7 +750,7 @@ const DashboardStats: React.FC<DashboardStatsProps> = ({
 
             {/* Operational Health / Alerts */}
             {widgetConfig.operationalHealth && (
-                <div className="space-y-6">
+                <div className="space-y-[15px]">
                     {/* Pending Actions */}
                     <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                         <h3 className="font-bold text-lg text-slate-800 mb-4 flex items-center gap-2">

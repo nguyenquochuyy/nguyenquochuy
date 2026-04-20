@@ -113,7 +113,7 @@ const StoreLogin: React.FC<StoreLoginProps> = ({ backend, message, onClearMessag
         
         <div className="relative z-10 flex flex-col justify-center p-12">
           <div className="mb-12">
-            <div className="flex items-center gap-4 mb-8">
+            <div className="flex items-center gap-[15px] mb-8">
               <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg">
                 <ShoppingBag size={32} className="text-white" />
               </div>
@@ -130,8 +130,8 @@ const StoreLogin: React.FC<StoreLoginProps> = ({ backend, message, onClearMessag
             </p>
           </div>
           
-          <div className="space-y-6">
-            <div className="flex items-center gap-4 group">
+          <div className="space-y-[15px]">
+            <div className="flex items-center gap-[15px] group">
               <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center group-hover:bg-white/30 transition-all duration-300">
                 <CheckCircle size={24} />
               </div>
@@ -140,7 +140,7 @@ const StoreLogin: React.FC<StoreLoginProps> = ({ backend, message, onClearMessag
                 <p className="text-white/70 text-sm">Quản lý tất cả đơn hàng trong một nơi</p>
               </div>
             </div>
-            <div className="flex items-center gap-4 group">
+            <div className="flex items-center gap-[15px] group">
               <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center group-hover:bg-white/30 transition-all duration-300">
                 <CheckCircle size={24} />
               </div>
@@ -149,7 +149,7 @@ const StoreLogin: React.FC<StoreLoginProps> = ({ backend, message, onClearMessag
                 <p className="text-white/70 text-sm">Ưu đãi độc quyền chỉ dành cho thành viên</p>
               </div>
             </div>
-            <div className="flex items-center gap-4 group">
+            <div className="flex items-center gap-[15px] group">
               <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center group-hover:bg-white/30 transition-all duration-300">
                 <CheckCircle size={24} />
               </div>
@@ -161,7 +161,7 @@ const StoreLogin: React.FC<StoreLoginProps> = ({ backend, message, onClearMessag
           </div>
 
           {/* Stats */}
-          <div className="mt-16 grid grid-cols-3 gap-8">
+          <div className="mt-16 grid grid-cols-3 gap-[15px]">
             <div className="text-center">
               <div className="text-3xl font-bold text-white mb-1">50K+</div>
               <div className="text-white/70 text-sm">Khách hàng</div>
@@ -210,7 +210,7 @@ const StoreLogin: React.FC<StoreLoginProps> = ({ backend, message, onClearMessag
               </div>
             )}
 
-            <form onSubmit={handleLogin} className="space-y-6">
+            <form onSubmit={handleLogin} className="space-y-[15px]">
               <div className="group">
                 <label className="block text-sm font-semibold text-gray-700 mb-3">{t.email}</label>
                 <div className="relative">
@@ -306,7 +306,7 @@ const StoreLogin: React.FC<StoreLoginProps> = ({ backend, message, onClearMessag
 
             <div className="mt-8 text-center text-sm text-gray-500">
               <p>{t.agreementPrompt}</p>
-              <div className="flex justify-center gap-6 mt-3">
+              <div className="flex justify-center gap-[15px] mt-3">
                 <button className="text-indigo-600 hover:text-indigo-700 hover:underline transition-colors duration-200">{t.termsOfUse}</button>
                 <span>&</span>
                 <button className="text-indigo-600 hover:text-indigo-700 hover:underline transition-colors duration-200">{t.privacyPolicy}</button>
@@ -315,7 +315,7 @@ const StoreLogin: React.FC<StoreLoginProps> = ({ backend, message, onClearMessag
           </div>
 
           {/* Trust Badges */}
-          <div className="mt-8 flex justify-center gap-8">
+          <div className="mt-8 flex justify-center gap-[15px]">
             <div className="text-center">
               <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
                 <CheckCircle size={24} className="text-green-600" />

@@ -326,7 +326,7 @@ const CustomerManager: React.FC<CustomerManagerProps> = ({ backend, lang }) => {
 
           {/* Header */}
           <div className="p-6 border-b border-gray-100 flex justify-between items-start bg-gray-50">
-             <div className="flex items-center gap-4">
+             <div className="flex items-center gap-[15px]">
                 <div className={`w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold shadow-sm ${customer.status === 'ACTIVE' ? 'bg-indigo-100 text-indigo-600' : 'bg-gray-200 text-gray-500'}`}>
                     {customer.name.charAt(0)}
                 </div>
@@ -356,7 +356,7 @@ const CustomerManager: React.FC<CustomerManagerProps> = ({ backend, lang }) => {
           {/* Body */}
           <div className="flex-1 overflow-y-auto p-6">
              {/* Stats Cards */}
-             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+             <div className="grid grid-cols-1 sm:grid-cols-3 gap-[15px] mb-8">
                 <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
                    <p className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">{t.totalSpent}</p>
                    <p className="text-xl font-bold text-indigo-600">{formatCurrency(stats.totalSpent)}</p>
@@ -431,8 +431,8 @@ const CustomerManager: React.FC<CustomerManagerProps> = ({ backend, lang }) => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6 animate-fade-in-up">
-       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div className="max-w-7xl mx-auto space-y-[15px] animate-fade-in-up">
+       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-[15px]">
           <div>
               <h2 className="text-2xl font-bold text-slate-900">{t.customerMgmt}</h2>
               <p className="text-slate-500 text-sm mt-1">{state.customers.length} khách hàng đã đăng ký</p>
@@ -447,7 +447,7 @@ const CustomerManager: React.FC<CustomerManagerProps> = ({ backend, lang }) => {
        </div>
 
        {/* Analytics Cards */}
-       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+       <div className="grid grid-cols-2 md:grid-cols-4 gap-[15px]">
            <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
                <div className="flex items-center gap-2 mb-2">
                    <Users size={18} className="text-indigo-600" />
@@ -479,7 +479,7 @@ const CustomerManager: React.FC<CustomerManagerProps> = ({ backend, lang }) => {
        </div>
 
        {/* Toolbar */}
-       <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-4 justify-between">
+       <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-[15px] justify-between">
           <div className="relative w-full">
              <Search className="absolute left-3 top-2.5 text-slate-400" size={18} />
              <input
@@ -582,7 +582,7 @@ const CustomerManager: React.FC<CustomerManagerProps> = ({ backend, lang }) => {
                              />
                           </td>
                           <td className="px-6 py-4">
-                             <div className="flex items-center gap-4">
+                             <div className="flex items-center gap-[15px]">
                                 <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm ${customer.status === 'ACTIVE' ? 'bg-indigo-100 text-indigo-600' : 'bg-gray-100 text-gray-500'}`}>
                                     {customer.name.charAt(0)}
                                 </div>

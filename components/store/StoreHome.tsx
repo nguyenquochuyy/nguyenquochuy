@@ -225,7 +225,7 @@ const StoreHome: React.FC<StoreHomeProps> = ({
                         <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent z-10"></div>
                         <img src={slide.image} alt={slide.title} className="w-full h-full object-cover object-center transform scale-105 animate-pulse-slow origin-center" />
                         <div className="absolute inset-0 z-20 flex items-center px-6 md:px-20">
-                            <div className="max-w-4xl animate-fade-in-up space-y-8 pl-4 md:pl-12 border-l-4 border-white/30">
+                            <div className="max-w-4xl animate-fade-in-up space-y-[15px] pl-4 md:pl-12 border-l-4 border-white/30">
                                 <span className={`inline-block px-5 py-2 rounded-full text-xs font-bold text-white bg-gradient-to-r ${slide.color} uppercase tracking-widest mb-2 shadow-lg ring-1 ring-white/50 backdrop-blur-md`}>
                                     New Collection 2024
                                 </span>
@@ -244,7 +244,7 @@ const StoreHome: React.FC<StoreHomeProps> = ({
                 ))}
                 
                 {/* Slider Controls */}
-                <div className="absolute bottom-10 right-10 z-30 flex gap-4">
+                <div className="absolute bottom-10 right-10 z-30 flex gap-[15px]">
                     <button 
                         onClick={() => setCurrentHeroSlide(prev => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length)}
                         className="p-4 bg-white/10 hover:bg-white/30 rounded-full text-white backdrop-blur-md border border-white/20 transition-all hover:scale-110"
@@ -289,14 +289,14 @@ const StoreHome: React.FC<StoreHomeProps> = ({
         {/* TRUST BAR */}
         <div className="border-b border-slate-100 relative z-20 bg-white">
             <div className="max-w-7xl mx-auto px-4 py-12">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-[15px]">
                     {[
                         { icon: Truck, title: "Miễn Phí Vận Chuyển", sub: "Đơn hàng từ 500k" },
                         { icon: ShieldCheck, title: "Bảo Hành Chính Hãng", sub: "Cam kết 100% Authentic" },
                         { icon: RefreshCw, title: "Đổi Trả Dễ Dàng", sub: "Trong vòng 30 ngày" },
                         { icon: Phone, title: "Hỗ Trợ 24/7", sub: "Hotline: 0901 234 567" }
                     ].map((item, idx) => (
-                        <div key={idx} className="flex flex-col items-center text-center gap-4 group px-4 p-6 rounded-2xl hover:bg-slate-50 transition-colors">
+                        <div key={idx} className="flex flex-col items-center text-center gap-[15px] group px-4 p-6 rounded-2xl hover:bg-slate-50 transition-colors">
                             <div className="p-4 bg-indigo-50 text-indigo-600 rounded-2xl group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300 shadow-sm group-hover:shadow-indigo-200 group-hover:scale-110">
                                 <item.icon size={28} />
                             </div>
@@ -319,7 +319,7 @@ const StoreHome: React.FC<StoreHomeProps> = ({
                         <h2 className="text-3xl md:text-4xl font-black text-slate-900 mb-4">Khám Phá Phong Cách</h2>
                         <p className="text-slate-500 max-w-2xl mx-auto">Chọn bộ sưu tập phù hợp với cá tính của bạn. Từ năng động, hiện đại đến tối giản và tinh tế.</p>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-4 h-[600px]">
+                    <div className="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-[15px] h-[600px]">
                         <div className="md:col-span-2 md:row-span-2 relative rounded-3xl overflow-hidden group cursor-pointer">
                             <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=2070&auto=format&fit=crop" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex flex-col justify-end p-8">
@@ -369,7 +369,7 @@ const StoreHome: React.FC<StoreHomeProps> = ({
                         </div>
 
                         {/* Countdown Timer */}
-                        <div className="flex gap-4">
+                        <div className="flex gap-[15px]">
                             {Object.entries(timeLeft).map(([unit, value]) => (
                                 <div key={unit} className="flex flex-col items-center">
                                     <div className="w-20 h-20 md:w-24 md:h-24 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 flex items-center justify-center text-3xl md:text-4xl font-black text-white shadow-xl">
@@ -386,7 +386,7 @@ const StoreHome: React.FC<StoreHomeProps> = ({
             {/* Trending Section */}
             {searchTerm === '' && categoryFilter === 'All' && (
                 <div>
-                    <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-4">
+                    <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-[15px]">
                         <div>
                             <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-bold uppercase tracking-wide mb-3">
                                 <Zap size={14} fill="currentColor"/> Hot Trend
@@ -398,7 +398,7 @@ const StoreHome: React.FC<StoreHomeProps> = ({
                         </button>
                     </div>
                     
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[15px]">
                         {trendingProducts.map((product, idx) => (
                             <div key={idx} className="bg-white p-4 rounded-3xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group cursor-pointer border border-slate-100" onClick={() => onProductClick(product)}>
                                 <div className="relative aspect-square rounded-2xl overflow-hidden mb-5 bg-slate-100">
@@ -434,7 +434,7 @@ const StoreHome: React.FC<StoreHomeProps> = ({
                     <h3 className="text-3xl font-black text-slate-900 mb-4">Khách Hàng Nói Gì?</h3>
                     <p className="text-slate-500 mb-12 max-w-xl mx-auto">Hơn 10,000 khách hàng đã tin tưởng và hài lòng với chất lượng dịch vụ của UniShop.</p>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-[15px]">
                         {TESTIMONIALS.map(item => (
                             <div key={item.id} className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 relative">
                                 <div className="absolute -top-6 left-1/2 -translate-x-1/2">
@@ -468,7 +468,7 @@ const StoreHome: React.FC<StoreHomeProps> = ({
                     </div>
                 ) : (
                     <>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[15px]">
                             {displayedProducts.map(product => {
                                 const finalPrice = getDiscountedPrice(product);
                                 const hasDiscount = product.discount > 0;
@@ -594,7 +594,7 @@ const StoreHome: React.FC<StoreHomeProps> = ({
                     </div>
                     <button className="text-sm font-bold text-indigo-600 hover:underline">Xem Blog</button>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-[15px]">
                     {BLOG_POSTS.map((post) => (
                         <div key={post.id} className="group cursor-pointer">
                             <div className="aspect-[16/10] rounded-2xl overflow-hidden mb-4 relative">

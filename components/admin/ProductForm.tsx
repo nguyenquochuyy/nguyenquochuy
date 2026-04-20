@@ -222,10 +222,10 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, onCancel, initialDa
 
         {/* Content - 2 Column Layout */}
         <div className="flex-1 overflow-y-auto p-8">
-          <form id="productForm" onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <form id="productForm" onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-[15px]">
             
             {/* Left Column: Media & Status (4 cols) */}
-            <div className="lg:col-span-4 space-y-6">
+            <div className="lg:col-span-4 space-y-[15px]">
                
                {/* Product Images */}
                <div className={sectionClass}>
@@ -377,7 +377,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, onCancel, initialDa
                  <h3 className="font-bold text-gray-900 mb-6 flex items-center gap-2 border-b border-gray-100 pb-3">
                     <List size={18} className="text-gray-500"/> {t.general}
                  </h3>
-                 <div className="grid grid-cols-2 gap-6 mb-6">
+                 <div className="grid grid-cols-2 gap-[15px] mb-6">
                     <div className="col-span-2 sm:col-span-1">
                        <label className={labelClass}>{t.name}</label>
                        <input
@@ -430,7 +430,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, onCancel, initialDa
                  <h3 className="font-bold text-gray-900 mb-6 flex items-center gap-2 border-b border-gray-100 pb-3">
                     <DollarSign size={18} className="text-gray-500"/> {t.pricing}
                  </h3>
-                 <div className="grid grid-cols-3 gap-6">
+                 <div className="grid grid-cols-3 gap-[15px]">
                     <div>
                        <label className={labelClass}>{t.price}</label>
                        <div className="relative">
@@ -571,7 +571,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, onCancel, initialDa
         </div>
 
         {/* Footer Actions */}
-        <div className="px-8 py-5 bg-white border-t border-gray-200 flex justify-end gap-4 shrink-0 z-10">
+        <div className="px-8 py-5 bg-white border-t border-gray-200 flex justify-end gap-[15px] shrink-0 z-10">
            <button
             type="button"
             onClick={onCancel}

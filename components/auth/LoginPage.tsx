@@ -67,7 +67,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onNavigate, backend, message, onC
             </div>
         )}
         <div className="bg-white p-8 rounded-2xl shadow-lg border border-slate-200">
-            <form onSubmit={handleLogin} className="space-y-6">
+            <form onSubmit={handleLogin} className="space-y-[15px]">
                 <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
                     <div className="relative">

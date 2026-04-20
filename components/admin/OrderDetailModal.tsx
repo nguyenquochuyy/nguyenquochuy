@@ -45,9 +45,9 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({ order, onClose, onP
         </div>
 
         <div className="p-6 overflow-y-auto">
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-2 gap-[15px]">
             {/* Cột trái: Thông tin đơn hàng */}
-            <div className="space-y-4">
+            <div className="space-y-[15px]">
               {/* Tiêu đề hóa đơn */}
               <div className="flex justify-between items-start pb-4 border-b border-gray-100">
                 <div>
@@ -125,7 +125,7 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({ order, onClose, onP
           </div>
 
           {/* Phần ghi chú - Chỉnh sửa trực tiếp */}
-          <div className="mt-6 space-y-4 no-print">
+          <div className="mt-6 space-y-[15px] no-print">
             <div className="bg-slate-50 rounded-xl p-4">
               <h3 className="font-bold text-slate-900 flex items-center gap-2 mb-3">
                 <FileText size={18} /> Ghi Chú Nội Bộ

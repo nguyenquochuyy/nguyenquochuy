@@ -72,7 +72,7 @@ const WarehouseManager: React.FC<Props> = ({ warehouses, products, onAddWarehous
         <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2 mb-6">
           <ArrowRightLeft className="text-indigo-600" /> Luân chuyển hàng hóa
         </h3>
-        <div className="space-y-4">
+        <div className="space-y-[15px]">
           <div>
             <label className="block text-sm font-semibold text-slate-700 mb-1">Sản phẩm</label>
             <select className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm" value={productId} onChange={e => setProductId(e.target.value)}>
@@ -80,7 +80,7 @@ const WarehouseManager: React.FC<Props> = ({ warehouses, products, onAddWarehous
               {products.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
             </select>
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-[15px]">
             <div className="flex-1">
               <label className="block text-sm font-semibold text-slate-700 mb-1">Từ Kho</label>
               <select className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm" value={fromWh} onChange={e => setFromWh(e.target.value)}>
@@ -96,10 +96,13 @@ const WarehouseManager: React.FC<Props> = ({ warehouses, products, onAddWarehous
               </select>
             </div>
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-[15px]">
             <div className="w-1/3">
               <label className="block text-sm font-semibold text-slate-700 mb-1">Số lượng</label>
-              <input type="number" min="1" className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm" value={qty} onChange={e => setQty(parseInt(e.target.value) || 0)} />
+              <input type="text" className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm" value={qty === 0 ? '' : new Intl.NumberFormat('vi-VN').format(qty).replace(/,/g, '.')} onChange={e => {
+                const val = e.target.value.replace(/\D/g, '');
+                setQty(parseInt(val) || 0);
+              }} />
             </div>
             <div className="flex-1">
               <label className="block text-sm font-semibold text-slate-700 mb-1">Ghi chú</label>
@@ -117,7 +120,7 @@ const WarehouseManager: React.FC<Props> = ({ warehouses, products, onAddWarehous
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 flex flex-col h-full animate-fade-in">
       {/* Tab header */}
-      <div className="flex gap-6 border-b border-slate-200 mb-6">
+      <div className="flex gap-[15px] border-b border-slate-200 mb-6">
         <button 
             onClick={() => setActiveTab('warehouses')}
             className={`pb-3 font-bold text-sm flex items-center gap-2 transition-all relative ${activeTab === 'warehouses' ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-700'}`}
@@ -145,7 +148,7 @@ const WarehouseManager: React.FC<Props> = ({ warehouses, products, onAddWarehous
               <Plus size={16} /> Thêm kho mới
             </button>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[15px]">
             {filteredWHs.map(w => (
               <div key={w.id} className="bg-slate-50 border border-slate-200 p-4 rounded-xl flex flex-col">
                 <div className="flex justify-between items-start mb-2">
@@ -179,7 +182,7 @@ const WarehouseManager: React.FC<Props> = ({ warehouses, products, onAddWarehous
               <h3 className="font-bold text-slate-800">{editingWH ? 'Sửa Kho' : 'Thêm Kho Mới'}</h3>
               <button type="button" onClick={() => setShowModal(false)} className="text-slate-400 hover:text-slate-600"><X size={20}/></button>
             </div>
-            <div className="p-6 space-y-4">
+            <div className="p-6 space-y-[15px]">
               <div><label className="block text-sm font-semibold text-slate-700 mb-1">Tên kho</label><input required name="name" defaultValue={editingWH?.name} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm" /></div>
               <div><label className="block text-sm font-semibold text-slate-700 mb-1">Quản lý (Tên)</label><input name="manager" defaultValue={editingWH?.manager} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm" /></div>
               <div><label className="block text-sm font-semibold text-slate-700 mb-1">Điện thoại</label><input name="phone" defaultValue={editingWH?.phone} className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm" /></div>

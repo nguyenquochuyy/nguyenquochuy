@@ -82,9 +82,9 @@ const MyProfile: React.FC<MyProfileProps> = ({ currentUser, backend, lang }) => 
   const iconClass = "absolute left-4 top-3.5 text-slate-400";
 
   return (
-    <div className="max-w-4xl mx-auto animate-fade-in-up space-y-8">
+    <div className="max-w-4xl mx-auto animate-fade-in-up space-y-[15px]">
       {/* Profile Info Section */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-[15px]">
         <div>
             <h2 className="text-2xl font-bold text-slate-900">Thông tin cá nhân</h2>
             <p className="text-slate-500 text-sm mt-1">Xem và cập nhật thông tin tài khoản của bạn.</p>
@@ -102,7 +102,7 @@ const MyProfile: React.FC<MyProfileProps> = ({ currentUser, backend, lang }) => 
       </div>
 
       <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
-        <form id="profileForm" onSubmit={handleSubmitInfo} className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <form id="profileForm" onSubmit={handleSubmitInfo} className="grid grid-cols-1 md:grid-cols-2 gap-[15px]">
           
           <div className="flex flex-col items-center md:items-start text-center md:text-left">
             <div className="w-32 h-32 rounded-full bg-gradient-to-br from-indigo-100 to-violet-100 flex items-center justify-center text-5xl font-bold text-indigo-600 border-4 border-white shadow-lg mb-4">
@@ -128,7 +128,7 @@ const MyProfile: React.FC<MyProfileProps> = ({ currentUser, backend, lang }) => 
             </div>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-[15px]">
             <div>
               <label className={labelClass}>Họ và tên</label>
               <div className="relative">
@@ -175,7 +175,7 @@ const MyProfile: React.FC<MyProfileProps> = ({ currentUser, backend, lang }) => 
               </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-[15px]">
             <div>
               <label className={labelClass}>Mật khẩu mới</label>
               <div className="relative">
