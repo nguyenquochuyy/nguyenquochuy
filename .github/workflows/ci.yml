@@ -17,8 +17,12 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.25'
+          go-version: '1.24'
           cache-dependency-path: backend-go/go.sum
+
+      - name: Tidy
+        working-directory: backend-go
+        run: go mod tidy
 
       - name: Lint
         uses: golangci/golangci-lint-action@v6
