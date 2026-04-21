@@ -88,7 +88,7 @@ func Setup(r *gin.Engine, db *mongo.Database, cfg *config.Config, c cache.Cache)
 	protected.Use(
 		middleware.Auth(cfg.JWTSecret),
 		middleware.UserRateLimit(),
-		middleware.AuditSensitiveOperations(),
+		middleware.AuditSensitiveOperations,
 	)
 
 	// 1. Admin Routes (Employees Only)

@@ -3,7 +3,6 @@ package middleware
 import (
 	"net/http"
 	"sync"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/time/rate"
@@ -20,7 +19,7 @@ type UserRateLimiter struct {
 func NewUserRateLimiter(r rate.Limit, b int) *UserRateLimiter {
 	return &UserRateLimiter{
 		users: make(map[string]*rate.Limiter),
-		mu:    &sync.RWMutex{},
+		mu:    sync.RWMutex{},
 		r:     r,
 		b:     b,
 	}
