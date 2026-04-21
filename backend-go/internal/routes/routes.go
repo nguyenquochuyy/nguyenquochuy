@@ -80,6 +80,7 @@ func Setup(r *gin.Engine, db *mongo.Database, cfg *config.Config, c cache.Cache)
 	api.GET("/categories", cached2m, categoryH.List)
 	api.GET("/categories/:id", cached2m, categoryH.GetByID)
 	api.GET("/categories/:id/products", cached2m, categoryH.GetProducts)
+	api.GET("/reviews", reviewH.List)
 
 	// --- PROTECTED ROUTES ---
 
@@ -223,7 +224,6 @@ func Setup(r *gin.Engine, db *mongo.Database, cfg *config.Config, c cache.Cache)
 		store.PUT("/customers/:id/wishlist", customerH.ToggleWishlist)
 		store.POST("/refunds", refundH.Create)
 		store.POST("/reviews", reviewH.Create)
-		store.GET("/reviews", reviewH.List) // Review list could be public, but maybe we want it here
 	}
 
 }

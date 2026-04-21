@@ -227,7 +227,7 @@ func (h *OrderHandler) List(c *gin.Context) {
 		sortOrder = 1
 	}
 
-	opts := options.Find().SetSort(bson.D{{Key: sortField, Value: sortOrder}}).SetSkip(int64(skip)).SetLimit(int64(limit))
+	opts := options.Find().SetSort(bson.D{bson.E{Key: sortField, Value: sortOrder}}).SetSkip(int64(skip)).SetLimit(int64(limit))
 
 	cursor, err := h.col.Find(ctx, filter, opts)
 	if err != nil {

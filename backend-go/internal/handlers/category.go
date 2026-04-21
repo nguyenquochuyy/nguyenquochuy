@@ -55,7 +55,7 @@ func (h *CategoryHandler) List(c *gin.Context) {
 		}
 	}
 
-	opts := options.Find().SetSort(bson.D{{Key: "order", Value: 1}})
+	opts := options.Find().SetSort(bson.D{bson.E{Key: "order", Value: 1}})
 
 	cursor, err := h.col.Find(ctx, filter, opts)
 	if err != nil {

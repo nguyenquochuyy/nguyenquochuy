@@ -16,8 +16,8 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-	"github.com/swaggo/files"
-	"github.com/swaggo/gin-swagger"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -80,70 +80,70 @@ func ensureIndexes(database *mongo.Database) {
 
 	indexes := map[string][]mongo.IndexModel{
 		"orders": {
-			{Keys: bson.D{{Key: "id", Value: 1}}, Options: options.Index().SetUnique(true)},
-			{Keys: bson.D{{Key: "status", Value: 1}}},
-			{Keys: bson.D{{Key: "paymentStatus", Value: 1}}},
-			{Keys: bson.D{{Key: "paymentMethod", Value: 1}}},
-			{Keys: bson.D{{Key: "createdAt", Value: -1}}},
-			{Keys: bson.D{{Key: "updatedAt", Value: -1}}},
-			{Keys: bson.D{{Key: "customerEmail", Value: 1}}},
-			{Keys: bson.D{{Key: "customerPhone", Value: 1}}},
-			{Keys: bson.D{{Key: "customerName", Value: 1}}},
-			{Keys: bson.D{{Key: "status", Value: 1}, {Key: "createdAt", Value: -1}}},
-			{Keys: bson.D{{Key: "customerPhone", Value: 1}, {Key: "createdAt", Value: -1}}},
-			{Keys: bson.D{{Key: "customerName", Value: 1}, {Key: "createdAt", Value: -1}}},
+			{Keys: bson.D{bson.E{Key: "id", Value: 1}}, Options: options.Index().SetUnique(true)},
+			{Keys: bson.D{bson.E{Key: "status", Value: 1}}},
+			{Keys: bson.D{bson.E{Key: "paymentStatus", Value: 1}}},
+			{Keys: bson.D{bson.E{Key: "paymentMethod", Value: 1}}},
+			{Keys: bson.D{bson.E{Key: "createdAt", Value: -1}}},
+			{Keys: bson.D{bson.E{Key: "updatedAt", Value: -1}}},
+			{Keys: bson.D{bson.E{Key: "customerEmail", Value: 1}}},
+			{Keys: bson.D{bson.E{Key: "customerPhone", Value: 1}}},
+			{Keys: bson.D{bson.E{Key: "customerName", Value: 1}}},
+			{Keys: bson.D{bson.E{Key: "status", Value: 1}, bson.E{Key: "createdAt", Value: -1}}},
+			{Keys: bson.D{bson.E{Key: "customerPhone", Value: 1}, bson.E{Key: "createdAt", Value: -1}}},
+			{Keys: bson.D{bson.E{Key: "customerName", Value: 1}, bson.E{Key: "createdAt", Value: -1}}},
 		},
 		"products": {
-			{Keys: bson.D{{Key: "id", Value: 1}}, Options: options.Index().SetUnique(true)},
-			{Keys: bson.D{{Key: "category", Value: 1}}},
-			{Keys: bson.D{{Key: "sku", Value: 1}}},
-			{Keys: bson.D{{Key: "isVisible", Value: 1}}},
-			{Keys: bson.D{{Key: "price", Value: 1}}},
-			{Keys: bson.D{{Key: "stock", Value: 1}}},
-			{Keys: bson.D{{Key: "createdAt", Value: -1}}},
-			{Keys: bson.D{{Key: "isVisible", Value: 1}, {Key: "category", Value: 1}}},
-			{Keys: bson.D{{Key: "isVisible", Value: 1}, {Key: "createdAt", Value: -1}}},
+			{Keys: bson.D{bson.E{Key: "id", Value: 1}}, Options: options.Index().SetUnique(true)},
+			{Keys: bson.D{bson.E{Key: "category", Value: 1}}},
+			{Keys: bson.D{bson.E{Key: "sku", Value: 1}}},
+			{Keys: bson.D{bson.E{Key: "isVisible", Value: 1}}},
+			{Keys: bson.D{bson.E{Key: "price", Value: 1}}},
+			{Keys: bson.D{bson.E{Key: "stock", Value: 1}}},
+			{Keys: bson.D{bson.E{Key: "createdAt", Value: -1}}},
+			{Keys: bson.D{bson.E{Key: "isVisible", Value: 1}, bson.E{Key: "category", Value: 1}}},
+			{Keys: bson.D{bson.E{Key: "isVisible", Value: 1}, bson.E{Key: "createdAt", Value: -1}}},
 		},
 		"productHistory": {
-			{Keys: bson.D{{Key: "id", Value: 1}}},
-			{Keys: bson.D{{Key: "productId", Value: 1}}},
-			{Keys: bson.D{{Key: "changedAt", Value: -1}}},
+			{Keys: bson.D{bson.E{Key: "id", Value: 1}}},
+			{Keys: bson.D{bson.E{Key: "productId", Value: 1}}},
+			{Keys: bson.D{bson.E{Key: "changedAt", Value: -1}}},
 		},
 		"customers": {
-			{Keys: bson.D{{Key: "id", Value: 1}}, Options: options.Index().SetUnique(true)},
-			{Keys: bson.D{{Key: "email", Value: 1}}},
+			{Keys: bson.D{bson.E{Key: "id", Value: 1}}, Options: options.Index().SetUnique(true)},
+			{Keys: bson.D{bson.E{Key: "email", Value: 1}}},
 		},
 		"employees": {
-			{Keys: bson.D{{Key: "id", Value: 1}}, Options: options.Index().SetUnique(true)},
-			{Keys: bson.D{{Key: "email", Value: 1}}},
+			{Keys: bson.D{bson.E{Key: "id", Value: 1}}, Options: options.Index().SetUnique(true)},
+			{Keys: bson.D{bson.E{Key: "email", Value: 1}}},
 		},
 		"categories": {
-			{Keys: bson.D{{Key: "id", Value: 1}}, Options: options.Index().SetUnique(true)},
-			{Keys: bson.D{{Key: "parentId", Value: 1}}},
-			{Keys: bson.D{{Key: "order", Value: 1}}},
-			{Keys: bson.D{{Key: "isActive", Value: 1}}},
+			{Keys: bson.D{bson.E{Key: "id", Value: 1}}, Options: options.Index().SetUnique(true)},
+			{Keys: bson.D{bson.E{Key: "parentId", Value: 1}}},
+			{Keys: bson.D{bson.E{Key: "order", Value: 1}}},
+			{Keys: bson.D{bson.E{Key: "isActive", Value: 1}}},
 		},
 		"vouchers": {
-			{Keys: bson.D{{Key: "id", Value: 1}}, Options: options.Index().SetUnique(true)},
-			{Keys: bson.D{{Key: "code", Value: 1}}},
+			{Keys: bson.D{bson.E{Key: "id", Value: 1}}, Options: options.Index().SetUnique(true)},
+			{Keys: bson.D{bson.E{Key: "code", Value: 1}}},
 		},
 		"refunds": {
-			{Keys: bson.D{{Key: "id", Value: 1}}, Options: options.Index().SetUnique(true)},
-			{Keys: bson.D{{Key: "orderId", Value: 1}}},
-			{Keys: bson.D{{Key: "status", Value: 1}}},
+			{Keys: bson.D{bson.E{Key: "id", Value: 1}}, Options: options.Index().SetUnique(true)},
+			{Keys: bson.D{bson.E{Key: "orderId", Value: 1}}},
+			{Keys: bson.D{bson.E{Key: "status", Value: 1}}},
 		},
 		"email_campaigns": {
-			{Keys: bson.D{{Key: "id", Value: 1}}, Options: options.Index().SetUnique(true)},
-			{Keys: bson.D{{Key: "status", Value: 1}}},
-			{Keys: bson.D{{Key: "createdAt", Value: -1}}},
+			{Keys: bson.D{bson.E{Key: "id", Value: 1}}, Options: options.Index().SetUnique(true)},
+			{Keys: bson.D{bson.E{Key: "status", Value: 1}}},
+			{Keys: bson.D{bson.E{Key: "createdAt", Value: -1}}},
 		},
 		"customer_notes": {
-			{Keys: bson.D{{Key: "id", Value: 1}}, Options: options.Index().SetUnique(true)},
-			{Keys: bson.D{{Key: "customerId", Value: 1}}},
-			{Keys: bson.D{{Key: "createdAt", Value: -1}}},
+			{Keys: bson.D{bson.E{Key: "id", Value: 1}}, Options: options.Index().SetUnique(true)},
+			{Keys: bson.D{bson.E{Key: "customerId", Value: 1}}},
+			{Keys: bson.D{bson.E{Key: "createdAt", Value: -1}}},
 		},
 		"transactions": {
-			{Keys: bson.D{{Key: "date", Value: -1}}},
+			{Keys: bson.D{bson.E{Key: "date", Value: -1}}},
 		},
 	}
 

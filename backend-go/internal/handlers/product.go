@@ -90,7 +90,7 @@ func (h *ProductHandler) List(c *gin.Context) {
 		sortOrder = 1
 	}
 
-	opts := options.Find().SetSort(bson.D{{Key: sortField, Value: sortOrder}})
+	opts := options.Find().SetSort(bson.D{bson.E{Key: sortField, Value: sortOrder}})
 
 	// Pagination
 	if limitStr := c.Query("limit"); limitStr != "" {
@@ -425,7 +425,7 @@ func (h *ProductHandler) GetHistory(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	opts := options.Find().SetSort(bson.D{{Key: "changedAt", Value: -1}}).SetLimit(50)
+	opts := options.Find().SetSort(bson.D{bson.E{Key: "changedAt", Value: -1}}).SetLimit(50)
 	cursor, err := h.histCol.Find(ctx, bson.M{"productId": id}, opts)
 	if err != nil {
 		utils.InternalError(c, err)
@@ -446,7 +446,7 @@ func (h *ProductHandler) GetAllHistory(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	opts := options.Find().SetSort(bson.D{{Key: "changedAt", Value: -1}}).SetLimit(100)
+	opts := options.Find().SetSort(bson.D{bson.E{Key: "changedAt", Value: -1}}).SetLimit(100)
 	cursor, err := h.histCol.Find(ctx, bson.M{}, opts)
 	if err != nil {
 		utils.InternalError(c, err)
