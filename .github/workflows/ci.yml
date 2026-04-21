@@ -23,15 +23,15 @@ jobs:
         working-directory: backend-go
         run: go mod tidy
 
+      - name: Build
+        working-directory: backend-go
+        run: go build -v ./...
+
       - name: Lint
         working-directory: backend-go
         run: |
           curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.64.5
-          $(go env GOPATH)/bin/golangci-lint run --timeout=5m
-
-      - name: Build
-        working-directory: backend-go
-        run: go build -ldflags="-s -w" ./...
+          $(go env GOPATH)/bin/golangci-lint run --timeout=5m --print-issued-lines=true --print-linter-name=true
 
       - name: Test
         working-directory: backend-go
