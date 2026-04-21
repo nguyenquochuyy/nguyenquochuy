@@ -22,9 +22,9 @@ type entry struct {
 
 // MemoryCache dùng sync.Map — thread-safe, không cần Redis
 type MemoryCache struct {
-	mu      sync.RWMutex
-	store   map[string]entry
-	keys    []string
+	mu    sync.RWMutex
+	store map[string]entry
+	keys  []string
 }
 
 func NewMemoryCache() *MemoryCache {

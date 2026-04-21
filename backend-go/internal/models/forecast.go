@@ -34,7 +34,7 @@ type StockForecast struct {
 // ForecastPoint is used for chart rendering (predicted vs actual over time)
 type ForecastPoint struct {
 	Date           string  `json:"date"`
-	ActualStock    *int    `json:"actualStock,omitempty"`    // nil for future dates
+	ActualStock    *int    `json:"actualStock,omitempty"` // nil for future dates
 	PredictedStock int     `json:"predictedStock"`
 	DailySales     float64 `json:"dailySales"`
 }

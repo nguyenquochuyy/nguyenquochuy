@@ -35,13 +35,13 @@ type TaxSettings struct {
 }
 
 type SecuritySettings struct {
-	Enable2FA       bool `bson:"enable2FA" json:"enable2FA"`
-	PasswordExpiry  int  `bson:"passwordExpiry" json:"passwordExpiry"`
+	Enable2FA      bool `bson:"enable2FA" json:"enable2FA"`
+	PasswordExpiry int  `bson:"passwordExpiry" json:"passwordExpiry"`
 }
 
 type NotificationSettings struct {
-	EmailOnOrder  bool `bson:"emailOnOrder" json:"emailOnOrder"`
-	PushLowStock  bool `bson:"pushLowStock" json:"pushLowStock"`
+	EmailOnOrder bool `bson:"emailOnOrder" json:"emailOnOrder"`
+	PushLowStock bool `bson:"pushLowStock" json:"pushLowStock"`
 }
 
 type StaffSettings struct {
@@ -50,14 +50,14 @@ type StaffSettings struct {
 }
 
 type StoreSettings struct {
-	ID            primitive.ObjectID   `bson:"_id,omitempty" json:"_id,omitempty"`
-	ShopInfo      ShopInfo             `bson:"shopInfo" json:"shopInfo"`
-	PaymentMethods PaymentMethods      `bson:"paymentMethods" json:"paymentMethods"`
-	Shipping      ShippingSettings     `bson:"shipping" json:"shipping"`
-	Inventory     InventorySettings    `bson:"inventory" json:"inventory"`
-	Orders        OrderSettings        `bson:"orders" json:"orders"`
-	Tax           TaxSettings          `bson:"tax" json:"tax"`
-	Security      SecuritySettings     `bson:"security" json:"security"`
-	Notifications NotificationSettings `bson:"notifications" json:"notifications"`
-	Staff         StaffSettings        `bson:"staff" json:"staff"`
+	ID             primitive.ObjectID   `bson:"_id,omitempty" json:"_id,omitempty"`
+	ShopInfo       ShopInfo             `bson:"shopInfo" json:"shopInfo"`
+	PaymentMethods PaymentMethods       `bson:"paymentMethods" json:"paymentMethods"`
+	Shipping       ShippingSettings     `bson:"shipping" json:"shipping"`
+	Inventory      InventorySettings    `bson:"inventory" json:"inventory"`
+	Orders         OrderSettings        `bson:"orders" json:"orders"`
+	Tax            TaxSettings          `bson:"tax" json:"tax"`
+	Security       SecuritySettings     `bson:"security" json:"security"`
+	Notifications  NotificationSettings `bson:"notifications" json:"notifications"`
+	Staff          StaffSettings        `bson:"staff" json:"staff"`
 }

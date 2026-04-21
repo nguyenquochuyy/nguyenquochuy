@@ -71,7 +71,7 @@ func (h *ForecastHandler) GetForecast(c *gin.Context) {
 	// Fetch inventory OUT logs for the last 90 days (sales proxy)
 	since := time.Now().AddDate(0, 0, -90).Format("2006-01-02")
 	logCursor, err := h.inventoryLogs.Find(ctx, bson.M{
-		"type": "OUT",
+		"type":      "OUT",
 		"createdAt": bson.M{"$gte": time.Now().AddDate(0, 0, -90)},
 	})
 	if err != nil {

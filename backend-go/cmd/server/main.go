@@ -16,11 +16,11 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"github.com/swaggo/files"
+	"github.com/swaggo/gin-swagger"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"github.com/swaggo/files"
-	"github.com/swaggo/gin-swagger"
 	"go.uber.org/zap"
 
 	"unishop/backend/internal/config"

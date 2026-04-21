@@ -62,7 +62,7 @@ func (h *PurchaseOrderHandler) Create(c *gin.Context) {
 	if order.Id == "" {
 		order.Id = fmt.Sprintf("PO-%d", time.Now().UnixNano()/1000)
 	}
-	
+
 	// Calculate total amount
 	var total float64
 	for _, item := range order.Items {

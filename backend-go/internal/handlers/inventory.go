@@ -2,8 +2,8 @@ package handlers
 
 import (
 	"context"
-	"time"
 	"fmt"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
@@ -263,7 +263,12 @@ func (h *InventoryHandler) RecordStockTake(c *gin.Context) {
 			ProductName: product.Name,
 			VariantName: variantName,
 			Type:        logType,
-			Quantity:    func(d int) int { if d < 0 { return -d }; return d }(diff),
+			Quantity: func(d int) int {
+				if d < 0 {
+					return -d
+				}
+				return d
+			}(diff),
 			StockBefore: expected,
 			StockAfter:  body.Actual,
 			Reason:      "Điều chỉnh sau kiểm kê kho: " + body.Note,

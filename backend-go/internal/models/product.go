@@ -7,8 +7,8 @@ import (
 )
 
 type ProductVariant struct {
-	ID    string  `bson:"id" json:"id"`
-	Name  string  `bson:"name" json:"name"`
+	ID      string  `bson:"id" json:"id"`
+	Name    string  `bson:"name" json:"name"`
 	SKU     string  `bson:"sku" json:"sku"`
 	Barcode string  `bson:"barcode" json:"barcode"`
 	Price   float64 `bson:"price" json:"price"`

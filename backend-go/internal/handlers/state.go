@@ -97,7 +97,7 @@ func (h *StateHandler) Get(c *gin.Context) {
 	g.Go(fetch("warehouses", &warehouses))
 	g.Go(fetch("stock_takes", &stockTakes))
 	g.Go(fetch("invoices", &invoices))
-	
+
 	g.Go(func() error {
 		err := h.db.Collection("settings").FindOne(gCtx, bson.M{}).Decode(&settings)
 		if err == mongo.ErrNoDocuments {

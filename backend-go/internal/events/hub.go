@@ -44,14 +44,14 @@ func (h *Hub) Unregister(conn *websocket.Conn) {
 // Broadcast sends a JSON event to every connected WebSocket client
 func (h *Hub) Broadcast(collection string) {
 	event := Event{Type: "data_changed", Collection: collection}
-	
+
 	h.mu.RLock()
 	defer h.mu.RUnlock()
 	for conn := range h.clients {
 		err := conn.WriteJSON(event)
 		if err != nil {
 			logger.Log.Warn("Failed to send WebSocket message", zap.Error(err))
-			// Do not remove here to avoid map iteration issues. 
+			// Do not remove here to avoid map iteration issues.
 			// The read pump will catch the error and unregister.
 			conn.Close()
 		}

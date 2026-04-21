@@ -29,35 +29,35 @@ type OrderTimelineEvent struct {
 }
 
 type Order struct {
-	ID                    primitive.ObjectID   `bson:"_id,omitempty" json:"_id,omitempty"`
-	OrderID               string               `bson:"id" json:"id"`
-	CustomerName          string               `bson:"customerName" json:"customerName"`
-	CustomerPhone         string               `bson:"customerPhone" json:"customerPhone"`
-	CustomerAddress       string               `bson:"customerAddress" json:"customerAddress"`
-	CustomerEmail         string               `bson:"customerEmail,omitempty" json:"customerEmail,omitempty"`
-	Items                 []CartItem           `bson:"items" json:"items"`
-	Subtotal              float64              `bson:"subtotal" json:"subtotal"`
-	DiscountAmount        float64              `bson:"discountAmount" json:"discountAmount"`
-	VoucherCode           string               `bson:"voucherCode,omitempty" json:"voucherCode,omitempty"`
-	VoucherDiscount       float64              `bson:"voucherDiscount,omitempty" json:"voucherDiscount,omitempty"`
-	PointsUsed            int                  `bson:"pointsUsed,omitempty" json:"pointsUsed,omitempty"`
-	PointsDiscount        float64              `bson:"pointsDiscount,omitempty" json:"pointsDiscount,omitempty"`
-	ShippingFee           float64              `bson:"shippingFee" json:"shippingFee"`
-	ShippingMethod        string               `bson:"shippingMethod" json:"shippingMethod"`
-	TaxRate               float64              `bson:"taxRate" json:"taxRate"`
-	TaxAmount             float64              `bson:"taxAmount" json:"taxAmount"`
-	Total                 float64              `bson:"total" json:"total"`
-	Status                string               `bson:"status" json:"status"`
-	PaymentMethod         string               `bson:"paymentMethod" json:"paymentMethod"`
-	ProcessedBy           string               `bson:"processedBy,omitempty" json:"processedBy,omitempty"`
-	InternalNotes         string               `bson:"internalNotes,omitempty" json:"internalNotes,omitempty"`
-	CustomerNotes         string               `bson:"customerNotes,omitempty" json:"customerNotes,omitempty"`
-	CreatedAt             time.Time            `bson:"createdAt" json:"createdAt"`
-	UpdatedAt             time.Time            `bson:"updatedAt,omitempty" json:"updatedAt,omitempty"`
-	Timeline              []OrderTimelineEvent `bson:"timeline,omitempty" json:"timeline,omitempty"`
-	ShippingTracking      string               `bson:"shippingTracking,omitempty" json:"shippingTracking,omitempty"`
-	PaymentStatus         string               `bson:"paymentStatus,omitempty" json:"paymentStatus,omitempty"`
-	PaymentTransactionID  string               `bson:"paymentTransactionId,omitempty" json:"paymentTransactionId,omitempty"`
+	ID                   primitive.ObjectID   `bson:"_id,omitempty" json:"_id,omitempty"`
+	OrderID              string               `bson:"id" json:"id"`
+	CustomerName         string               `bson:"customerName" json:"customerName"`
+	CustomerPhone        string               `bson:"customerPhone" json:"customerPhone"`
+	CustomerAddress      string               `bson:"customerAddress" json:"customerAddress"`
+	CustomerEmail        string               `bson:"customerEmail,omitempty" json:"customerEmail,omitempty"`
+	Items                []CartItem           `bson:"items" json:"items"`
+	Subtotal             float64              `bson:"subtotal" json:"subtotal"`
+	DiscountAmount       float64              `bson:"discountAmount" json:"discountAmount"`
+	VoucherCode          string               `bson:"voucherCode,omitempty" json:"voucherCode,omitempty"`
+	VoucherDiscount      float64              `bson:"voucherDiscount,omitempty" json:"voucherDiscount,omitempty"`
+	PointsUsed           int                  `bson:"pointsUsed,omitempty" json:"pointsUsed,omitempty"`
+	PointsDiscount       float64              `bson:"pointsDiscount,omitempty" json:"pointsDiscount,omitempty"`
+	ShippingFee          float64              `bson:"shippingFee" json:"shippingFee"`
+	ShippingMethod       string               `bson:"shippingMethod" json:"shippingMethod"`
+	TaxRate              float64              `bson:"taxRate" json:"taxRate"`
+	TaxAmount            float64              `bson:"taxAmount" json:"taxAmount"`
+	Total                float64              `bson:"total" json:"total"`
+	Status               string               `bson:"status" json:"status"`
+	PaymentMethod        string               `bson:"paymentMethod" json:"paymentMethod"`
+	ProcessedBy          string               `bson:"processedBy,omitempty" json:"processedBy,omitempty"`
+	InternalNotes        string               `bson:"internalNotes,omitempty" json:"internalNotes,omitempty"`
+	CustomerNotes        string               `bson:"customerNotes,omitempty" json:"customerNotes,omitempty"`
+	CreatedAt            time.Time            `bson:"createdAt" json:"createdAt"`
+	UpdatedAt            time.Time            `bson:"updatedAt,omitempty" json:"updatedAt,omitempty"`
+	Timeline             []OrderTimelineEvent `bson:"timeline,omitempty" json:"timeline,omitempty"`
+	ShippingTracking     string               `bson:"shippingTracking,omitempty" json:"shippingTracking,omitempty"`
+	PaymentStatus        string               `bson:"paymentStatus,omitempty" json:"paymentStatus,omitempty"`
+	PaymentTransactionID string               `bson:"paymentTransactionId,omitempty" json:"paymentTransactionId,omitempty"`
 }
 
 var (
@@ -92,8 +92,8 @@ var (
 		"Samsung 49\" Odyssey G9",
 		"Dell UltraSharp U2723QE",
 	}
-	statuses = []string{"PENDING", "CONFIRMED", "SHIPPING", "COMPLETED", "CANCELLED"}
-	paymentMethods = []string{"COD", "BANKING", "MOMO", "VNPAY"}
+	statuses        = []string{"PENDING", "CONFIRMED", "SHIPPING", "COMPLETED", "CANCELLED"}
+	paymentMethods  = []string{"COD", "BANKING", "MOMO", "VNPAY"}
 	paymentStatuses = []string{"PENDING", "PAID", "FAILED"}
 	shippingMethods = []string{"Standard", "Express", "Same Day"}
 )
