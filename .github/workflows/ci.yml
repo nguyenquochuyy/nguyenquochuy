@@ -36,7 +36,7 @@ jobs:
         with:
           version: v2.1.6
           working-directory: backend-go
-          args: --timeout=5m
+          args: --timeout=5m --enable=errcheck,govet,ineffassign,staticcheck,unused
 
       - name: Test
         working-directory: backend-go
