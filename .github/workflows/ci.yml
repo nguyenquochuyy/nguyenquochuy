@@ -24,11 +24,10 @@ jobs:
         run: go mod tidy
 
       - name: Lint
-        uses: golangci/golangci-lint-action@v6
-        with:
-          working-directory: backend-go
-          version: latest
-          args: --timeout=3m
+        working-directory: backend-go
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.64.5
+          $(go env GOPATH)/bin/golangci-lint run --timeout=5m
 
       - name: Build
         working-directory: backend-go
