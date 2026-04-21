@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { queryClient } from './services/queryClient';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { useBackend } from './hooks/useBackend';
 import { Customer } from './types';
@@ -63,15 +66,15 @@ const AppController: React.FC = () => {
               <WifiOff size={16} /> Chế độ Offline: Không thể kết nối đến máy chủ.
           </div>
       )}
-      
+
       <Routes>
         {/* === PUBLIC ROUTES === */}
         <Route path="/" element={<Navigate to="/store" replace />} />
 
         <Route path="/login" element={
-            <StoreLogin 
-                backend={backend} 
-                message={loginMessage} 
+            <StoreLogin
+                backend={backend}
+                message={loginMessage}
                 onClearMessage={() => setLoginMessage(null)}
                 onNavigate={(view) => {
                     if (view === 'REGISTER') navigate('/register');
@@ -85,22 +88,22 @@ const AppController: React.FC = () => {
                 }}
             />
         } />
-        
+
         <Route path="/customer-login" element={<Navigate to="/login" replace />} />
-        
+
         <Route path="/register" element={
-            <RegisterPage 
-                onNavigate={() => navigate('/login')} 
-                backend={backend} 
-                onBeginVerification={(d) => { setPendingRegistration(d); navigate('/verify'); }} 
+            <RegisterPage
+                onNavigate={() => navigate('/login')}
+                backend={backend}
+                onBeginVerification={(d) => { setPendingRegistration(d); navigate('/verify'); }}
             />
         } />
-        
+
         <Route path="/verify" element={
-            <VerifyEmailPage 
-                email={pendingRegistration?.email || ''} 
-                onNavigate={() => navigate('/login')} 
-                onVerifySuccess={async () => { 
+            <VerifyEmailPage
+                email={pendingRegistration?.email || ''}
+                onNavigate={() => navigate('/login')}
+                onVerifySuccess={async () => {
                     if(pendingRegistration) {
                         try {
                             // Call API to create customer
@@ -115,12 +118,12 @@ const AppController: React.FC = () => {
                             setLoginMessage({type:'error', text: 'Không thể kết nối đến server để tạo tài khoản.'});
                         }
                     }
-                    setPendingRegistration(null); 
-                    navigate('/login'); 
-                }} 
+                    setPendingRegistration(null);
+                    navigate('/login');
+                }}
             />
         } />
-        
+
         <Route path="/forgot-password" element={<ForgotPasswordPage onNavigate={() => navigate('/login')} />} />
 
         {/* === STOREFRONT === */}
@@ -142,9 +145,12 @@ const AppController: React.FC = () => {
 
 const App: React.FC = () => {
     return (
-        <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-            <AppController />
-        </BrowserRouter>
+        <QueryClientProvider client={queryClient}>
+            <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+                <AppController />
+            </BrowserRouter>
+            <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
     );
 };
 

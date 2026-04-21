@@ -18,8 +18,25 @@ func Unauthorized(c *gin.Context) {
 	c.JSON(401, gin.H{"success": false, "message": "Unauthorized"})
 }
 
-func Forbidden(c *gin.Context) {
-	c.JSON(403, gin.H{"success": false, "message": "Forbidden"})
+func Forbidden(c *gin.Context, message ...string) {
+	msg := "Forbidden"
+	if len(message) > 0 {
+		msg = message[0]
+	}
+	c.JSON(403, gin.H{"success": false, "message": msg})
+}
+
+func Paginated(c *gin.Context, data any, total int64, page, limit int) {
+	c.JSON(200, gin.H{
+		"success": true,
+		"data":    data,
+		"meta": gin.H{
+			"total": total,
+			"page":  page,
+			"limit": limit,
+			"pages": (total + int64(limit) - 1) / int64(limit),
+		},
+	})
 }
 
 func NotFound(c *gin.Context, message string) {

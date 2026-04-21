@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
+
 	"unishop/backend/internal/logger"
 )
 
@@ -17,24 +18,36 @@ func ZapLogger() gin.HandlerFunc {
 
 		c.Next()
 
-		end := time.Now()
-		latency := end.Sub(start)
+		latencyMs := time.Since(start).Milliseconds()
+		status := c.Writer.Status()
+
+		fields := []zap.Field{
+			zap.Int("status", status),
+			zap.String("method", c.Request.Method),
+			zap.String("path", path),
+			zap.String("ip", c.ClientIP()),
+			zap.Int64("latency_ms", latencyMs),
+		}
+		if query != "" {
+			fields = append(fields, zap.String("query", query))
+		}
+		if rid, ok := c.Get("requestId"); ok {
+			fields = append(fields, zap.Any("request_id", rid))
+		}
+		if uid, ok := c.Get("userId"); ok && uid != "" {
+			fields = append(fields, zap.Any("user_id", uid))
+		}
 
 		if len(c.Errors) > 0 {
-			// Append error field if this is an erroneous request.
 			for _, e := range c.Errors.Errors() {
-				logger.Log.Error(e)
+				logger.Log.Error(e, fields...)
 			}
+		} else if status >= 500 {
+			logger.Log.Error("Server error", fields...)
+		} else if status >= 400 {
+			logger.Log.Warn("Client error", fields...)
 		} else {
-			logger.Log.Info("Incoming request",
-				zap.Int("status", c.Writer.Status()),
-				zap.String("method", c.Request.Method),
-				zap.String("path", path),
-				zap.String("query", query),
-				zap.String("ip", c.ClientIP()),
-				zap.String("user-agent", c.Request.UserAgent()),
-				zap.Duration("latency", latency),
-			)
+			logger.Log.Info("Request", fields...)
 		}
 	}
 }

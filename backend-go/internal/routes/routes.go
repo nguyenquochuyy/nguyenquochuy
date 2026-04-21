@@ -1,15 +1,18 @@
 package routes
 
 import (
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/mongo"
 
 	"unishop/backend/internal/config"
 	"unishop/backend/internal/handlers"
 	"unishop/backend/internal/middleware"
+	"unishop/backend/pkg/cache"
 )
 
-func Setup(r *gin.Engine, db *mongo.Database, cfg *config.Config) {
+func Setup(r *gin.Engine, db *mongo.Database, cfg *config.Config, c cache.Cache) {
 	// Init handlers
 	authH := handlers.NewAuthHandler(db, cfg)
 	stateH := handlers.NewStateHandler(db)
@@ -31,10 +34,21 @@ func Setup(r *gin.Engine, db *mongo.Database, cfg *config.Config) {
 	warehouseH := handlers.NewWarehouseHandler(db)
 	invoiceH := handlers.NewInvoiceHandler(db)
 
-	api := r.Group("/api")
+	// API v1
+	api := r.Group("/api/v1")
 
-	// Health
-	api.GET("/healthz", func(c *gin.Context) { c.JSON(200, gin.H{"ok": true}) })
+	// Health & Readiness
+	startTime := time.Now()
+	api.GET("/healthz", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"ok":      true,
+			"uptime":  time.Since(startTime).String(),
+			"version": "1.0.0",
+		})
+	})
+	api.GET("/ready", func(c *gin.Context) {
+		c.JSON(200, gin.H{"ready": true})
+	})
 
 	// Real-time SSE stream
 	api.GET("/events", handlers.StreamEvents)
@@ -45,9 +59,11 @@ func Setup(r *gin.Engine, db *mongo.Database, cfg *config.Config) {
 	// Auth (public)
 	auth := api.Group("/auth")
 	{
-		auth.POST("/admin/login", authH.AdminLogin)
-		auth.POST("/store/login", authH.StoreLogin)
-		auth.POST("/login", authH.Login)
+		auth.POST("/admin/login", middleware.LoginRateLimit(), authH.AdminLogin)
+		auth.POST("/store/login", middleware.LoginRateLimit(), authH.StoreLogin)
+		auth.POST("/login", middleware.LoginRateLimit(), authH.Login)
+		auth.POST("/refresh", authH.Refresh)
+		auth.POST("/logout", authH.Logout)
 		auth.POST("/check-email", authH.CheckEmail)
 		auth.POST("/send-code", authH.SendCode)
 		auth.POST("/verify-code", authH.VerifyCode)
@@ -56,19 +72,24 @@ func Setup(r *gin.Engine, db *mongo.Database, cfg *config.Config) {
 		auth.POST("/verify-2fa-code", authH.Verify2FACode)
 	}
 
-	// Public product & category reads
-	api.GET("/products", productH.List)
+	// Public product & category reads (cached 2 phút)
+	cached2m := middleware.CacheResponse(c, 2*time.Minute)
+	api.GET("/products", cached2m, productH.List)
 	api.GET("/products/barcode/:code", productH.GetByBarcode)
-	api.GET("/products/:id", productH.GetByID)
-	api.GET("/categories", categoryH.List)
-	api.GET("/categories/:id", categoryH.GetByID)
-	api.GET("/categories/:id/products", categoryH.GetProducts)
+	api.GET("/products/:id", cached2m, productH.GetByID)
+	api.GET("/categories", cached2m, categoryH.List)
+	api.GET("/categories/:id", cached2m, categoryH.GetByID)
+	api.GET("/categories/:id/products", cached2m, categoryH.GetProducts)
 
 	// --- PROTECTED ROUTES ---
 
 	// Base JWT Auth Middleware
 	protected := api.Group("")
-	protected.Use(middleware.Auth(cfg.JWTSecret))
+	protected.Use(
+		middleware.Auth(cfg.JWTSecret),
+		middleware.UserRateLimit(),
+		middleware.AuditSensitiveOperations(),
+	)
 
 	// 1. Admin Routes (Employees Only)
 	admin := protected.Group("")
@@ -119,10 +140,11 @@ func Setup(r *gin.Engine, db *mongo.Database, cfg *config.Config) {
 		admin.POST("/customers/:id/notes", customerH.AddNote)
 		admin.GET("/customers/:id/notes", customerH.GetNotes)
 
-		// Employees
-		admin.GET("/employees", employeeH.List)
-		admin.POST("/employees", employeeH.Create)
-		admin.PUT("/employees/:id", employeeH.Update)
+		// Employees — chỉ OWNER
+		ownerOnly := admin.Group("").Use(middleware.RequireOwner())
+		ownerOnly.GET("/employees", employeeH.List)
+		ownerOnly.POST("/employees", employeeH.Create)
+		ownerOnly.PUT("/employees/:id", employeeH.Update)
 
 		// Inventory
 		admin.POST("/inventory/adjust", inventoryH.Adjust)
@@ -133,16 +155,17 @@ func Setup(r *gin.Engine, db *mongo.Database, cfg *config.Config) {
 		admin.GET("/inventory/forecast", forecastH.GetForecast)
 		admin.POST("/inventory/daily-sales", forecastH.RecordDailySales)
 
-		// Finance
-		admin.GET("/transactions", financeH.ListTransactions)
-		admin.POST("/transactions", financeH.AddTransaction)
-		admin.PUT("/transactions/:id", financeH.UpdateTransaction)
-		admin.DELETE("/transactions/:id", financeH.DeleteTransaction)
-		admin.GET("/finance/accounts", financeH.ListAccounts)
-		admin.POST("/finance/accounts", financeH.CreateAccount)
-		admin.PUT("/finance/accounts/:id", financeH.UpdateAccount)
-		admin.DELETE("/finance/accounts/:id", financeH.DeleteAccount)
-		admin.GET("/finance/reports/advanced", financeH.AdvancedReports)
+		// Finance — chỉ OWNER và ACCOUNTANT
+		finance := admin.Group("").Use(middleware.RequireFinance())
+		finance.GET("/transactions", financeH.ListTransactions)
+		finance.POST("/transactions", financeH.AddTransaction)
+		finance.PUT("/transactions/:id", financeH.UpdateTransaction)
+		finance.DELETE("/transactions/:id", financeH.DeleteTransaction)
+		finance.GET("/finance/accounts", financeH.ListAccounts)
+		finance.POST("/finance/accounts", financeH.CreateAccount)
+		finance.PUT("/finance/accounts/:id", financeH.UpdateAccount)
+		finance.DELETE("/finance/accounts/:id", financeH.DeleteAccount)
+		finance.GET("/finance/reports/advanced", financeH.AdvancedReports)
 
 		// Vouchers
 		admin.GET("/vouchers", voucherH.List)

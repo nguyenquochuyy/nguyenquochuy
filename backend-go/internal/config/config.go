@@ -10,6 +10,7 @@ type Config struct {
 	Env       string
 	EmailUser string
 	EmailPass string
+	RedisURL  string
 }
 
 func Load() *Config {
@@ -21,6 +22,7 @@ func Load() *Config {
 		Env:       getEnv("APP_ENV", "development"),
 		EmailUser: getEnv("EMAIL_USER", ""),
 		EmailPass: getEnv("EMAIL_PASS", ""),
+		RedisURL:  getEnv("REDIS_URL", ""),
 	}
 }
 

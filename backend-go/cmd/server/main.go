@@ -25,6 +25,7 @@ import (
 	"unishop/backend/internal/logger"
 	"unishop/backend/internal/middleware"
 	"unishop/backend/internal/routes"
+	"unishop/backend/pkg/cache"
 	"unishop/backend/pkg/db"
 )
 
@@ -179,6 +180,10 @@ func main() {
 	// Create indexes for performance
 	ensureIndexes(database)
 
+	// Init in-memory cache (swap to Redis by implementing cache.Cache interface)
+	appCache := cache.NewMemoryCache()
+	logger.Log.Info("✅ In-memory cache initialized")
+
 	if cfg.Env == "production" {
 		gin.SetMode(gin.ReleaseMode)
 	}
@@ -186,11 +191,17 @@ func main() {
 	// Use Gin without default loggers
 	router := gin.New()
 
-	// Add Zap Logger & Recovery
-	router.Use(middleware.ZapLogger(), gin.Recovery())
+	// Add Request ID, Security Headers, Zap Logger & Recovery
+	router.Use(
+		middleware.RequestID(),
+		middleware.SecurityHeaders(),
+		middleware.ZapLogger(),
+		middleware.ErrorHandler(),
+		gin.Recovery(),
+	)
 
-	// Apply rate limiting
-	router.Use(middleware.RateLimit())
+	// Apply rate limiting & gzip
+	router.Use(middleware.RateLimit(), middleware.Gzip())
 
 	// Apply robust CORS setup
 	router.Use(cors.New(cors.Config{
@@ -202,7 +213,12 @@ func main() {
 		MaxAge:           12 * time.Hour,
 	}))
 
-	routes.Setup(router, database, cfg)
+	routes.Setup(router, database, cfg, appCache)
+
+	// Swagger docs (development only)
+	if cfg.Env == "development" {
+		router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	}
 
 	// Auto-free port if occupied
 	freePort(cfg.Port)

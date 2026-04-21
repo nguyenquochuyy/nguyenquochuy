@@ -1,0 +1,29 @@
+Phase 2-5: Full Backend & Frontend Upgrade
+
+Phase 2 - Caching:
+- Cache interface (MemoryCache with sync.Map)
+- Cache middleware cho GET endpoints (2p TTL)
+- Apply cache cho products, categories
+- Config RedisURL cho swap Redis sau nay
+
+Phase 3 - Observability:
+- Request ID middleware (UUID 16-char)
+- ZapLogger: log requestId, userId, latency_ms
+- Health check: uptime + version
+- /ready endpoint cho Kubernetes
+
+Phase 4 - DevOps:
+- Dockerfile: Go 1.23, distroless, non-root, layer cache
+- docker-compose: Redis, health checks, proper env
+- GitHub Actions CI/CD: lint + build + test
+- .env.example: REDIS_URL
+
+Phase 5 - Frontend:
+- React Query, Zustand, RHF, Zod dependencies
+- queryClient.ts: staleTime 2p, retry 2
+- authStore.ts: Zustand + persist, token management
+- httpClient.ts: auto-refresh token logic
+- useQueries.ts: React Query hooks (products, orders, customers)
+- App.tsx: QueryClientProvider wrap
+
+Note: npm install chua chay duoc qua terminal — user can chay thu cong

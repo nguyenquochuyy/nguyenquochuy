@@ -1,0 +1,11 @@
+Phase 1: Nang cap bao mat Authentication
+
+- Refresh Token (7 ngay) + Access Token ngan han (15 phut)
+- Logout endpoint thu hoi refresh token trong MongoDB
+- Endpoint /api/auth/refresh lay access token moi
+- Tang bcrypt cost len 12
+- Kiem tra tai khoan LOCKED khi dang nhap
+- RBAC chi tiet: Finance chi OWNER/ACCOUNTANT, Employees chi OWNER
+- Rate limit login: 5 lan/phut per IP chong brute force
+- Validate JWT signing method chong algorithm confusion attack
+- Them Paginated response helper

@@ -1,30 +1,27 @@
-# Build stage
-FROM golang:1.21-alpine AS builder
+# ---- Build stage ----
+FROM golang:1.23-alpine AS builder
 
 WORKDIR /app
 
-# Copy go mod files
+# Layer cache: chỉ re-download khi go.mod/go.sum thay đổi
 COPY go.mod go.sum ./
 RUN go mod download
 
-# Copy source code
 COPY . .
 
-# Build the application
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main ./cmd/server
+# Build nhỏ + strip debug symbols
+RUN CGO_ENABLED=0 GOOS=linux go build \
+    -ldflags="-s -w" \
+    -trimpath \
+    -o /app/server ./cmd/server
 
-# Final stage
-FROM alpine:latest
+# ---- Final stage (distroless) ----
+FROM gcr.io/distroless/static-debian12:nonroot
 
-RUN apk --no-cache add ca-certificates
+COPY --from=builder /app/server /server
 
-WORKDIR /root/
-
-# Copy the binary from builder
-COPY --from=builder /app/main .
-
-# Expose port
 EXPOSE 8080
 
-# Run the application
-CMD ["./main"]
+USER nonroot:nonroot
+
+ENTRYPOINT ["/server"]

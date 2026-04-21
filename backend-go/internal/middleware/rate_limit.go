@@ -61,7 +61,27 @@ func RateLimit() gin.HandlerFunc {
 		l := limiter.GetLimiter(ip)
 		if !l.Allow() {
 			c.JSON(http.StatusTooManyRequests, gin.H{
-				"error": "Too many requests",
+				"success": false,
+				"message": "Quá nhiều yêu cầu, vui lòng thử lại sau",
+			})
+			c.Abort()
+			return
+		}
+		c.Next()
+	}
+}
+
+// loginLimiter giới hạn 5 lần đăng nhập mỗi phút per IP (chống brute force)
+var loginLimiter = NewIPRateLimiter(rate.Limit(5.0/60), 5)
+
+func LoginRateLimit() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		ip := c.ClientIP()
+		l := loginLimiter.GetLimiter(ip)
+		if !l.Allow() {
+			c.JSON(http.StatusTooManyRequests, gin.H{
+				"success": false,
+				"message": "Quá nhiều lần đăng nhập thất bại, vui lòng thử lại sau 1 phút",
 			})
 			c.Abort()
 			return
