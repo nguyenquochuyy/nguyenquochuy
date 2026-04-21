@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, Smartphone, Mail, Key, Loader2, CheckCircle, ArrowLeft } from 'lucide-react';
+import { Shield, Smartphone, Mail, Key, Loader2, CheckCircle, ArrowLeft, AlertCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { TRANSLATIONS } from '../../services/translations';
 import { api } from '../../services/apiClient';

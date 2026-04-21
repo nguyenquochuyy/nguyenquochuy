@@ -32,5 +32,11 @@
     "strictFunctionTypes": false,
     "noUnusedLocals": false,
     "noUnusedParameters": false
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "admin-mobile",
+    "backend-go",
+    "dist"
+  ]
 }
