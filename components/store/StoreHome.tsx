@@ -229,13 +229,13 @@ const StoreHome: React.FC<StoreHomeProps> = ({
                                 <span className={`inline-block px-5 py-2 rounded-full text-xs font-bold text-white bg-gradient-to-r ${slide.color} uppercase tracking-widest mb-2 shadow-lg ring-1 ring-white/50 backdrop-blur-md`}>
                                     New Collection 2024
                                 </span>
-                                <h2 className="text-5xl md:text-8xl font-black text-white leading-[0.9] drop-shadow-2xl">
+                                <h2 className="text-5xl md:text-7xl font-extrabold text-white leading-tight drop-shadow-lg">
                                     {slide.title}
                                 </h2>
                                 <p className="text-lg md:text-2xl text-slate-200 font-light drop-shadow-md max-w-2xl leading-relaxed">
                                     {slide.subtitle}
                                 </p>
-                                <button className="mt-4 bg-white text-slate-900 px-10 py-4 rounded-full font-bold hover:bg-indigo-50 hover:scale-105 transition-all shadow-[0_20px_50px_rgba(0,0,0,0.3)] flex items-center gap-3 group/btn">
+                                <button className="mt-4 bg-white text-slate-900 px-8 py-3.5 rounded-full font-bold hover:bg-slate-50 hover:-translate-y-1 transition-all shadow-xl flex items-center gap-3 group/btn">
                                     {slide.cta} <ArrowRight size={20} className="group-hover/btn:translate-x-1 transition-transform"/>
                                 </button>
                             </div>
@@ -264,7 +264,7 @@ const StoreHome: React.FC<StoreHomeProps> = ({
         {/* BRANDS MARQUEE (TRUST INDICATOR) */}
         {searchTerm === '' && categoryFilter === 'All' && (
             <div className="bg-slate-50 border-y border-slate-100 py-8 overflow-hidden">
-                <div className="max-w-7xl mx-auto px-4 mb-4 text-center">
+                <div className="container-senior mb-4 text-center">
                     <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em]">Trusted Partners</p>
                 </div>
                 <div className="flex overflow-hidden group space-x-16">
@@ -288,7 +288,7 @@ const StoreHome: React.FC<StoreHomeProps> = ({
 
         {/* TRUST BAR */}
         <div className="border-b border-slate-100 relative z-20 bg-white">
-            <div className="max-w-7xl mx-auto px-4 py-12">
+            <div className="container-senior py-12">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-[15px]">
                     {[
                         { icon: Truck, title: "Miễn Phí Vận Chuyển", sub: "Đơn hàng từ 500k" },
@@ -310,7 +310,7 @@ const StoreHome: React.FC<StoreHomeProps> = ({
             </div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 w-full space-y-24">
+        <div className="container-senior py-16 w-full space-y-24">
             
             {/* FEATURED COLLECTIONS (MOSAIC GRID) */}
             {searchTerm === '' && (
@@ -352,7 +352,7 @@ const StoreHome: React.FC<StoreHomeProps> = ({
 
             {/* FLASH SALE BANNER & COUNTDOWN */}
             {searchTerm === '' && categoryFilter === 'All' && (
-                <div className="relative rounded-[40px] overflow-hidden bg-slate-900 shadow-2xl shadow-rose-200 group">
+                <div className="relative rounded-3xl overflow-hidden bg-slate-900 shadow-xl shadow-rose-200/50 group">
                     <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1607083206869-4c7672e72a8a?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-40 group-hover:scale-105 transition-transform duration-1000"></div>
                     <div className="absolute inset-0 bg-gradient-to-r from-rose-900/90 to-indigo-900/80"></div>
                     
@@ -430,7 +430,7 @@ const StoreHome: React.FC<StoreHomeProps> = ({
 
             {/* TESTIMONIALS (SOCIAL PROOF) */}
             {searchTerm === '' && categoryFilter === 'All' && (
-                <div className="bg-slate-50 rounded-[40px] p-8 md:p-16 text-center">
+                <div className="bg-slate-50 rounded-3xl p-8 md:p-16 text-center">
                     <h3 className="text-3xl font-black text-slate-900 mb-4">Khách Hàng Nói Gì?</h3>
                     <p className="text-slate-500 mb-12 max-w-xl mx-auto">Hơn 10,000 khách hàng đã tin tưởng và hài lòng với chất lượng dịch vụ của UniShop.</p>
                     
@@ -548,7 +548,7 @@ const StoreHome: React.FC<StoreHomeProps> = ({
             </div>
 
             {/* NEWSLETTER SECTION (NEW) */}
-            <div className="bg-indigo-900 rounded-[40px] overflow-hidden relative isolate">
+            <div className="bg-indigo-900 rounded-3xl overflow-hidden relative isolate">
                 <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=2032&auto=format&fit=crop')] mix-blend-overlay opacity-20 bg-cover bg-center"></div>
                 <div className="relative z-10 px-6 py-24 md:px-24 flex flex-col md:flex-row items-center justify-between gap-12">
                     <div className="text-center md:text-left max-w-xl">

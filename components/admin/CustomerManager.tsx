@@ -203,10 +203,10 @@ const CustomerManager: React.FC<CustomerManagerProps> = ({ backend, lang }) => {
       return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in">
             {/* Backdrop */}
-            <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={onClose}></div>
+            <div className="absolute inset-0 bg-black/30" onClick={onClose}></div>
 
             {/* Modal Content */}
-            <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl relative flex flex-col z-10 overflow-hidden transform transition-all scale-100">
+            <div className="bg-white rounded-xl w-full max-w-lg shadow-lg relative flex flex-col z-10 overflow-hidden transform transition-all scale-100">
                 {/* Header */}
                 <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-white">
                     <div>
@@ -223,8 +223,8 @@ const CustomerManager: React.FC<CustomerManagerProps> = ({ backend, lang }) => {
                 </div>
 
                 {/* Form Body */}
-                <form onSubmit={handleSubmit} className="p-6 space-y-5 bg-white">
-                    <div className="grid grid-cols-2 gap-5">
+                <form onSubmit={handleSubmit} className="p-6 space-y-[15px] bg-white">
+                    <div className="grid grid-cols-2 gap-[15px]">
                         <div className="col-span-2 sm:col-span-1">
                             <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5 ml-1">{t.customer} <span className="text-rose-500">*</span></label>
                             <div className="relative">
@@ -321,8 +321,8 @@ const CustomerManager: React.FC<CustomerManagerProps> = ({ backend, lang }) => {
 
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in">
-        <div className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" onClick={onClose}></div>
-        <div className="bg-white rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden shadow-2xl relative flex flex-col">
+        <div className="absolute inset-0 bg-black/30" onClick={onClose}></div>
+        <div className="bg-white rounded-xl w-full max-w-3xl max-h-[90vh] overflow-hidden shadow-lg relative flex flex-col">
 
           {/* Header */}
           <div className="p-6 border-b border-gray-100 flex justify-between items-start bg-gray-50">
@@ -513,7 +513,7 @@ const CustomerManager: React.FC<CustomerManagerProps> = ({ backend, lang }) => {
        </div>
 
        {/* Customer List */}
-       <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+       <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
           {selectedCustomers.size > 0 && (
             <div className="bg-indigo-50 border-b border-indigo-100 px-6 py-3 flex items-center justify-between">
               <span className="text-sm font-medium text-indigo-900">

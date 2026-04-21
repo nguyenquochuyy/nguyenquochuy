@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { BackendContextType, Language, Invoice, formatCurrency } from '../../types';
 import { TRANSLATIONS } from '../../services/translations';
-import { 
-  FileText, Plus, Search, Filter, CheckCircle, Clock, 
+import {
+  FileText, Plus, Search, Filter, CheckCircle, Clock,
   AlertCircle, XCircle, Send, Download, MoreVertical,
   Calendar, CreditCard, User, Hash, Save, X
 } from 'lucide-react';
@@ -15,11 +15,11 @@ interface InvoiceManagerProps {
 const InvoiceManager: React.FC<InvoiceManagerProps> = ({ backend, lang }) => {
   const t = TRANSLATIONS[lang];
   const { state, addInvoice, updateInvoiceStatus } = backend;
-  
+
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
   const [showCreateModal, setShowCreateModal] = useState(false);
-  
+
   // New Invoice Form State
   const [formData, setFormData] = useState({
     orderId: '',
@@ -29,7 +29,7 @@ const InvoiceManager: React.FC<InvoiceManagerProps> = ({ backend, lang }) => {
   });
 
   const filteredInvoices = state.invoices.filter(inv => {
-    const matchesSearch = inv.invoiceId.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    const matchesSearch = inv.invoiceId.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           inv.orderId.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'ALL' || inv.status === statusFilter;
     return matchesSearch && matchesStatus;
@@ -79,7 +79,7 @@ const InvoiceManager: React.FC<InvoiceManagerProps> = ({ backend, lang }) => {
           { label: 'Đã thanh toán', value: state.invoices.filter(i => i.status === 'PAID').length, icon: CheckCircle, color: 'text-emerald-600', bg: 'bg-emerald-50' },
           { label: 'Quá hạn', value: state.invoices.filter(i => i.status === 'OVERDUE').length, icon: AlertCircle, color: 'text-rose-600', bg: 'bg-rose-50' },
         ].map((stat, i) => (
-          <div key={i} className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4">
+          <div key={i} className="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex items-center gap-[15px]">
             <div className={`${stat.bg} ${stat.color} p-3 rounded-xl`}>
               <stat.icon size={20} />
             </div>
@@ -92,13 +92,13 @@ const InvoiceManager: React.FC<InvoiceManagerProps> = ({ backend, lang }) => {
       </div>
 
       {/* Controls */}
-      <div className="flex flex-col md:flex-row justify-between items-center gap-[15px] bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+      <div className="flex flex-col md:flex-row justify-between items-center gap-[15px] bg-white p-4 rounded-xl shadow-sm border border-slate-100">
         <div className="flex flex-1 gap-[15px] w-full">
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-            <input 
-              type="text" 
-              placeholder="Tìm mã hóa đơn, đơn hàng..." 
+            <input
+              type="text"
+              placeholder="Tìm mã hóa đơn, đơn hàng..."
               className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -106,7 +106,7 @@ const InvoiceManager: React.FC<InvoiceManagerProps> = ({ backend, lang }) => {
           </div>
           <div className="relative">
             <Filter className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-            <select 
+            <select
               className="pl-10 pr-8 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none appearance-none focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer"
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
@@ -119,7 +119,7 @@ const InvoiceManager: React.FC<InvoiceManagerProps> = ({ backend, lang }) => {
             </select>
           </div>
         </div>
-        <button 
+        <button
           onClick={() => setShowCreateModal(true)}
           className="w-full md:w-auto bg-indigo-600 text-white px-6 py-2.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 hover:bg-indigo-700 shadow-lg shadow-indigo-100 transition-all active:scale-95"
         >
@@ -128,7 +128,7 @@ const InvoiceManager: React.FC<InvoiceManagerProps> = ({ backend, lang }) => {
       </div>
 
       {/* Invoice Table */}
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+      <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm whitespace-nowrap">
             <thead className="bg-slate-50 border-b border-slate-100">
@@ -176,7 +176,7 @@ const InvoiceManager: React.FC<InvoiceManagerProps> = ({ backend, lang }) => {
                   <td className="px-6 py-4 text-right">
                     <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                       {inv.status === 'PENDING' && (
-                        <button 
+                        <button
                           onClick={() => updateInvoiceStatus(inv.id, 'PAID')}
                           className="p-2 bg-emerald-50 text-emerald-600 rounded-lg hover:bg-emerald-100 transition-colors"
                           title="Đánh dấu đã thanh toán"
@@ -207,8 +207,8 @@ const InvoiceManager: React.FC<InvoiceManagerProps> = ({ backend, lang }) => {
 
       {/* Create Invoice Modal */}
       {showCreateModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl animate-scale-in">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/30 animate-fade-in">
+          <div className="bg-white rounded-xl w-full max-w-lg overflow-hidden shadow-lg animate-scale-in">
             <div className="px-8 py-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
               <div className="flex items-center gap-3">
                 <div className="bg-indigo-100 text-indigo-600 p-2 rounded-xl">
@@ -220,17 +220,17 @@ const InvoiceManager: React.FC<InvoiceManagerProps> = ({ backend, lang }) => {
                 <X size={20} />
               </button>
             </div>
-            
-            <form onSubmit={handleCreateInvoice} className="p-8 space-y-6">
-              <div className="grid grid-cols-2 gap-6">
+
+            <form onSubmit={handleCreateInvoice} className="p-8 space-y-[15px]">
+              <div className="grid grid-cols-2 gap-[15px]">
                 <div className="space-y-2">
                   <label className="block text-xs font-black text-slate-500 uppercase tracking-wider">Mã đơn hàng</label>
                   <div className="relative">
                     <Hash className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-                    <input 
+                    <input
                       required
-                      type="text" 
-                      className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm outline-none focus:ring-2 focus:ring-indigo-500 transition-all font-bold"
+                      type="text"
+                      className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-indigo-500 transition-all font-bold"
                       placeholder="ORD-123..."
                       value={formData.orderId}
                       onChange={e => setFormData({...formData, orderId: e.target.value})}
@@ -241,10 +241,10 @@ const InvoiceManager: React.FC<InvoiceManagerProps> = ({ backend, lang }) => {
                   <label className="block text-xs font-black text-slate-500 uppercase tracking-wider">Khách hàng ID</label>
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-                    <input 
+                    <input
                       required
-                      type="text" 
-                      className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm outline-none focus:ring-2 focus:ring-indigo-500 transition-all font-bold"
+                      type="text"
+                      className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-indigo-500 transition-all font-bold"
                       placeholder="CUST-..."
                       value={formData.customerId}
                       onChange={e => setFormData({...formData, customerId: e.target.value})}
@@ -257,10 +257,10 @@ const InvoiceManager: React.FC<InvoiceManagerProps> = ({ backend, lang }) => {
                 <label className="block text-xs font-black text-slate-500 uppercase tracking-wider">Số tiền thanh toán</label>
                 <div className="relative">
                   <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                  <input 
+                  <input
                     required
-                    type="number" 
-                    className="w-full pl-10 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl text-lg outline-none focus:ring-2 focus:ring-indigo-500 transition-all font-black text-slate-900"
+                    type="number"
+                    className="w-full pl-10 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-xl text-lg outline-none focus:ring-2 focus:ring-indigo-500 transition-all font-black text-slate-900"
                     placeholder="0"
                     value={formData.amount}
                     onChange={e => setFormData({...formData, amount: parseFloat(e.target.value) || 0})}
@@ -273,27 +273,27 @@ const InvoiceManager: React.FC<InvoiceManagerProps> = ({ backend, lang }) => {
                 <label className="block text-xs font-black text-slate-500 uppercase tracking-wider">Hạn thanh toán</label>
                 <div className="relative">
                   <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                  <input 
+                  <input
                     required
-                    type="date" 
-                    className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm outline-none focus:ring-2 focus:ring-indigo-500 transition-all font-bold"
+                    type="date"
+                    className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-indigo-500 transition-all font-bold"
                     value={formData.dueDate}
                     onChange={e => setFormData({...formData, dueDate: e.target.value})}
                   />
                 </div>
               </div>
 
-              <div className="pt-4 flex gap-4">
-                <button 
-                  type="button" 
+              <div className="pt-4 flex gap-[15px]">
+                <button
+                  type="button"
                   onClick={() => setShowCreateModal(false)}
-                  className="flex-1 py-4 text-slate-500 font-bold hover:bg-slate-50 rounded-2xl transition-colors"
+                  className="flex-1 py-4 text-slate-500 font-bold hover:bg-slate-50 rounded-xl transition-colors"
                 >
                   Hủy bỏ
                 </button>
-                <button 
+                <button
                   type="submit"
-                  className="flex-1 py-4 bg-indigo-600 text-white font-black rounded-2xl hover:bg-indigo-700 shadow-xl shadow-indigo-100 flex items-center justify-center gap-2 active:scale-95 transition-all"
+                  className="flex-1 py-4 bg-indigo-600 text-white font-black rounded-xl hover:bg-indigo-700 shadow-xl shadow-indigo-100 flex items-center justify-center gap-2 active:scale-95 transition-all"
                 >
                   <Save size={20} /> Lưu hóa đơn
                 </button>

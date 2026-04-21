@@ -30,9 +30,9 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ backend, onExit, lang }
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [dashboardDateRange, setDashboardDateRange] = useState<DateRange>('7D');
-  
+
   const { state } = backend;
-  
+
   // Current User State (Simulating Login) - now gets user from context
   const currentUser = backend.getCurrentUser() as Employee;
   const currentUserId = currentUser?.id;
@@ -52,12 +52,12 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ backend, onExit, lang }
       switch (activeTab) {
           case 'dashboard':
               return (
-                  <DashboardStats 
-                      backend={enhancedBackend} 
-                      lang={lang} 
-                      dateRangeFilter={dashboardDateRange} 
-                      setDateRangeFilter={setDashboardDateRange} 
-                      setActiveTab={setActiveTab} 
+                  <DashboardStats
+                      backend={enhancedBackend}
+                      lang={lang}
+                      dateRangeFilter={dashboardDateRange}
+                      setDateRangeFilter={setDashboardDateRange}
+                      setActiveTab={setActiveTab}
                   />
               );
           case 'products':
@@ -82,7 +82,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ backend, onExit, lang }
   };
 
   return (
-    <div className="h-full bg-slate-50 font-sans">
+    <div className="h-full bg-gray-50 font-sans">
 
       {/* Mobile backdrop */}
       {isMobileSidebarOpen && (
@@ -92,12 +92,12 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ backend, onExit, lang }
         />
       )}
 
-      <Sidebar 
-          activeTab={activeTab} 
+      <Sidebar
+          activeTab={activeTab}
           setActiveTab={(tab) => { setActiveTab(tab); setIsMobileSidebarOpen(false); }}
-          isCollapsed={isSidebarCollapsed} 
-          setIsCollapsed={setIsSidebarCollapsed} 
-          lang={lang} 
+          isCollapsed={isSidebarCollapsed}
+          setIsCollapsed={setIsSidebarCollapsed}
+          lang={lang}
           currentUser={currentUser}
           onExit={onExit}
           isMobileOpen={isMobileSidebarOpen}
@@ -106,24 +106,23 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ backend, onExit, lang }
 
       {/* Offset wrapper — pushes content away from fixed sidebar */}
       <div className={`h-full flex flex-col transition-all duration-300 ${
-          isSidebarCollapsed ? 'md:pl-20' : 'md:pl-72'
+          isSidebarCollapsed ? 'md:pl-[68px]' : 'md:pl-64'
       }`}>
 
       <main className="flex-1 min-h-0 overflow-auto flex flex-col relative min-w-0">
-          
+
           {/* Top Bar */}
-          <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-md border-b border-slate-200 px-4 md:px-8 py-3 md:py-4 flex justify-between items-center print:hidden">
+          <div className="sticky top-0 z-10 bg-white border-b border-gray-200 px-4 md:px-6 h-14 flex justify-between items-center print:hidden">
               <div className="flex items-center gap-3">
-                  {/* Mobile hamburger */}
                   <button
                       onClick={() => setIsMobileSidebarOpen(true)}
-                      className="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors"
+                      className="md:hidden p-2 rounded-md text-gray-500 hover:bg-gray-100 transition-colors"
                   >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                       </svg>
                   </button>
-                  <h1 className="text-lg md:text-xl font-bold text-slate-800 capitalize tracking-tight">
+                  <h1 className="text-base font-semibold text-gray-800">
                       {activeTab === 'dashboard' ? t.dashboard
                        : activeTab === 'products' ? 'Sản Phẩm'
                        : activeTab === 'orders' ? t.orders
@@ -135,19 +134,19 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ backend, onExit, lang }
                        : activeTab}
                   </h1>
               </div>
-              
-              <div className="flex items-center gap-3 md:gap-[15px]">
+
+              <div className="flex items-center gap-3">
                   <div className="text-right hidden sm:block">
-                    <p className="font-bold text-sm text-slate-800">{currentUser?.name}</p>
-                    <p className="text-xs text-slate-500">{currentUser?.role}</p>
+                    <p className="text-sm font-medium text-gray-700">{currentUser?.name}</p>
+                    <p className="text-xs text-gray-400">{currentUser?.role}</p>
                   </div>
-                  <div className="w-9 h-9 md:w-10 md:h-10 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-bold border-2 border-white shadow-sm">
+                  <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm font-semibold">
                       {currentUser?.name.charAt(0)}
                   </div>
               </div>
           </div>
 
-          <div className="p-4 md:p-6 xl:p-8">
+          <div className="p-4 md:p-6 flex-1 min-h-0 w-full max-w-[100vw]">
               {renderContent()}
           </div>
       </main>

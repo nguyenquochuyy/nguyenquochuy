@@ -275,6 +275,26 @@ export const api = {
   addTransaction: async (transaction: any) => {
     await fetch(`${API_URL}/transactions`, { method: 'POST', headers: adminHeaders(), body: JSON.stringify(transaction) });
   },
+  updateTransaction: async (id: string, updates: any) => {
+    await fetch(`${API_URL}/transactions/${id}`, { method: 'PUT', headers: adminHeaders(), body: JSON.stringify(updates) });
+  },
+  deleteTransaction: async (id: string) => {
+    await fetch(`${API_URL}/transactions/${id}`, { method: 'DELETE', headers: adminHeaders() });
+  },
+  listFinanceAccounts: async () => {
+    const res = await fetch(`${API_URL}/finance/accounts`, { headers: adminHeaders() });
+    return res.json();
+  },
+  createFinanceAccount: async (account: any) => {
+    const res = await fetch(`${API_URL}/finance/accounts`, { method: 'POST', headers: adminHeaders(), body: JSON.stringify(account) });
+    return res.json();
+  },
+  updateFinanceAccount: async (id: string, updates: any) => {
+    await fetch(`${API_URL}/finance/accounts/${id}`, { method: 'PUT', headers: adminHeaders(), body: JSON.stringify(updates) });
+  },
+  deleteFinanceAccount: async (id: string) => {
+    await fetch(`${API_URL}/finance/accounts/${id}`, { method: 'DELETE', headers: adminHeaders() });
+  },
 
   // --- VOUCHERS (admin token) ---
   addVoucher: async (voucher: any) => {
@@ -321,7 +341,7 @@ export const api = {
   toggleReviewHidden: async (id: string) => {
     await fetch(`${API_URL}/reviews/${id}/toggle-hidden`, { method: 'PUT', headers: adminHeaders() });
   },
-  
+
   // --- INVOICES (admin token) ---
   addInvoice: async (invoice: any) => {
     const res = await fetch(`${API_URL}/invoices`, { method: 'POST', headers: adminHeaders(), body: JSON.stringify(invoice) });

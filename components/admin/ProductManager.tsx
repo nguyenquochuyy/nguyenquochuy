@@ -50,14 +50,14 @@ const ProductManager: React.FC<ProductManagerProps> = ({ backend, lang }) => {
     const filteredProducts = useMemo(() => {
         return state.products.filter(p => {
             const searchTerm = productSearch.toLowerCase();
-            
+
             // Fuzzy search function
             const fuzzyMatch = (text: string, query: string) => {
                 if (!query) return true;
                 const lowerText = text.toLowerCase();
                 let queryIdx = 0;
                 let textIdx = 0;
-                
+
                 while (queryIdx < query.length && textIdx < lowerText.length) {
                     if (lowerText[textIdx] === query[queryIdx]) {
                         queryIdx++;
@@ -248,8 +248,8 @@ const ProductManager: React.FC<ProductManagerProps> = ({ backend, lang }) => {
     const ProductDetailModal = ({ product, onClose }: { product: Product; onClose: () => void }) => {
         return (
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in">
-                <div className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" onClick={onClose}></div>
-                <div className="bg-white rounded-2xl w-full max-w-3xl shadow-2xl relative flex flex-col max-h-[90vh] overflow-hidden">
+                <div className="absolute inset-0 bg-black/30" onClick={onClose}></div>
+                <div className="bg-white rounded-xl w-full max-w-3xl shadow-lg relative flex flex-col max-h-[90vh] overflow-hidden">
                     <div className="flex justify-between items-center p-6 border-b border-gray-100">
                         <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
                             <Package className="text-indigo-600" /> {t.productDetails}
@@ -464,12 +464,12 @@ const ProductManager: React.FC<ProductManagerProps> = ({ backend, lang }) => {
             {selectedProducts.size > 0 && (
                 <div className="bg-indigo-50 border border-indigo-200 p-4 rounded-xl flex items-center justify-between animate-fade-in">
                     <div className="flex items-center gap-[15px]">
-                        <span className="text-sm font-bold text-indigo-900">{selectedProducts.size} selected</span>
+                        <span className="text-sm font-bold text-indigo-900">{selectedProducts.size} đã chọn</span>
                         <button
                             onClick={() => setSelectedProducts(new Set())}
                             className="text-sm text-indigo-600 hover:text-indigo-800 font-medium"
                         >
-                            Clear selection
+                            Bỏ chọn
                         </button>
                     </div>
                     <div className="flex gap-2">
@@ -477,19 +477,19 @@ const ProductManager: React.FC<ProductManagerProps> = ({ backend, lang }) => {
                             onClick={() => setBulkActionType('visibility')}
                             className="px-4 py-2 bg-white text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-100 transition-colors border border-slate-200"
                         >
-                            Update Visibility
+                            Cập nhật hiển thị
                         </button>
                         <button
                             onClick={() => setBulkActionType('category')}
                             className="px-4 py-2 bg-white text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-100 transition-colors border border-slate-200"
                         >
-                            Update Category
+                            Cập nhật danh mục
                         </button>
                         <button
                             onClick={() => setBulkActionType('delete')}
                             className="px-4 py-2 bg-rose-600 text-white rounded-lg text-sm font-medium hover:bg-rose-700 transition-colors"
                         >
-                            Delete Selected
+                            Xóa đã chọn
                         </button>
                     </div>
                 </div>
@@ -498,12 +498,12 @@ const ProductManager: React.FC<ProductManagerProps> = ({ backend, lang }) => {
             {/* Bulk Action Modal */}
             {bulkActionType && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in">
-                    <div className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" onClick={() => setBulkActionType(null)}></div>
-                    <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl relative p-6">
+                    <div className="absolute inset-0 bg-black/30" onClick={() => setBulkActionType(null)}></div>
+                    <div className="bg-white rounded-xl w-full max-w-md shadow-lg relative p-6">
                         <h3 className="text-xl font-bold text-slate-900 mb-4">
-                            {bulkActionType === 'delete' ? 'Delete Selected Products' :
-                             bulkActionType === 'visibility' ? 'Update Visibility' :
-                             'Update Category'}
+                            {bulkActionType === 'delete' ? 'Xóa sản phẩm đã chọn' :
+                             bulkActionType === 'visibility' ? 'Cập nhật hiển thị' :
+                             'Cập nhật danh mục'}
                         </h3>
                         {bulkActionType === 'visibility' && (
                             <div className="space-y-[15px]">
@@ -517,7 +517,7 @@ const ProductManager: React.FC<ProductManagerProps> = ({ backend, lang }) => {
                                             onChange={() => setBulkVisibility('show')}
                                             className="w-4 h-4 text-indigo-600"
                                         />
-                                        <span>Show</span>
+                                        <span>Hiển thị</span>
                                     </label>
                                     <label className="flex items-center gap-2 cursor-pointer">
                                         <input
@@ -528,7 +528,7 @@ const ProductManager: React.FC<ProductManagerProps> = ({ backend, lang }) => {
                                             onChange={() => setBulkVisibility('hide')}
                                             className="w-4 h-4 text-indigo-600"
                                         />
-                                        <span>Hide</span>
+                                        <span>Ẩn</span>
                                     </label>
                                 </div>
                             </div>
@@ -540,20 +540,20 @@ const ProductManager: React.FC<ProductManagerProps> = ({ backend, lang }) => {
                                     onChange={(e) => setBulkCategory(e.target.value)}
                                     className="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm"
                                 >
-                                    <option value="">Select category...</option>
+                                    <option value="">Chọn danh mục...</option>
                                     {state.categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                                 </select>
                             </div>
                         )}
                         {bulkActionType === 'delete' && (
-                            <p className="text-slate-600">Are you sure you want to delete {selectedProducts.size} selected products? This action cannot be undone.</p>
+                            <p className="text-slate-600">Bạn có chắc muốn xóa {selectedProducts.size} sản phẩm đã chọn? Hành động này không thể hoàn tác.</p>
                         )}
                         <div className="flex justify-end gap-3 mt-6">
                             <button
                                 onClick={() => setBulkActionType(null)}
                                 className="px-4 py-2 border border-slate-200 rounded-lg text-slate-700 hover:bg-slate-50 transition-colors"
                             >
-                                Cancel
+                                Hủy bỏ
                             </button>
                             <button
                                 onClick={() => {
@@ -564,7 +564,7 @@ const ProductManager: React.FC<ProductManagerProps> = ({ backend, lang }) => {
                                 disabled={bulkActionType === 'category' && !bulkCategory}
                                 className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                Confirm
+                                Xác nhận
                             </button>
                         </div>
                     </div>
@@ -572,7 +572,7 @@ const ProductManager: React.FC<ProductManagerProps> = ({ backend, lang }) => {
             )}
 
             {/* Product List */}
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left">
                         <thead className="bg-slate-50 border-b border-slate-200">

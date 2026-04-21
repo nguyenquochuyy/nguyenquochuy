@@ -69,8 +69,8 @@ const CustomerNotesModal: React.FC<CustomerNotesModalProps> = ({ isOpen, onClose
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in">
-            <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={onClose}></div>
-            <div className="bg-white rounded-2xl w-full max-w-2xl max-h-[80vh] shadow-2xl relative flex flex-col z-10 overflow-hidden transform transition-all scale-100">
+            <div className="absolute inset-0 bg-black/30" onClick={onClose}></div>
+            <div className="bg-white rounded-xl w-full max-w-2xl max-h-[80vh] shadow-lg relative flex flex-col z-10 overflow-hidden transform transition-all scale-100">
                 {/* Header */}
                 <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-white">
                     <div>

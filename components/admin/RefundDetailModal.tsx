@@ -79,9 +79,9 @@ const RefundDetailModal: React.FC<RefundDetailModalProps> = ({ refund, onClose, 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in bg-slate-900/60 backdrop-blur-sm">
-      <div className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" onClick={onClose}></div>
-      <div className="bg-white w-full max-w-2xl rounded-2xl shadow-2xl relative overflow-hidden max-h-[90vh] flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in bg-black/30">
+      <div className="absolute inset-0 bg-black/30" onClick={onClose}></div>
+      <div className="bg-white w-full max-w-2xl rounded-xl shadow-lg relative overflow-hidden max-h-[90vh] flex flex-col">
         <div className="flex justify-between items-center p-4 border-b border-gray-100 shrink-0">
           <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
             <DollarSign className="text-indigo-600" /> Chi Tiết Yêu Cầu Hoàn Tiền

@@ -35,25 +35,30 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ backend, message, onClearMessag
     setIsLoading(true);
 
     try {
-      const response = await api.adminLogin(email, password);
+      // Use the centralized login method from backend context
+      const success = await backend.login(email, password);
 
-      if (response && response.success && response.user) {
-        backend.setCurrentUser(response.user);
-        adminAuthStorage.saveCredentials(email, rememberMe);
-        adminAuthStorage.saveSession(response.user, response.token, 8 * 60 * 60 * 1000);
-        navigate('/');
+      if (success) {
+        // Get the user that was just set in the context
+        const user = backend.getCurrentUser();
+        if (user) {
+          adminAuthStorage.saveCredentials(email, rememberMe);
+          // Token is already in localStorage via apiClient -> tokenManager
+          // We also save session for legacy/persistence reasons if needed
+          adminAuthStorage.saveSession(user, tokenManager.getAdmin(), 8 * 60 * 60 * 1000);
+          navigate('/');
+        }
       } else {
-        tokenManager.clearAdmin();
-        setError(response?.message || 'Email hoặc mật khẩu không đúng.');
+        setError('Email hoặc mật khẩu không đúng.');
       }
     } catch (err) {
       console.error('Login error:', err);
-      tokenManager.clearAdmin();
       setError('Không thể kết nối đến server.');
     } finally {
       setIsLoading(false);
     }
   };
+
 
   useEffect(() => {
     if (message) {

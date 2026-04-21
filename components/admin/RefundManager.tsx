@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { BackendContextType, Language, Refund, RefundStatus } from '../../types';
 import { TRANSLATIONS } from '../../services/translations';
-import { 
-  ArrowLeft, Plus, Search, Filter, CheckCircle, XCircle, Clock, 
-  AlertCircle, DollarSign, Calendar, User, Phone, Eye, Trash2, 
+import {
+  ArrowLeft, Plus, Search, Filter, CheckCircle, XCircle, Clock,
+  AlertCircle, DollarSign, Calendar, User, Phone, Eye, Trash2,
   MoreVertical, Download, RefreshCw
 } from 'lucide-react';
 
@@ -24,7 +24,7 @@ const RefundManager: React.FC<RefundManagerProps> = ({ backend, lang }) => {
   const [showActions, setShowActions] = useState<string | null>(null);
 
   const filteredRefunds = refunds.filter(refund => {
-    const matchesSearch = 
+    const matchesSearch =
       refund.orderNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
       refund.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       refund.customerPhone.includes(searchTerm);
@@ -87,7 +87,7 @@ const RefundManager: React.FC<RefundManagerProps> = ({ backend, lang }) => {
           <h2 className="text-2xl font-bold text-slate-900">{t.refundMgmt}</h2>
           <p className="text-slate-500 text-sm mt-1">Quản lý yêu cầu hoàn tiền và trả hàng</p>
         </div>
-        <button 
+        <button
           onClick={() => setIsCreateModalOpen(true)}
           className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium"
         >
@@ -253,8 +253,8 @@ const RefundManager: React.FC<RefundManagerProps> = ({ backend, lang }) => {
 
       {/* Detail Modal */}
       {selectedRefund && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in bg-slate-900/60 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl w-full max-w-2xl shadow-2xl relative overflow-hidden flex flex-col max-h-[85vh]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in bg-black/30">
+          <div className="bg-white rounded-xl w-full max-w-2xl shadow-lg relative overflow-hidden flex flex-col max-h-[85vh]">
             <div className="flex justify-between items-center p-4 border-b border-gray-100 shrink-0">
               <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
                 <DollarSign className="text-indigo-600" /> Chi Tiết Hoàn Tiền
@@ -389,8 +389,8 @@ const RefundManager: React.FC<RefundManagerProps> = ({ backend, lang }) => {
 
       {/* Create Modal */}
       {isCreateModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in bg-slate-900/60 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl w-full max-w-2xl shadow-2xl relative overflow-hidden flex flex-col max-h-[85vh]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in bg-black/30">
+          <div className="bg-white rounded-xl w-full max-w-2xl shadow-lg relative overflow-hidden flex flex-col max-h-[85vh]">
             <div className="flex justify-between items-center p-4 border-b border-gray-100 shrink-0">
               <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
                 <Plus className="text-indigo-600" /> Tạo Yêu Cầu Hoàn Tiền

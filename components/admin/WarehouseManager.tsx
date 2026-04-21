@@ -13,11 +13,11 @@ interface Props {
 
 const WarehouseManager: React.FC<Props> = ({ warehouses, products, onAddWarehouse, onUpdateWarehouse, onDeleteWarehouse, onTransfer }) => {
   const [activeTab, setActiveTab] = useState<'warehouses' | 'transfer'>('warehouses');
-  
+
   // Modals state
   const [showModal, setShowModal] = useState(false);
   const [editingWH, setEditingWH] = useState<Warehouse | null>(null);
-  
+
   // Search
   const [search, setSearch] = useState('');
 
@@ -68,7 +68,7 @@ const WarehouseManager: React.FC<Props> = ({ warehouses, products, onAddWarehous
     };
 
     return (
-      <div className="p-6 max-w-2xl mx-auto bg-slate-50 rounded-2xl border border-slate-200">
+      <div className="p-6 max-w-2xl mx-auto bg-slate-50 rounded-xl border border-slate-200">
         <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2 mb-6">
           <ArrowRightLeft className="text-indigo-600" /> Luân chuyển hàng hóa
         </h3>
@@ -118,17 +118,17 @@ const WarehouseManager: React.FC<Props> = ({ warehouses, products, onAddWarehous
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 flex flex-col h-full animate-fade-in">
+    <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6 flex flex-col h-full animate-fade-in">
       {/* Tab header */}
       <div className="flex gap-[15px] border-b border-slate-200 mb-6">
-        <button 
+        <button
             onClick={() => setActiveTab('warehouses')}
             className={`pb-3 font-bold text-sm flex items-center gap-2 transition-all relative ${activeTab === 'warehouses' ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-700'}`}
         >
             <Box size={18} /> Danh sách kho
             {activeTab === 'warehouses' && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 rounded-t-full"></div>}
         </button>
-        <button 
+        <button
             onClick={() => setActiveTab('transfer')}
             className={`pb-3 font-bold text-sm flex items-center gap-2 transition-all relative ${activeTab === 'transfer' ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-700'}`}
         >
@@ -176,8 +176,8 @@ const WarehouseManager: React.FC<Props> = ({ warehouses, products, onAddWarehous
 
       {/* WH Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-          <form onSubmit={handleSave} className="bg-white rounded-2xl w-full max-w-md overflow-hidden shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30">
+          <form onSubmit={handleSave} className="bg-white rounded-xl w-full max-w-md overflow-hidden shadow-lg">
             <div className="p-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
               <h3 className="font-bold text-slate-800">{editingWH ? 'Sửa Kho' : 'Thêm Kho Mới'}</h3>
               <button type="button" onClick={() => setShowModal(false)} className="text-slate-400 hover:text-slate-600"><X size={20}/></button>

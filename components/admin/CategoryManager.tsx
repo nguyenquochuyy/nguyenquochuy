@@ -183,7 +183,7 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({ backend, lang }) => {
 
   // Helper calculations
   const getProductCount = (catId: string) => state.products.filter(p => p.category === catId).length;
-  
+
   const getInventoryValue = (catId: string) => state.products
     .filter(p => p.category === catId)
     .reduce((sum, p) => sum + (p.price * p.stock), 0);
@@ -356,8 +356,8 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({ backend, lang }) => {
 
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in">
-        <div className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" onClick={onClose}></div>
-        <div className="bg-white rounded-2xl w-full max-w-2xl shadow-2xl relative overflow-hidden flex flex-col max-h-[85vh]">
+        <div className="absolute inset-0 bg-black/30" onClick={onClose}></div>
+        <div className="bg-white rounded-xl w-full max-w-2xl shadow-lg relative overflow-hidden flex flex-col max-h-[85vh]">
 
           {/* Banner */}
           {category.banner && (
@@ -475,7 +475,7 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({ backend, lang }) => {
                 </div>
              </div>
           </div>
-          
+
           <div className="p-4 bg-gray-50 border-t border-gray-100 flex justify-end">
              <button onClick={onClose} className="px-5 py-2 bg-white border border-gray-300 rounded-xl text-gray-700 font-medium hover:bg-gray-100 shadow-sm transition-colors">
                 {t.closeBtn}
@@ -494,7 +494,7 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({ backend, lang }) => {
               <h2 className="text-2xl font-bold text-slate-900">{t.categoryMgmt}</h2>
               <p className="text-slate-500 text-sm mt-1">{state.categories.length} {t.categoriesSubtitle} • {state.products.length} {t.productsAssigned}</p>
           </div>
-          <button 
+          <button
             onClick={() => { resetForm(); setIsEditing(true); }}
             className="flex items-center gap-2 bg-indigo-600 text-white px-5 py-2.5 rounded-xl hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-200 font-medium active:scale-95"
           >
@@ -535,7 +535,7 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({ backend, lang }) => {
        <div className="grid grid-cols-1 lg:grid-cols-3 gap-[15px]">
           {/* Main Content: Category List */}
           <div className="lg:col-span-2">
-             <div className="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
+             <div className="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
                 <div className="p-6 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white">
                    <div className="flex items-center justify-between">
                      <h2 className="text-xl font-bold text-slate-800 flex items-center gap-3">
@@ -604,18 +604,18 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({ backend, lang }) => {
           {/* Side Panel: Form */}
           <div className="lg:col-span-1">
              {isEditing ? (
-                <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 sticky top-6">
+                <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-lg border border-slate-200 p-6 sticky top-6">
                    <h3 className="font-bold text-lg text-slate-800 mb-6 flex items-center gap-2 pb-4 border-b border-slate-100">
                       {editingId ? <Edit size={20} className="text-indigo-600"/> : <Plus size={20} className="text-indigo-600"/>}
                       {editingId ? t.editCategory : t.addCategory}
                    </h3>
-                   
-                   <div className="space-y-5">
+
+                   <div className="space-y-[15px]">
                       {/* Name Input */}
                       <div>
                          <label className="block text-sm font-medium text-slate-700 mb-1.5">{t.name}</label>
-                         <input 
-                           type="text" 
+                         <input
+                           type="text"
                            required
                            className="w-full px-4 py-2 bg-white text-slate-900 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all shadow-sm"
                            placeholder="e.g. Summer Collection"
@@ -659,8 +659,8 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({ backend, lang }) => {
                                 type="button"
                                 onClick={() => setFormData({...formData, parentId: undefined})}
                                 className={`flex flex-col items-center justify-center gap-2 px-2 py-4 rounded-xl border-2 transition-all ${
-                                    !formData.parentId 
-                                    ? 'bg-indigo-50 border-indigo-600 text-indigo-700 shadow-md transform scale-[1.02]' 
+                                    !formData.parentId
+                                    ? 'bg-indigo-50 border-indigo-600 text-indigo-700 shadow-md transform scale-[1.02]'
                                     : 'bg-white border-slate-100 text-slate-400 hover:bg-slate-50 hover:border-slate-200'
                                 }`}
                             >
@@ -679,8 +679,8 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({ backend, lang }) => {
                                     }
                                 }}
                                 className={`flex flex-col items-center justify-center gap-2 px-2 py-4 rounded-xl border-2 transition-all ${
-                                    formData.parentId 
-                                    ? 'bg-indigo-50 border-indigo-600 text-indigo-700 shadow-md transform scale-[1.02]' 
+                                    formData.parentId
+                                    ? 'bg-indigo-50 border-indigo-600 text-indigo-700 shadow-md transform scale-[1.02]'
                                     : 'bg-white border-slate-100 text-slate-400 hover:bg-slate-50 hover:border-slate-200'
                                 }`}
                             >
@@ -696,7 +696,7 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({ backend, lang }) => {
                              <div className="animate-fade-in p-4 bg-slate-50 rounded-xl border border-slate-200">
                                 <label className="block text-xs font-bold text-slate-500 uppercase mb-2 ml-1">{t.selectParent}</label>
                                 <div className="relative">
-                                    <select 
+                                    <select
                                     className="w-full pl-4 pr-10 py-2.5 bg-white text-slate-900 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all appearance-none cursor-pointer font-medium shadow-sm"
                                     value={formData.parentId || ''}
                                     onChange={e => setFormData({...formData, parentId: e.target.value})}
@@ -797,15 +797,15 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({ backend, lang }) => {
                    </div>
 
                    <div className="flex gap-3 mt-8 pt-4 border-t border-slate-50">
-                      <button 
-                        type="button" 
+                      <button
+                        type="button"
                         onClick={resetForm}
                         className="flex-1 py-2.5 border border-slate-200 text-slate-600 rounded-xl hover:bg-slate-50 font-medium transition-colors"
                       >
                          {t.cancel}
                       </button>
-                      <button 
-                        type="submit" 
+                      <button
+                        type="submit"
                         className="flex-1 py-2.5 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 font-medium transition-colors shadow-lg shadow-indigo-100"
                       >
                          {t.save}
@@ -813,15 +813,15 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({ backend, lang }) => {
                    </div>
                 </form>
              ) : (
-                <div className="bg-gradient-to-br from-indigo-50 to-white rounded-2xl p-8 border border-indigo-100 text-center sticky top-6">
-                    <div className="w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center mx-auto mb-4 text-indigo-500">
+                <div className="bg-gradient-to-br from-indigo-50 to-white rounded-xl p-8 border border-indigo-100 text-center sticky top-6">
+                    <div className="w-16 h-16 bg-white rounded-xl shadow-sm flex items-center justify-center mx-auto mb-4 text-indigo-500">
                         <FolderTree size={32} />
                     </div>
                     <h3 className="font-bold text-slate-800 text-lg mb-2">Category Management</h3>
                     <p className="text-slate-500 text-sm mb-6 leading-relaxed">
                         Select "Add Category" or edit an existing one to organize your store's structure efficiently.
                     </p>
-                    <button 
+                    <button
                         onClick={() => { resetForm(); setIsEditing(true); }}
                         className="w-full py-2.5 bg-white border border-indigo-200 text-indigo-700 font-bold rounded-xl hover:bg-indigo-50 transition-colors"
                     >
@@ -863,8 +863,8 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({ backend, lang }) => {
         {/* Bulk Reorder Modal */}
         {showBulkReorderModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in">
-            <div className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" onClick={() => setShowBulkReorderModal(false)}></div>
-            <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl relative overflow-hidden">
+            <div className="absolute inset-0 bg-black/30" onClick={() => setShowBulkReorderModal(false)}></div>
+            <div className="bg-white rounded-xl w-full max-w-md shadow-lg relative overflow-hidden">
               <div className="p-6 border-b border-slate-100">
                 <h3 className="text-lg font-bold text-slate-800">Di chuyển danh mục</h3>
                 <p className="text-sm text-slate-500 mt-1">Chọn hướng di chuyển cho {selectedCategories.size} danh mục</p>

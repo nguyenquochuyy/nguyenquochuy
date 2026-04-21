@@ -3,14 +3,15 @@ package handlers
 import (
 	"context"
 	"time"
+	"fmt"
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+
 	"unishop/backend/internal/events"
 	"unishop/backend/internal/models"
 	"unishop/backend/pkg/utils"
-	"fmt"
 )
 
 type InventoryHandler struct {
@@ -132,13 +133,13 @@ func (h *InventoryHandler) Transfer(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	// In a real system, we would decrement fromWarehouse and increment toWarehouse 
-	// inside the product.Inventory array. Since this requires array manipulation, 
+	// In a real system, we would decrement fromWarehouse and increment toWarehouse
+	// inside the product.Inventory array. Since this requires array manipulation,
 	// we will simulate the transfer logic or update both array elements.
-	
+
 	// Fast way: Just record the transfer log, and optionally adjust the nested inventory.
 	// For simplicity in this full-stack example, we just add the logs.
-	
+
 	nowNano := time.Now().UnixNano()
 	logOut := models.InventoryLog{
 		LogID:       fmt.Sprintf("inv-%d-out", nowNano),
@@ -237,7 +238,7 @@ func (h *InventoryHandler) RecordStockTake(c *gin.Context) {
 	if diff != 0 {
 		updateFilter := bson.M{"id": body.ProductID}
 		var updateQuery bson.M
-		
+
 		if product.HasVariants && body.VariantID != "" {
 			updateFilter["variants.id"] = body.VariantID
 			updateQuery = bson.M{"$set": bson.M{"variants.$.stock": body.Actual}}

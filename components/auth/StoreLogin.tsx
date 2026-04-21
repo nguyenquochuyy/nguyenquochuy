@@ -43,32 +43,33 @@ const StoreLogin: React.FC<StoreLoginProps> = ({ backend, message, onClearMessag
     const startTime = performance.now();
 
     try {
-      const response = await api.storeLogin(email, password);
+      const success = await backend.login(email, password);
       const responseTime = performance.now() - startTime;
 
-      if (response && response.success && response.user) {
-        const user = response.user;
-        loginAnalytics.trackLoginSuccess(email, user.id || user._id, 'email');
+      if (success) {
+        const user = backend.getCurrentUser() as Customer;
+        loginAnalytics.trackLoginSuccess(email, user.id, 'email');
         loginAnalytics.updateLoginResponseTime(email, responseTime);
+
         storeAuthStorage.saveCredentials(email, rememberMe);
-        storeAuthStorage.saveSession(user, response.token, 24 * 60 * 60 * 1000);
+        // Token is already handled in apiClient -> tokenManager
+        storeAuthStorage.saveSession(user, tokenManager.getStore(), 24 * 60 * 60 * 1000);
         if (onLoginSuccess) onLoginSuccess(user);
         navigate('/store');
       } else {
-        tokenManager.clearStore();
-        loginAnalytics.trackLoginFailure(email, response?.message || 'Invalid credentials');
+        loginAnalytics.trackLoginFailure(email, 'Invalid credentials');
         loginAnalytics.updateLoginResponseTime(email, responseTime);
-        setError(response?.message || 'Email hoặc mật khẩu không đúng.');
+        setError('Email hoặc mật khẩu không đúng.');
       }
     } catch (err) {
       console.error('Login error:', err);
-      tokenManager.clearStore();
       loginAnalytics.trackLoginFailure(email, 'Network error');
       setError('Không thể kết nối đến server.');
     } finally {
       setIsLoading(false);
     }
   };
+
 
   const handleSocialLogin = async (provider: 'google' | 'github' | 'facebook' | 'twitter') => {
     setError('');

@@ -355,16 +355,16 @@ export interface BackendContextType {
   productHistory: ProductHistory[];
   reviews: Review[];
   // Auth
-  login: (email: string, password: string) => boolean;
+  login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
   setCurrentUser: (user: Employee | Customer) => void;
-  register: (customerData: Omit<Customer, 'id' | 'joinedAt' | 'status' | 'loyaltyPoints' | 'wishlist'>) => void;
+  register: (customerData: Omit<Customer, 'id' | 'joinedAt' | 'status' | 'loyaltyPoints' | 'wishlist'>) => Promise<void>;
   getCurrentUser: () => Employee | Customer | null;
   // Product
-  addProduct: (product: Omit<Product, 'id'>) => void;
-  updateProduct: (id: string, updates: Partial<Product>) => void;
-  deleteProduct: (id: string) => void;
-  toggleWishlist: (customerId: string, productId: string) => void; // New Method
+  addProduct: (product: Omit<Product, 'id'>) => Promise<void>;
+  updateProduct: (id: string, updates: Partial<Product>) => Promise<void>;
+  deleteProduct: (id: string) => Promise<void>;
+  toggleWishlist: (customerId: string, productId: string) => Promise<void>;
   // Order
   placeOrder: (
     customerInfo: { name: string; phone: string; address: string; email?: string },
@@ -372,51 +372,52 @@ export interface BackendContextType {
     paymentMethod: Order['paymentMethod'],
     shippingInfo: { method: string, fee: number },
     voucherCode?: string,
-    usePoints?: boolean // New Param
-  ) => Order;
-  updateOrderStatus: (id: string, status: OrderStatus, userId?: string) => void;
-  updateOrderNotes: (id: string, internalNotes?: string, customerNotes?: string) => void;
+    usePoints?: boolean
+  ) => Order; // placeOrder is sync in useBackend (updates local state first)
+  updateOrderStatus: (id: string, status: OrderStatus, userId?: string) => Promise<void>;
+  updateOrderNotes: (id: string, internalNotes?: string, customerNotes?: string) => Promise<void>;
   // Category Methods
-  addCategory: (category: Omit<Category, 'id'>) => void;
-  updateCategory: (id: string, updates: Partial<Category>) => void;
-  deleteCategory: (id: string) => void;
+  addCategory: (category: Omit<Category, 'id'>) => Promise<void>;
+  updateCategory: (id: string, updates: Partial<Category>) => Promise<void>;
+  deleteCategory: (id: string) => Promise<void>;
   // Customer Methods
-  addCustomer: (customer: Omit<Customer, 'id' | 'joinedAt'>) => void;
-  updateCustomer: (id: string, updates: Partial<Customer>) => void;
-  updateCustomerStatus: (id: string, status: 'ACTIVE' | 'LOCKED') => void;
+  addCustomer: (customer: Omit<Customer, 'id' | 'joinedAt'>) => Promise<void>;
+  updateCustomer: (id: string, updates: Partial<Customer>) => Promise<void>;
+  updateCustomerStatus: (id: string, status: 'ACTIVE' | 'LOCKED') => Promise<void>;
   // Inventory Methods
-  adjustStock: (productId: string, variantId: string | undefined, quantity: number, type: 'IN' | 'OUT' | 'ADJUSTMENT', reason: string, userId?: string) => void;
+  adjustStock: (productId: string, variantId: string | undefined, quantity: number, type: 'IN' | 'OUT' | 'ADJUSTMENT', reason: string, userId?: string) => Promise<void>;
   // Finance Methods
-  addTransaction: (transaction: Omit<Transaction, 'id'>, userId?: string) => void;
-  addPaymentAccount: (account: Omit<PaymentAccount, 'id'>) => void;
-  deletePaymentAccount: (id: number) => void;
+  addTransaction: (transaction: Omit<Transaction, 'id'>, userId?: string) => Promise<void>;
+  addPaymentAccount: (account: Omit<PaymentAccount, 'id'>) => void; // Sync
+  deletePaymentAccount: (id: number) => void; // Sync
   // Voucher Methods
-  addVoucher: (voucher: Omit<Voucher, 'id' | 'usedCount'>, userId?: string) => void;
-  updateVoucher: (id: string, updates: Partial<Voucher>, userId?: string) => void;
-  deleteVoucher: (id: string) => void;
+  addVoucher: (voucher: Omit<Voucher, 'id' | 'usedCount'>, userId?: string) => Promise<void>;
+  updateVoucher: (id: string, updates: Partial<Voucher>, userId?: string) => Promise<void>;
+  deleteVoucher: (id: string) => Promise<void>;
   validateVoucher: (code: string, orderTotal: number) => { valid: boolean; discount: number; message?: string };
   // Employee Methods
-  addEmployee: (employee: Omit<Employee, 'id' | 'joinedAt' | 'lastActive'>) => void;
-  updateEmployee: (id: string, updates: Partial<Employee>) => void;
-  setLevel2Password: (employeeId: string, newPassword: string) => void;
-  disableLevel2Password: (employeeId: string) => void; // New method to turn off L2
+  addEmployee: (employee: Omit<Employee, 'id' | 'joinedAt' | 'lastActive'>) => Promise<void>;
+  updateEmployee: (id: string, updates: Partial<Employee>) => Promise<void>;
+  setLevel2Password: (employeeId: string, newPassword: string) => Promise<void>;
+  disableLevel2Password: (employeeId: string) => Promise<void>;
   verifyLevel2Password: (employeeId: string, password: string) => { success: boolean; attemptsLeft: number };
   resetLevel2PasswordAttempts: (employeeId: string) => void;
   // Review Methods
-  addReview: (review: Omit<Review, 'id' | 'createdAt' | 'updatedAt'>) => void;
-  replyToReview: (reviewId: string, reply: string) => void;
-  toggleReviewHidden: (reviewId: string) => void;
+  addReview: (review: Omit<Review, 'id' | 'createdAt' | 'updatedAt'>) => Promise<void>;
+  replyToReview: (reviewId: string, reply: string) => Promise<void>;
+  toggleReviewHidden: (reviewId: string) => Promise<void>;
   // Settings
-  updateSettings: (settings: Partial<StoreSettings>) => void;
+  updateSettings: (settings: Partial<StoreSettings>) => Promise<void>;
   refresh: () => void;
   // Refund Methods
-  createRefund: (refund: Omit<Refund, 'id' | 'requestDate'>) => void;
-  updateRefundStatus: (id: string, status: RefundStatus, processedBy?: string) => void;
-  deleteRefund: (id: string) => void;
+  createRefund: (refund: Omit<Refund, 'id' | 'requestDate'>) => Promise<void>;
+  updateRefundStatus: (id: string, status: RefundStatus, processedBy?: string) => Promise<void>;
+  deleteRefund: (id: string) => Promise<void>;
   // Invoice Methods
   addInvoice: (invoice: Omit<Invoice, 'id' | 'invoiceId' | 'createdAt' | 'updatedAt'>) => Promise<void>;
   updateInvoiceStatus: (id: string, status: Invoice['status']) => Promise<void>;
 }
+
 
 export const formatCurrency = (value: number) => {
   // Vietnamese format: 1.000.000đ (uses dots for thousands)

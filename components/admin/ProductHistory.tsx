@@ -49,8 +49,8 @@ const ProductHistoryModal: React.FC<ProductHistoryModalProps> = ({ history, lang
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in">
-      <div className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" onClick={onClose}></div>
-      <div className="bg-white rounded-2xl w-full max-w-2xl shadow-2xl relative flex flex-col max-h-[90vh] overflow-hidden">
+      <div className="absolute inset-0 bg-black/30" onClick={onClose}></div>
+      <div className="bg-white rounded-xl w-full max-w-2xl shadow-lg relative flex flex-col max-h-[90vh] overflow-hidden">
         <div className="flex justify-between items-center p-6 border-b border-gray-100">
           <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
             <History className="text-indigo-600" /> Product History

@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { BackendContextType, Language, Employee, StoreSettings } from '../../types';
 import { TRANSLATIONS } from '../../services/translations';
 import ConfirmModal from './ConfirmModal';
-import { 
-  Store, CreditCard, Truck, Package, ShoppingCart, DollarSign, 
+import {
+  Store, CreditCard, Truck, Package, ShoppingCart, DollarSign,
   Users, Bell, Shield, Save, CheckCircle, Smartphone, Mail, Lock,
   Landmark, User, Hash, Plus, Trash2, X, Key, ShieldAlert, Edit
 } from 'lucide-react';
+import CurrencyInput from '../ui/CurrencyInput';
 
 interface SettingsManagerProps {
   backend: BackendContextType;
@@ -26,7 +27,7 @@ const SettingsManager: React.FC<SettingsManagerProps> = ({ backend, lang }) => {
 
   // Local state for UI, initialized from backend settings
   const [localSettings, setLocalSettings] = useState<StoreSettings>(settings);
-  
+
   // Sync local state if backend state changes (e.g. initial load)
   useEffect(() => {
     setLocalSettings(settings);
@@ -35,7 +36,7 @@ const SettingsManager: React.FC<SettingsManagerProps> = ({ backend, lang }) => {
   const [isAddingAccount, setIsAddingAccount] = useState(false);
   const [newAccount, setNewAccount] = useState({ bank: '', number: '', holder: '' });
   const [deletingAccountId, setDeletingAccountId] = useState<number | null>(null);
-  
+
   const [l2PasswordModalOpen, setL2PasswordModalOpen] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
   const [newL2Password, setNewL2Password] = useState('');
@@ -44,7 +45,7 @@ const SettingsManager: React.FC<SettingsManagerProps> = ({ backend, lang }) => {
   const handleSave = () => {
       setSaveStatus('saving');
       updateSettings(localSettings);
-      
+
       setTimeout(() => {
           setSaveStatus('saved');
           setTimeout(() => setSaveStatus('idle'), 2000);
@@ -212,7 +213,7 @@ const SettingsManager: React.FC<SettingsManagerProps> = ({ backend, lang }) => {
                       )}
                   </div>
               );
-          case 'shipping': return (<div className="space-y-[15px] max-w-2xl"><h3 className="text-lg font-bold text-slate-800 border-b border-slate-100 pb-2">{t.shipping}</h3><div className="grid grid-cols-1 md:grid-cols-2 gap-[15px]"><div><label className={labelClass}>{t.standardShippingFee}</label><div className="relative"><input type="number" className={inputClass} value={localSettings.shipping.standardFee} onChange={e => updateSection('shipping', { standardFee: parseInt(e.target.value) || 0 })} /><span className="absolute right-3 top-2.5 text-slate-400 text-sm font-bold">₫</span></div></div><div><label className={labelClass}>{t.freeShippingThreshold}</label><div className="relative"><input type="number" className={inputClass} value={localSettings.shipping.freeShipThreshold} onChange={e => updateSection('shipping', { freeShipThreshold: parseInt(e.target.value) || 0 })} /><span className="absolute right-3 top-2.5 text-slate-400 text-sm font-bold">₫</span></div></div></div></div>);
+          case 'shipping': return (<div className="space-y-[15px] max-w-2xl"><h3 className="text-lg font-bold text-slate-800 border-b border-slate-100 pb-2">{t.shipping}</h3><div className="grid grid-cols-1 md:grid-cols-2 gap-[15px]"><div><CurrencyInput label={t.standardShippingFee} value={localSettings.shipping.standardFee} onChange={val => updateSection('shipping', { standardFee: val })} /></div><div><CurrencyInput label={t.freeShippingThreshold} value={localSettings.shipping.freeShipThreshold} onChange={val => updateSection('shipping', { freeShipThreshold: val })} /></div></div></div>);
           case 'inventory': return (<div className="space-y-[15px] max-w-2xl"><h3 className="text-lg font-bold text-slate-800 border-b border-slate-100 pb-2">{t.inventory}</h3><div className="grid grid-cols-1 gap-[15px]"><div><label className={labelClass}>{t.lowStockThreshold}</label><input type="number" className={inputClass} value={localSettings.inventory.lowStockThreshold} onChange={e => updateSection('inventory', { lowStockThreshold: parseInt(e.target.value) || 0 })} /><p className="text-xs text-slate-500 mt-1">{t.lowStockAlert}</p></div><ToggleSwitch checked={localSettings.inventory.showOutOfStock} onChange={(e: any) => updateSection('inventory', { showOutOfStock: e.target.checked })} label={t.showOutOfStock} subLabel={t.showOutOfStockSubLabel} icon={Package}/></div></div>);
           case 'orders': return (<div className="space-y-[15px] max-w-2xl"><h3 className="text-lg font-bold text-slate-800 border-b border-slate-100 pb-2">{t.orders}</h3><div className="space-y-[15px]"><ToggleSwitch checked={localSettings.orders.autoConfirm} onChange={(e: any) => updateSection('orders', { autoConfirm: e.target.checked })} label={t.autoConfirmOrders} subLabel={t.autoConfirmSubLabel} icon={CheckCircle}/><div className="grid grid-cols-1 md:grid-cols-2 gap-[15px]"><div><label className={labelClass}>{t.invoicePrefix}</label><input type="text" className={inputClass} value={localSettings.orders.invoicePrefix} onChange={e => updateSection('orders', { invoicePrefix: e.target.value })} /></div></div></div></div>);
           case 'finance': return (
@@ -243,7 +244,7 @@ const SettingsManager: React.FC<SettingsManagerProps> = ({ backend, lang }) => {
                         <p className="text-xs text-slate-500 mt-1">{t.forcePasswordChange}</p>
                     </div>
                 </div>
-                
+
                 {currentUser.role === 'OWNER' && (
                     <div className="space-y-[15px]">
                         <h3 className="text-lg font-bold text-slate-800 border-b border-slate-100 pb-2 flex items-center gap-2">
@@ -252,7 +253,7 @@ const SettingsManager: React.FC<SettingsManagerProps> = ({ backend, lang }) => {
                         <p className="text-sm text-slate-500">
                             {t.level2PasswordDesc}
                         </p>
-                        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                             <table className="w-full text-sm">
                                 <thead className="bg-slate-50 border-b border-slate-100">
                                     <tr>
@@ -282,18 +283,18 @@ const SettingsManager: React.FC<SettingsManagerProps> = ({ backend, lang }) => {
                                             <td className="px-6 py-4 text-right">
                                                 <div className="flex justify-end gap-2">
                                                     <label className="relative inline-flex items-center cursor-pointer">
-                                                        <input 
-                                                            type="checkbox" 
-                                                            className="sr-only peer" 
-                                                            checked={!!emp.level2Password} 
+                                                        <input
+                                                            type="checkbox"
+                                                            className="sr-only peer"
+                                                            checked={!!emp.level2Password}
                                                             onChange={() => handleToggleL2(emp)}
                                                         />
                                                         <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
                                                     </label>
-                                                    
+
                                                     {emp.level2Password && (
-                                                        <button 
-                                                            onClick={() => handleOpenL2Modal(emp)} 
+                                                        <button
+                                                            onClick={() => handleOpenL2Modal(emp)}
                                                             className="p-1.5 bg-slate-100 hover:bg-indigo-100 text-slate-500 hover:text-indigo-600 rounded-lg transition-colors border border-slate-200"
                                                             title={lang === 'vi' ? 'Đổi mật khẩu' : 'Change Password'}
                                                         >
@@ -323,7 +324,7 @@ const SettingsManager: React.FC<SettingsManagerProps> = ({ backend, lang }) => {
                 <h2 className="text-2xl font-bold text-slate-900">{t.settingsMgmt}</h2>
                 <p className="text-slate-500 text-sm font-medium mt-1">Manage your store preferences and system configurations</p>
             </div>
-            <button 
+            <button
                 onClick={handleSave}
                 disabled={saveStatus !== 'idle'}
                 className={`flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold text-white transition-all shadow-lg active:scale-95 ${
@@ -335,7 +336,7 @@ const SettingsManager: React.FC<SettingsManagerProps> = ({ backend, lang }) => {
         </div>
 
         {/* Layout */}
-        <div className="flex flex-1 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div className="flex flex-1 bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
             {/* Sidebar */}
             <div className="w-64 bg-slate-50 border-r border-slate-200 flex flex-col overflow-y-auto">
                 <div className="p-3 space-y-1">
@@ -344,8 +345,8 @@ const SettingsManager: React.FC<SettingsManagerProps> = ({ backend, lang }) => {
                             key={item.id}
                             onClick={() => setActiveTab(item.id as SettingTab)}
                             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${
-                                activeTab === item.id 
-                                ? 'bg-white text-indigo-600 shadow-sm border border-slate-200' 
+                                activeTab === item.id
+                                ? 'bg-white text-indigo-600 shadow-sm border border-slate-200'
                                 : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
                             }`}
                         >
@@ -362,16 +363,16 @@ const SettingsManager: React.FC<SettingsManagerProps> = ({ backend, lang }) => {
             </div>
         </div>
         {l2PasswordModalOpen && selectedEmployee && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
-                <div className="bg-white rounded-2xl w-full max-w-sm shadow-2xl p-6">
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30 animate-fade-in">
+                <div className="bg-white rounded-xl w-full max-w-sm shadow-lg p-6">
                     <h3 className="font-bold text-lg text-slate-900 mb-2">
                         {selectedEmployee.level2Password ? 'Thay đổi Mật khẩu cấp 2' : 'Thiết lập Mật khẩu cấp 2'}
                     </h3>
                     <p className="text-sm text-slate-500 mb-4">Nhập mật khẩu phụ mới cho <strong className="text-slate-700">{selectedEmployee.name}</strong>.</p>
                     <div className="relative">
                         <Key size={16} className="absolute left-3 top-3.5 text-slate-400" />
-                        <input 
-                            type="password" 
+                        <input
+                            type="password"
                             value={newL2Password}
                             onChange={e => setNewL2Password(e.target.value)}
                             placeholder="Nhập mật khẩu mới"
@@ -386,7 +387,7 @@ const SettingsManager: React.FC<SettingsManagerProps> = ({ backend, lang }) => {
                 </div>
             </div>
         )}
-        
+
         <ConfirmModal
             isOpen={!!confirmDisableL2}
             onClose={() => setConfirmDisableL2(null)}

@@ -69,13 +69,13 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onClose, onProductFound
         // A full re-mount is better. For now we just tell user to close/re-open or we can just reload it.
         // Actually Html5QrcodeScanner has a "Scan an Image File" / "Scan using Camera directly" ui.
         // Let's just reset the state and ask them to scan again.
-        // The library automatically handles pause/resume if we handle it properly, but with `Html5QrcodeScanner`, 
+        // The library automatically handles pause/resume if we handle it properly, but with `Html5QrcodeScanner`,
         // it renders its own UI.
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-sm animate-fade-in">
-            <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl flex flex-col overflow-hidden">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 animate-fade-in">
+            <div className="bg-white rounded-xl w-full max-w-md shadow-lg flex flex-col overflow-hidden">
                 <div className="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-emerald-500 to-teal-600 text-white flex-shrink-0">
                     <h2 className="font-bold text-lg flex items-center gap-2">
                         Quét mã vạch (Barcode / QR)
@@ -131,7 +131,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onClose, onProductFound
                                         <span className="text-slate-500">Tồn kho hiện tại:</span>
                                         <span className="font-bold text-slate-800">{product.stock}</span>
                                     </div>
-                                    <button 
+                                    <button
                                         onClick={() => {
                                             onProductFound(product);
                                             onClose();
@@ -143,9 +143,9 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onClose, onProductFound
                                 </div>
                             ) : null}
 
-                            <button 
+                            <button
                                 onClick={() => {
-                                    onClose(); 
+                                    onClose();
                                     // Normally we would just reset, but it's easier to close and re-open to re-init camera
                                 }}
                                 className="mt-4 text-sm text-slate-500 hover:text-slate-700 underline"

@@ -62,11 +62,11 @@ const DashboardStats: React.FC<DashboardStatsProps> = ({
       const end = new Date();
       end.setDate(end.getDate() - offsetDays);
       end.setHours(23, 59, 59, 999);
-      
+
       const start = new Date(end);
       start.setDate(end.getDate() - days);
       start.setHours(0, 0, 0, 0);
-      
+
       return { start, end, days };
   };
 
@@ -123,7 +123,7 @@ const DashboardStats: React.FC<DashboardStatsProps> = ({
           const date = new Date(start);
           date.setDate(start.getDate() + i);
           const dateStr = date.toLocaleDateString(lang === 'vi' ? 'vi-VN' : 'en-US', { day: '2-digit', month: 'short' });
-          
+
           // Filter orders for this specific day
           const dayOrders = currentOrders.filter(o => {
               const d = new Date(o.createdAt);
@@ -169,10 +169,10 @@ const DashboardStats: React.FC<DashboardStatsProps> = ({
           order.items.forEach(item => {
               if (!prodMap[item.id]) {
                   const productInDb = state.products.find(p => p.id === item.id);
-                  prodMap[item.id] = { 
-                      name: item.name, 
-                      qty: 0, 
-                      revenue: 0, 
+                  prodMap[item.id] = {
+                      name: item.name,
+                      qty: 0,
+                      revenue: 0,
                       image: item.images?.[0] ?? '',
                       stock: productInDb ? productInDb.stock : 0
                   };
@@ -294,29 +294,29 @@ const DashboardStats: React.FC<DashboardStatsProps> = ({
       const { icon: DrillIcon, color, data } = drillData;
 
       return (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4 animate-fade-in">
-              <div className="bg-white w-full max-w-4xl max-h-[90vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden">
-                  <div className="p-6 border-b border-slate-200 flex justify-between items-center">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
+              <div className="bg-white w-full max-w-4xl max-h-[90vh] rounded-xl border border-gray-200 flex flex-col overflow-hidden shadow-lg">
+                  <div className="px-5 py-4 border-b border-gray-200 flex justify-between items-center">
                       <div className="flex items-center gap-3">
-                          <div className={`p-3 rounded-xl ${color} text-white`}>
-                              <DrillIcon size={24} />
+                          <div className={`p-2 rounded-lg ${color} text-white`}>
+                              <DrillIcon size={20} />
                           </div>
                           <div>
-                              <h2 className="text-xl font-bold text-slate-900">{drillDownModal.title}</h2>
-                              <p className="text-sm text-slate-500">{data.length} records</p>
+                              <h2 className="text-lg font-semibold text-gray-900">{drillDownModal.title}</h2>
+                              <p className="text-sm text-gray-500">{data.length} records</p>
                           </div>
                       </div>
                       <button
                           onClick={() => setDrillDownModal({ isOpen: false, type: null, title: '' })}
-                          className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+                          className="p-1.5 hover:bg-gray-100 rounded-md transition-colors"
                       >
-                          <X size={20} />
+                          <X size={18} />
                       </button>
                   </div>
-                  <div className="flex-1 overflow-auto p-6">
+                  <div className="flex-1 overflow-auto p-5">
                       <div className="overflow-x-auto">
                           <table className="w-full text-left">
-                              <thead className="bg-slate-50 text-slate-500 text-xs uppercase font-bold sticky top-0">
+                              <thead className="bg-gray-50 text-gray-500 text-[11px] uppercase font-medium sticky top-0">
                                   <tr>
                                       <th className="px-4 py-3">Date</th>
                                       <th className="px-4 py-3">Customer</th>
@@ -344,15 +344,15 @@ const DashboardStats: React.FC<DashboardStatsProps> = ({
                                       )}
                                   </tr>
                               </thead>
-                              <tbody className="divide-y divide-slate-100">
+                              <tbody className="divide-y divide-gray-100">
                                   {data.map((item: any, idx: number) => (
-                                      <tr key={idx} className="hover:bg-slate-50 transition-colors">
-                                          <td className="px-4 py-3 text-sm text-slate-600">{item.date}</td>
-                                          <td className="px-4 py-3 text-sm font-medium text-slate-900">{item.customer}</td>
+                                      <tr key={idx} className="hover:bg-gray-50 transition-colors">
+                                          <td className="px-4 py-3 text-sm text-gray-500">{item.date}</td>
+                                          <td className="px-4 py-3 text-sm font-medium text-gray-900">{item.customer}</td>
                                           {drillDownModal.type === 'profit' && (
                                               <>
-                                                  <td className="px-4 py-3 text-sm text-slate-600">{formatCurrency(item.revenue)}</td>
-                                                  <td className="px-4 py-3 text-sm text-slate-600">{formatCurrency(item.cost)}</td>
+                                                  <td className="px-4 py-3 text-sm text-gray-500">{formatCurrency(item.revenue)}</td>
+                                                  <td className="px-4 py-3 text-sm text-gray-500">{formatCurrency(item.cost)}</td>
                                                   <td className={`px-4 py-3 text-sm font-bold ${item.profit >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
                                                       {formatCurrency(item.profit)}
                                                   </td>
@@ -365,22 +365,22 @@ const DashboardStats: React.FC<DashboardStatsProps> = ({
                                                           item.status === 'COMPLETED' ? 'bg-emerald-100 text-emerald-700' :
                                                           item.status === 'PENDING' ? 'bg-amber-100 text-amber-700' :
                                                           item.status === 'CANCELLED' ? 'bg-rose-100 text-rose-700' :
-                                                          'bg-slate-100 text-slate-700'
+                                                          'bg-gray-100 text-gray-700'
                                                       }`}>
                                                           {item.status}
                                                       </span>
                                                   </td>
-                                                  <td className="px-4 py-3 text-sm text-slate-600">{item.items}</td>
+                                                  <td className="px-4 py-3 text-sm text-gray-500">{item.items}</td>
                                               </>
                                           )}
                                           {(drillDownModal.type === 'revenue' || drillDownModal.type === 'aov') && (
                                               <>
-                                                  <td className="px-4 py-3 text-sm text-slate-600">{item.items}</td>
-                                                  <td className="px-4 py-3 text-sm font-bold text-slate-900 text-right">{formatCurrency(item.total)}</td>
+                                                  <td className="px-4 py-3 text-sm text-gray-500">{item.items}</td>
+                                                  <td className="px-4 py-3 text-sm font-medium text-gray-900 text-right">{formatCurrency(item.total)}</td>
                                               </>
                                           )}
                                           {drillDownModal.type === 'aov' && (
-                                              <td className="px-4 py-3 text-sm font-bold text-slate-900 text-right">{formatCurrency(item.avg)}</td>
+                                              <td className="px-4 py-3 text-sm font-medium text-gray-900 text-right">{formatCurrency(item.avg)}</td>
                                           )}
                                       </tr>
                                   ))}
@@ -397,7 +397,7 @@ const DashboardStats: React.FC<DashboardStatsProps> = ({
   const TrendIndicator = ({ value }: { value: number }) => {
       const isPositive = value >= 0;
       return (
-          <span className={`flex items-center text-xs font-bold px-1.5 py-0.5 rounded-md ${isPositive ? 'text-emerald-600 bg-emerald-50' : 'text-rose-600 bg-rose-50'}`}>
+          <span className={`inline-flex items-center text-xs font-medium gap-0.5 ${isPositive ? 'text-emerald-600' : 'text-rose-500'}`}>
               {isPositive ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
               {Math.abs(value).toFixed(1)}%
           </span>
@@ -407,74 +407,69 @@ const DashboardStats: React.FC<DashboardStatsProps> = ({
   const KPICard = ({ title, value, trend, icon: Icon, colorClass, subValue, onClick }: any) => (
       <div
           onClick={onClick}
-          className="bg-white p-5 rounded-2xl border border-slate-200 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.05)] hover:shadow-md transition-all group relative overflow-hidden cursor-pointer hover:border-indigo-300"
+          className="bg-white p-5 rounded-xl border border-gray-200 hover:border-gray-300 transition-colors cursor-pointer"
       >
-          <div className={`absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-500 ${colorClass.replace('bg-', 'text-')}`}>
-              <Icon size={80} />
-          </div>
-          <div className="relative z-10">
-              <div className="flex justify-between items-start mb-2">
-                  <div className={`p-2.5 rounded-xl ${colorClass} text-white shadow-sm`}>
-                      <Icon size={20} />
-                  </div>
-                  <TrendIndicator value={trend} />
+          <div className="flex justify-between items-start mb-3">
+              <div className={`p-2 rounded-lg ${colorClass} text-white`}>
+                  <Icon size={18} />
               </div>
-              <p className="text-slate-500 text-xs font-bold uppercase tracking-wider">{title}</p>
-              <h3 className="text-2xl font-black text-slate-900 mt-1 tracking-tight">{value}</h3>
-              {subValue && <p className="text-xs text-slate-400 mt-1 font-medium">{subValue}</p>}
+              <TrendIndicator value={trend} />
           </div>
+          <p className="text-gray-500 text-xs font-medium uppercase tracking-wide">{title}</p>
+          <h3 className="text-2xl font-bold text-gray-900 mt-1">{value}</h3>
+          {subValue && <p className="text-xs text-gray-400 mt-1">{subValue}</p>}
       </div>
   );
 
   return (
-    <div className="space-y-[15px] animate-fade-in-up pb-10">
-        
+    <div className="space-y-5 pb-8">
+
         {/* 1. Header & Controls */}
-        <div className="flex flex-col md:flex-row justify-between items-end gap-[15px]">
+        <div className="flex flex-col md:flex-row justify-between items-end gap-4">
             <div>
-                <h1 className="text-2xl font-bold text-slate-900">{t.businessOverview}</h1>
-                <p className="text-slate-500 text-sm mt-1">
-                    {t.performanceReportFrom} <span className="font-bold text-slate-700">{currentRange.start.toLocaleDateString()}</span> – <span className="font-bold text-slate-700">{currentRange.end.toLocaleDateString()}</span>
+                <h1 className="text-xl font-semibold text-gray-900">{t.businessOverview}</h1>
+                <p className="text-gray-500 text-sm mt-0.5">
+                    {t.performanceReportFrom} <span className="font-medium text-gray-700">{currentRange.start.toLocaleDateString()}</span> – <span className="font-medium text-gray-700">{currentRange.end.toLocaleDateString()}</span>
                 </p>
             </div>
             <div className="flex items-center gap-2">
-                <div className="flex items-center gap-2 bg-white p-1 rounded-xl border border-slate-200 shadow-sm">
+                <div className="flex items-center gap-1 bg-white p-1 rounded-lg border border-gray-200">
                     {(['7D', '30D', '90D'] as const).map(range => (
                         <button
                             key={range}
                             onClick={() => setDateRangeFilter(range)}
-                            className={`px-4 py-2 text-xs font-bold rounded-lg transition-all ${
+                            className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
                                 dateRangeFilter === range
-                                ? 'bg-slate-900 text-white shadow-md'
-                                : 'text-slate-500 hover:bg-slate-50'
+                                ? 'bg-gray-900 text-white'
+                                : 'text-gray-500 hover:bg-gray-50'
                             }`}
                         >
                             {range === '7D' ? t.last7Days : range === '30D' ? t.last30Days : t.last90Days}
                         </button>
                     ))}
-                    <div className="w-px h-6 bg-slate-200 mx-1"></div>
+                    <div className="w-px h-5 bg-gray-200 mx-0.5"></div>
                     <button
                         onClick={() => setAdvancedFilters({ ...advancedFilters, showFilters: !advancedFilters.showFilters })}
-                        className={`px-3 py-2 text-xs font-bold rounded-lg transition-all ${
-                            advancedFilters.showFilters ? 'bg-indigo-600 text-white' : 'text-slate-500 hover:bg-slate-50'
+                        className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
+                            advancedFilters.showFilters ? 'bg-gray-900 text-white' : 'text-gray-500 hover:bg-gray-50'
                         }`}
                     >
                         Filters
                     </button>
                     <button
                         onClick={() => setAdvancedFilters({ ...advancedFilters, showFilters: !advancedFilters.showFilters, showWidgets: !advancedFilters.showWidgets })}
-                        className={`px-3 py-2 text-xs font-bold rounded-lg transition-all ${
-                            advancedFilters.showFilters ? 'bg-indigo-600 text-white' : 'text-slate-500 hover:bg-slate-50'
+                        className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
+                            advancedFilters.showWidgets ? 'bg-gray-900 text-white' : 'text-gray-500 hover:bg-gray-50'
                         }`}
                     >
                         Widgets
                     </button>
-                    <div className="w-px h-6 bg-slate-200 mx-1"></div>
-                    <button onClick={() => handleExport('csv')} className="px-3 py-2 text-slate-400 hover:text-indigo-600 transition-colors" title="Export CSV">
-                        <Download size={18} />
+                    <div className="w-px h-5 bg-gray-200 mx-0.5"></div>
+                    <button onClick={() => handleExport('csv')} className="px-2 py-1.5 text-gray-400 hover:text-gray-700 transition-colors" title="Export CSV">
+                        <Download size={16} />
                     </button>
-                    <button onClick={() => handleExport('pdf')} className="px-3 py-2 text-slate-400 hover:text-indigo-600 transition-colors" title="Export PDF">
-                        <Download size={18} />
+                    <button onClick={() => handleExport('pdf')} className="px-2 py-1.5 text-gray-400 hover:text-gray-700 transition-colors" title="Export PDF">
+                        <Download size={16} />
                     </button>
                 </div>
             </div>
@@ -482,14 +477,14 @@ const DashboardStats: React.FC<DashboardStatsProps> = ({
 
         {/* Advanced Filters Panel */}
         {advancedFilters.showFilters && (
-            <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm animate-fade-in">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-[15px]">
+            <div className="bg-white p-4 rounded-xl border border-gray-200">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
-                        <label className="block text-xs font-bold text-slate-500 mb-2">Category</label>
+                        <label className="block text-xs font-medium text-gray-500 mb-1.5">Category</label>
                         <select
                             value={advancedFilters.category}
                             onChange={(e) => setAdvancedFilters({ ...advancedFilters, category: e.target.value })}
-                            className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                            className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
                         >
                             <option value="all">All Categories</option>
                             {state.categories.map(cat => (
@@ -498,11 +493,11 @@ const DashboardStats: React.FC<DashboardStatsProps> = ({
                         </select>
                     </div>
                     <div>
-                        <label className="block text-xs font-bold text-slate-500 mb-2">Status</label>
+                        <label className="block text-xs font-medium text-gray-500 mb-1.5">Status</label>
                         <select
                             value={advancedFilters.status}
                             onChange={(e) => setAdvancedFilters({ ...advancedFilters, status: e.target.value })}
-                            className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                            className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
                         >
                             <option value="all">All Status</option>
                             <option value="PENDING">Pending</option>
@@ -514,7 +509,7 @@ const DashboardStats: React.FC<DashboardStatsProps> = ({
                     <div className="flex items-end">
                         <button
                             onClick={() => setAdvancedFilters({ category: 'all', status: 'all', showFilters: false, showWidgets: false })}
-                            className="w-full px-3 py-2 text-sm text-slate-600 hover:text-slate-900 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors"
+                            className="w-full px-3 py-2 text-sm text-gray-600 hover:text-gray-900 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
                         >
                             Reset Filters
                         </button>
@@ -525,8 +520,8 @@ const DashboardStats: React.FC<DashboardStatsProps> = ({
 
         {/* Widget Customization Panel */}
         {advancedFilters.showWidgets && (
-            <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm animate-fade-in">
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-[15px]">
+            <div className="bg-white p-4 rounded-xl border border-gray-200">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                     {[
                         { key: 'kpiCards', label: 'KPI Cards' },
                         { key: 'mainChart', label: 'Main Chart' },
@@ -540,9 +535,9 @@ const DashboardStats: React.FC<DashboardStatsProps> = ({
                                 type="checkbox"
                                 checked={widgetConfig[widget.key as keyof typeof widgetConfig]}
                                 onChange={() => toggleWidget(widget.key as keyof typeof widgetConfig)}
-                                className="w-4 h-4 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500"
+                                className="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
                             />
-                            <span className="text-sm font-medium text-slate-700">{widget.label}</span>
+                            <span className="text-sm font-medium text-gray-700">{widget.label}</span>
                         </label>
                     ))}
                 </div>
@@ -551,7 +546,7 @@ const DashboardStats: React.FC<DashboardStatsProps> = ({
 
         {/* 2. KPI Grid (More Comprehensive) */}
         {widgetConfig.kpiCards && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-[15px]">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <KPICard
                     title={t.totalRevenue}
                     value={formatCurrency(currentMetrics.revenue)}
@@ -593,23 +588,23 @@ const DashboardStats: React.FC<DashboardStatsProps> = ({
 
         {/* 3. Main Analytics Chart */}
         {widgetConfig.mainChart && (
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-[15px] h-[400px]">
-                <div className="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col">
-                    <div className="flex justify-between items-center mb-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 h-[400px]">
+                <div className="lg:col-span-2 bg-white p-5 rounded-xl border border-gray-200 flex flex-col">
+                    <div className="flex justify-between items-center mb-4">
                         <div>
-                            <h3 className="font-bold text-lg text-slate-800">{t.revenueProfitTrends}</h3>
-                            <p className="text-xs text-slate-500">{t.financialPerformanceOverTime}</p>
+                            <h3 className="font-semibold text-gray-800">{t.revenueProfitTrends}</h3>
+                            <p className="text-xs text-gray-400 mt-0.5">{t.financialPerformanceOverTime}</p>
                         </div>
-                        <div className="flex bg-slate-100 rounded-lg p-1">
+                        <div className="flex bg-gray-100 rounded-md p-0.5">
                             <button
                                 onClick={() => setChartType('revenue')}
-                                className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${chartType === 'revenue' ? 'bg-white shadow text-indigo-600' : 'text-slate-500'}`}
+                                className={`px-3 py-1 text-xs font-medium rounded transition-all ${chartType === 'revenue' ? 'bg-white text-gray-900' : 'text-gray-500'}`}
                             >
                                 {t.financeChart}
                             </button>
                             <button
                                 onClick={() => setChartType('orders')}
-                                className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${chartType === 'orders' ? 'bg-white shadow text-indigo-600' : 'text-slate-500'}`}
+                                className={`px-3 py-1 text-xs font-medium rounded transition-all ${chartType === 'orders' ? 'bg-white text-gray-900' : 'text-gray-500'}`}
                             >
                                 {t.orders}
                             </button>
@@ -632,12 +627,12 @@ const DashboardStats: React.FC<DashboardStatsProps> = ({
                                 <XAxis dataKey="name" tick={{fontSize: 11, fill: '#64748b'}} axisLine={false} tickLine={false} dy={10} minTickGap={30} />
                                 <YAxis tick={{fontSize: 11, fill: '#64748b'}} axisLine={false} tickLine={false} tickFormatter={(value) => chartType === 'revenue' ? `${(value/1000000).toFixed(1)}M` : value} />
                                 <Tooltip
-                                    contentStyle={{borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', padding: '12px'}}
+                                    contentStyle={{borderRadius: '8px', border: '1px solid #e5e7eb', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', padding: '10px'}}
                                     formatter={(value: number) => chartType === 'revenue' ? formatCurrency(value) : value}
                                 />
-                                <Area type="monotone" dataKey={chartType === 'revenue' ? 'revenue' : 'orders'} stroke="#6366f1" strokeWidth={3} fillOpacity={1} fill="url(#colorMain)" name={chartType === 'revenue' ? t.revenue : t.orders} />
+                                <Area type="monotone" dataKey={chartType === 'revenue' ? 'revenue' : 'orders'} stroke="#6366f1" strokeWidth={2} fillOpacity={1} fill="url(#colorMain)" name={chartType === 'revenue' ? t.revenue : t.orders} />
                                 {chartType === 'revenue' && (
-                                    <Area type="monotone" dataKey="profit" stroke="#10b981" strokeWidth={3} fillOpacity={1} fill="url(#colorSec)" name={t.profit} />
+                                    <Area type="monotone" dataKey="profit" stroke="#10b981" strokeWidth={2} fillOpacity={1} fill="url(#colorSec)" name={t.profit} />
                                 )}
                             </AreaChart>
                         </ResponsiveContainer>
@@ -646,9 +641,9 @@ const DashboardStats: React.FC<DashboardStatsProps> = ({
 
                 {/* Category Distribution (Donut) */}
                 {widgetConfig.categoryChart && (
-                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col">
-                        <h3 className="font-bold text-lg text-slate-800 mb-2">{t.salesByCategory}</h3>
-                        <p className="text-xs text-slate-500 mb-6">{t.topPerformingCats}</p>
+                    <div className="bg-white p-5 rounded-xl border border-gray-200 flex flex-col">
+                        <h3 className="font-semibold text-gray-800 mb-1">{t.salesByCategory}</h3>
+                        <p className="text-xs text-gray-400 mb-4">{t.topPerformingCats}</p>
                         <div className="flex-1 relative">
                             <ResponsiveContainer width="100%" height="100%">
                                 <PieChart>
@@ -671,8 +666,8 @@ const DashboardStats: React.FC<DashboardStatsProps> = ({
                             </ResponsiveContainer>
                             {/* Centered Total */}
                             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                                <span className="text-2xl font-bold text-slate-900">{categoryData.length}</span>
-                                <span className="text-[10px] uppercase text-slate-400 font-bold">{t.categories}</span>
+                                <span className="text-xl font-bold text-gray-900">{categoryData.length}</span>
+                                <span className="text-[10px] uppercase text-gray-400 font-medium">{t.categories}</span>
                             </div>
                         </div>
                         <div className="mt-4 space-y-2">
@@ -680,9 +675,9 @@ const DashboardStats: React.FC<DashboardStatsProps> = ({
                                 <div key={idx} className="flex justify-between items-center text-sm">
                                     <div className="flex items-center gap-2">
                                         <div className="w-2 h-2 rounded-full" style={{backgroundColor: CATEGORY_COLORS[idx]}}></div>
-                                        <span className="text-slate-600">{cat.name}</span>
+                                        <span className="text-gray-600 text-sm">{cat.name}</span>
                                     </div>
-                                    <span className="font-bold text-slate-900">{((cat.value / currentMetrics.revenue) * 100).toFixed(0)}%</span>
+                                    <span className="font-medium text-gray-900 text-sm">{((cat.value / currentMetrics.revenue) * 100).toFixed(0)}%</span>
                                 </div>
                             ))}
                         </div>
@@ -692,55 +687,51 @@ const DashboardStats: React.FC<DashboardStatsProps> = ({
         )}
 
         {/* 4. Bottom Section: Top Products & Operations */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-[15px]">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
 
             {/* Top Products Table */}
             {widgetConfig.topProducts && (
-                <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
-                    <div className="p-6 border-b border-slate-50 flex justify-between items-center">
-                        <h3 className="font-bold text-lg text-slate-800 flex items-center gap-2">
-                            <Package size={20} className="text-indigo-600"/> {t.topProducts}
+                <div className="lg:col-span-2 bg-white rounded-xl border border-gray-200 overflow-hidden flex flex-col">
+                    <div className="px-5 py-4 border-b border-gray-100 flex justify-between items-center">
+                        <h3 className="font-semibold text-gray-800 flex items-center gap-2">
+                            <Package size={18} className="text-gray-400"/> {t.topProducts}
                         </h3>
-                        <button onClick={() => setActiveTab('products')} className="text-xs font-bold text-indigo-600 hover:underline">{t.viewInventory}</button>
+                        <button onClick={() => setActiveTab('products')} className="text-xs font-medium text-blue-600 hover:underline">{t.viewInventory}</button>
                     </div>
                     <div className="flex-1 overflow-auto">
                         <table className="w-full text-left">
-                            <thead className="bg-slate-50 text-slate-500 text-xs uppercase font-bold sticky top-0">
+                            <thead className="bg-gray-50 text-gray-500 text-[11px] uppercase font-medium sticky top-0">
                                 <tr>
-                                    <th className="px-6 py-3">{t.itemLabel}</th>
-                                    <th className="px-6 py-3 text-center">{t.sales}</th>
-                                    <th className="px-6 py-3 text-right">{t.revenue}</th>
-                                    <th className="px-6 py-3 text-center">{t.stock}</th>
+                                    <th className="px-5 py-2.5">{t.itemLabel}</th>
+                                    <th className="px-5 py-2.5 text-center">{t.sales}</th>
+                                    <th className="px-5 py-2.5 text-right">{t.revenue}</th>
+                                    <th className="px-5 py-2.5 text-center">{t.stock}</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-slate-50">
+                            <tbody className="divide-y divide-gray-50">
                                 {topProducts.map((product, idx) => (
-                                    <tr key={idx} className="hover:bg-slate-50/80 transition-colors">
-                                        <td className="px-6 py-4">
+                                    <tr key={idx} className="hover:bg-gray-50 transition-colors">
+                                        <td className="px-5 py-3">
                                             <div className="flex items-center gap-3">
-                                                <span className="text-xs font-bold text-slate-400 w-4">#{idx+1}</span>
-                                                <img src={product.image} className="w-10 h-10 rounded-lg object-cover border border-slate-100" />
-                                                <div className="min-w-0">
-                                                    <p className="text-sm font-bold text-slate-800 truncate max-w-[150px]">{product.name}</p>
-                                                </div>
+                                                <span className="text-xs text-gray-400 w-4">#{idx+1}</span>
+                                                <img src={product.image} className="w-9 h-9 rounded-lg object-cover border border-gray-100" />
+                                                <p className="text-sm font-medium text-gray-800 truncate max-w-[150px]">{product.name}</p>
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4 text-center">
-                                            <div className="inline-flex items-center gap-1 px-2 py-1 rounded bg-indigo-50 text-indigo-700 text-xs font-bold">
-                                                {product.qty} <span className="opacity-70">{t.soldUnit}</span>
-                                            </div>
+                                        <td className="px-5 py-3 text-center">
+                                            <span className="text-sm text-gray-600">{product.qty} {t.soldUnit}</span>
                                         </td>
-                                        <td className="px-6 py-4 text-right font-bold text-slate-700">{formatCurrency(product.revenue)}</td>
-                                        <td className="px-6 py-4 text-center">
-                                            <div className="w-16 h-1.5 bg-slate-100 rounded-full mx-auto overflow-hidden">
-                                                <div className={`h-full rounded-full ${product.stock < 10 ? 'bg-rose-500' : 'bg-emerald-500'}`} style={{width: `${Math.min(100, product.stock * 2)}%`}}></div>
+                                        <td className="px-5 py-3 text-right text-sm font-medium text-gray-700">{formatCurrency(product.revenue)}</td>
+                                        <td className="px-5 py-3 text-center">
+                                            <div className="w-14 h-1.5 bg-gray-100 rounded-full mx-auto overflow-hidden">
+                                                <div className={`h-full rounded-full ${product.stock < 10 ? 'bg-rose-400' : 'bg-emerald-400'}`} style={{width: `${Math.min(100, product.stock * 2)}%`}}></div>
                                             </div>
-                                            <span className="text-[10px] text-slate-400 font-bold">{product.stock} {t.leftUnit}</span>
+                                            <span className="text-[10px] text-gray-400">{product.stock} {t.leftUnit}</span>
                                         </td>
                                     </tr>
                                 ))}
                                 {topProducts.length === 0 && (
-                                    <tr><td colSpan={4} className="p-8 text-center text-slate-400">{t.noSalesInPeriod}</td></tr>
+                                    <tr><td colSpan={4} className="p-8 text-center text-gray-400">{t.noSalesInPeriod}</td></tr>
                                 )}
                             </tbody>
                         </table>
@@ -750,58 +741,56 @@ const DashboardStats: React.FC<DashboardStatsProps> = ({
 
             {/* Operational Health / Alerts */}
             {widgetConfig.operationalHealth && (
-                <div className="space-y-[15px]">
-                    {/* Pending Actions */}
-                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                        <h3 className="font-bold text-lg text-slate-800 mb-4 flex items-center gap-2">
-                            <Activity size={20} className="text-rose-500"/> {t.operationalHealth}
+                <div className="space-y-4">
+                    <div className="bg-white p-5 rounded-xl border border-gray-200">
+                        <h3 className="font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                            <Activity size={18} className="text-gray-400"/> {t.operationalHealth}
                         </h3>
-                        <div className="space-y-3">
-                            <div className="flex justify-between items-center p-3 bg-amber-50 rounded-xl border border-amber-100">
+                        <div className="space-y-2.5">
+                            <div className="flex justify-between items-center p-3 bg-amber-50/60 rounded-lg border border-amber-100/60">
                                 <div className="flex items-center gap-3">
-                                    <div className="p-2 bg-white rounded-lg text-amber-500 shadow-sm"><AlertCircle size={18}/></div>
+                                    <div className="p-1.5 bg-white rounded-md text-amber-500"><AlertCircle size={16}/></div>
                                     <div>
-                                        <p className="text-sm font-bold text-slate-800">{t.pendingOrders}</p>
-                                        <p className="text-xs text-amber-700">{t.needsConfirmation}</p>
+                                        <p className="text-sm font-medium text-gray-800">{t.pendingOrders}</p>
+                                        <p className="text-xs text-gray-500">{t.needsConfirmation}</p>
                                     </div>
                                 </div>
-                                <span className="text-xl font-black text-amber-600">{state.orders.filter(o => o.status === OrderStatus.PENDING).length}</span>
+                                <span className="text-lg font-bold text-amber-600">{state.orders.filter(o => o.status === OrderStatus.PENDING).length}</span>
                             </div>
 
-                            <div className="flex justify-between items-center p-3 bg-rose-50 rounded-xl border border-rose-100">
+                            <div className="flex justify-between items-center p-3 bg-rose-50/60 rounded-lg border border-rose-100/60">
                                 <div className="flex items-center gap-3">
-                                    <div className="p-2 bg-white rounded-lg text-rose-500 shadow-sm"><Package size={18}/></div>
+                                    <div className="p-1.5 bg-white rounded-md text-rose-500"><Package size={16}/></div>
                                     <div>
-                                        <p className="text-sm font-bold text-slate-800">{t.lowStock}</p>
-                                        <p className="text-xs text-rose-700">{t.restockRequired}</p>
+                                        <p className="text-sm font-medium text-gray-800">{t.lowStock}</p>
+                                        <p className="text-xs text-gray-500">{t.restockRequired}</p>
                                     </div>
                                 </div>
-                                <span className="text-xl font-black text-rose-600">{lowStockCount}</span>
+                                <span className="text-lg font-bold text-rose-500">{lowStockCount}</span>
                             </div>
 
-                            <div className="flex justify-between items-center p-3 bg-indigo-50 rounded-xl border border-indigo-100">
+                            <div className="flex justify-between items-center p-3 bg-blue-50/60 rounded-lg border border-blue-100/60">
                                 <div className="flex items-center gap-3">
-                                    <div className="p-2 bg-white rounded-lg text-indigo-500 shadow-sm"><Users size={18}/></div>
+                                    <div className="p-1.5 bg-white rounded-md text-blue-500"><Users size={16}/></div>
                                     <div>
-                                        <p className="text-sm font-bold text-slate-800">{t.activeCustomersLabel}</p>
-                                        <p className="text-xs text-indigo-700">{t.inThisPeriod}</p>
+                                        <p className="text-sm font-medium text-gray-800">{t.activeCustomersLabel}</p>
+                                        <p className="text-xs text-gray-500">{t.inThisPeriod}</p>
                                     </div>
                                 </div>
-                                <span className="text-xl font-black text-indigo-600">{new Set(currentOrders.map(o => o.customerPhone)).size}</span>
+                                <span className="text-lg font-bold text-blue-600">{new Set(currentOrders.map(o => o.customerPhone)).size}</span>
                             </div>
                         </div>
                     </div>
 
-                    {/* Quick Actions */}
                     {widgetConfig.quickActions && (
-                        <div className="bg-slate-900 rounded-2xl p-6 text-white shadow-lg shadow-slate-200">
-                            <h3 className="font-bold text-lg mb-4">{t.quickActions}</h3>
-                            <div className="grid grid-cols-2 gap-3">
-                                <button onClick={() => setActiveTab('products')} className="p-3 bg-white/10 hover:bg-white/20 rounded-xl text-sm font-bold transition-colors flex flex-col items-center gap-2">
-                                    <Package size={20} /> {t.addProduct}
+                        <div className="bg-gray-900 rounded-xl p-5 text-white">
+                            <h3 className="font-semibold mb-3">{t.quickActions}</h3>
+                            <div className="grid grid-cols-2 gap-2">
+                                <button onClick={() => setActiveTab('products')} className="p-3 bg-white/10 hover:bg-white/15 rounded-lg text-sm font-medium transition-colors flex flex-col items-center gap-1.5">
+                                    <Package size={18} /> {t.addProduct}
                                 </button>
-                                <button onClick={() => setActiveTab('orders')} className="p-3 bg-white/10 hover:bg-white/20 rounded-xl text-sm font-bold transition-colors flex flex-col items-center gap-2">
-                                    <RefreshCw size={20} /> {t.processOrders}
+                                <button onClick={() => setActiveTab('orders')} className="p-3 bg-white/10 hover:bg-white/15 rounded-lg text-sm font-medium transition-colors flex flex-col items-center gap-1.5">
+                                    <RefreshCw size={18} /> {t.processOrders}
                                 </button>
                             </div>
                         </div>

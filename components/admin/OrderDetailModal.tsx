@@ -20,7 +20,7 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({ order, onClose, onP
   const handlePrint = () => window.print();
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in bg-slate-900/60 backdrop-blur-sm print:bg-white print:absolute print:inset-0">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in bg-black/30 print:bg-white print:absolute print:inset-0">
       <style>{`
         @media print {
           body > * { display: none !important; }
@@ -29,7 +29,7 @@ const OrderDetailModal: React.FC<OrderDetailModalProps> = ({ order, onClose, onP
         }
       `}</style>
 
-      <div className="bg-white w-full max-w-6xl rounded-2xl shadow-2xl relative overflow-hidden flex flex-col max-h-[85vh] print-only-modal">
+      <div className="bg-white w-full max-w-6xl rounded-xl shadow-lg relative overflow-hidden flex flex-col max-h-[85vh] print-only-modal">
         <div className="flex justify-between items-center p-4 border-b border-gray-100 no-print shrink-0">
           <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
             <FileText className="text-indigo-600" /> {t.orderDetails}

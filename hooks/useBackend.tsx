@@ -80,28 +80,37 @@ export const useBackend = () => {
     saveState(newState);
   };
 
+  const isAdminContext = window.location.pathname.startsWith('/admin');
+
   // --- BACKEND LOGIC ---
   const backend: BackendContextType = {
     state: data,
-    login: (email, password) => {
-        // Only return true/false here, navigation is handled by the UI component
-        const employee = data.employees.find(e => e.email.toLowerCase() === email.toLowerCase());
-        if (employee && employee.password === password) {
-            setCurrentUser(employee);
-            return true;
+    login: async (email, password) => {
+        try {
+            let response;
+            if (isAdminContext) {
+                response = await api.adminLogin(email, password);
+            } else {
+                response = await api.storeLogin(email, password);
+            }
+
+            if (response && response.success && response.user) {
+                setCurrentUser(response.user);
+                // Persistence is handled inside api.adminLogin/storeLogin (tokenManager)
+                // and the UI components (AdminLogin/StoreLogin) for session storage
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.error('Login error:', error);
+            return false;
         }
-        const customer = data.customers.find(c => c.email?.toLowerCase() === email.toLowerCase());
-        if (customer && customer.password === password) {
-            setCurrentUser(customer);
-            return true;
-        }
-        return false;
     },
     setCurrentUser: (user) => {
         setCurrentUser(user);
     },
     logout: () => {
-        if (currentUser && 'role' in currentUser) {
+        if (isAdminContext) {
             tokenManager.clearAdmin();
             adminAuthStorage.clearSession();
         } else {
@@ -110,6 +119,7 @@ export const useBackend = () => {
         }
         setCurrentUser(null);
     },
+
     register: async (customerData) => {
         if (!isOffline) {
             try { await api.addCustomer(customerData); refreshData(); return; } catch (e) { setIsOffline(true); }

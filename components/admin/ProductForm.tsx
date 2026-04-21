@@ -5,6 +5,7 @@ import { generateProductDescription } from '../../services/gemini';
 import { TRANSLATIONS } from '../../services/translations';
 import { Loader2, Sparkles, X, Plus, Trash2, Image as ImageIcon, Check, Box, DollarSign, List, Tag, Upload, Star } from 'lucide-react';
 import ConfirmModal from './ConfirmModal';
+import CurrencyInput from '../ui/CurrencyInput';
 
 interface ProductFormProps {
   onSubmit: (data: Omit<Product, 'id'>) => void;
@@ -16,7 +17,7 @@ interface ProductFormProps {
 const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, onCancel, initialData, lang }) => {
   const t = TRANSLATIONS[lang];
   const fileInputRef = useRef<HTMLInputElement>(null);
-  
+
   const [categories, setCategories] = useState<Category[]>([]);
   useEffect(() => {
       const state = loadState();
@@ -38,13 +39,11 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, onCancel, initialDa
     hasVariants: initialData?.hasVariants || false,
     variants: initialData?.variants || []
   });
-  
+
   const [isGenerating, setIsGenerating] = useState(false);
   const [newImageUrl, setNewImageUrl] = useState('');
   const [confirmRemoveImageIndex, setConfirmRemoveImageIndex] = useState<number | null>(null);
   const [confirmRemoveVariantIndex, setConfirmRemoveVariantIndex] = useState<number | null>(null);
-  const [priceInput, setPriceInput] = useState(initialData?.price ? formatNumberInput(initialData.price.toString()) : '');
-  const [costPriceInput, setCostPriceInput] = useState(initialData?.costPrice ? formatNumberInput(initialData.costPrice.toString()) : '');
   const [draggedImageIndex, setDraggedImageIndex] = useState<number | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
 
@@ -187,9 +186,9 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, onCancel, initialDa
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const cleanImages = formData.images.filter(i => i.trim() !== '');
-    const finalData = { 
-        ...formData, 
-        images: cleanImages.length > 0 ? cleanImages : [`https://picsum.photos/400/400?random=${Math.floor(Math.random() * 1000)}`] 
+    const finalData = {
+        ...formData,
+        images: cleanImages.length > 0 ? cleanImages : [`https://picsum.photos/400/400?random=${Math.floor(Math.random() * 1000)}`]
     };
     onSubmit(finalData);
   };
@@ -201,9 +200,9 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, onCancel, initialDa
   const validImages = formData.images.filter(i => i && i.trim() !== '');
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4 sm:p-6 animate-fade-in">
-      <div className="bg-slate-50 w-full max-w-6xl max-h-[90vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden">
-        
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4 sm:p-6 animate-fade-in">
+      <div className="bg-slate-50 w-full max-w-6xl max-h-[90vh] rounded-xl shadow-lg flex flex-col overflow-hidden">
+
         {/* Header */}
         <div className="bg-white px-8 py-5 border-b border-gray-200 flex justify-between items-center shrink-0 z-10">
           <div>
@@ -212,7 +211,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, onCancel, initialDa
               {initialData ? t.editProduct : t.addNewProduct}
             </h2>
           </div>
-          <button 
+          <button
             onClick={onCancel}
             className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-all"
           >
@@ -223,10 +222,10 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, onCancel, initialDa
         {/* Content - 2 Column Layout */}
         <div className="flex-1 overflow-y-auto p-8">
           <form id="productForm" onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-[15px]">
-            
+
             {/* Left Column: Media & Status (4 cols) */}
             <div className="lg:col-span-4 space-y-[15px]">
-               
+
                {/* Product Images */}
                <div className={sectionClass}>
                   <div className="flex justify-between items-center mb-4">
@@ -235,7 +234,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, onCancel, initialDa
                      </h3>
                      <span className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-full">{validImages.length} items</span>
                   </div>
-                  
+
                   {/* Main Image Preview */}
                   <div className="mb-4">
                     <p className="text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wide">{t.mainImage}</p>
@@ -248,7 +247,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, onCancel, initialDa
                         ) : (
                         <div className="text-center p-6 text-gray-400">
                             <ImageIcon size={48} className="mx-auto mb-2 opacity-20"/>
-                            <p className="text-sm">No image selected</p>
+                            <p className="text-sm">Chưa chọn ảnh</p>
                         </div>
                         )}
                     </div>
@@ -279,7 +278,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, onCancel, initialDa
                                             type="button"
                                             onClick={() => handleSetMainImage(idx + 1)}
                                             className="p-1.5 bg-white/20 text-white rounded-full hover:bg-white hover:text-indigo-600 transition-colors"
-                                            title="Set as Main"
+                                            title="Đặt làm ảnh chính"
                                         >
                                             <Star size={14} />
                                         </button>
@@ -287,7 +286,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, onCancel, initialDa
                                             type="button"
                                             onClick={() => handleRemoveImage(idx + 1)}
                                             className="p-1.5 bg-white/20 text-white rounded-full hover:bg-red-500 hover:text-white transition-colors"
-                                            title="Remove"
+                                            title="Xóa"
                                         >
                                             <Trash2 size={14} />
                                         </button>
@@ -301,7 +300,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, onCancel, initialDa
                   {/* Add New Image Controls */}
                   <div className="space-y-3 mt-4 pt-4 border-t border-gray-100">
                      <p className="text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wide">{t.addImage}</p>
-                     
+
                      {/* URL Input */}
                      <div className="flex gap-2">
                         <input
@@ -314,10 +313,10 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, onCancel, initialDa
                         />
                         <button type="button" onClick={handleAddImageUrl} className="bg-white border border-gray-200 text-gray-600 px-3 rounded-lg hover:bg-gray-50"><Plus size={20}/></button>
                      </div>
-                     
+
                      <div className="flex items-center gap-2 text-xs text-gray-400 uppercase font-bold justify-center my-2">
                         <div className="h-px bg-gray-200 flex-1"></div>
-                        <span>OR</span>
+                        <span>HOẶC</span>
                         <div className="h-px bg-gray-200 flex-1"></div>
                      </div>
 
@@ -351,14 +350,14 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, onCancel, initialDa
                {/* Visibility Status */}
                <div className={sectionClass}>
                   <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
-                    <Check size={18} className="text-gray-500"/> Status
+                    <Check size={18} className="text-gray-500"/> Trạng thái
                   </h3>
                   <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
                     <span className="text-sm font-medium text-gray-700">{t.isVisible}</span>
                     <label className="relative inline-flex items-center cursor-pointer">
-                      <input 
-                        type="checkbox" 
-                        className="sr-only peer" 
+                      <input
+                        type="checkbox"
+                        className="sr-only peer"
                         checked={formData.isVisible}
                         onChange={e => setFormData({ ...formData, isVisible: e.target.checked })}
                       />
@@ -371,7 +370,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, onCancel, initialDa
 
             {/* Right Column: Details (8 cols) */}
             <div className="lg:col-span-8">
-              
+
               {/* General Info */}
               <div className={sectionClass}>
                  <h3 className="font-bold text-gray-900 mb-6 flex items-center gap-2 border-b border-gray-100 pb-3">
@@ -384,7 +383,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, onCancel, initialDa
                           type="text"
                           required
                           className={inputClass}
-                          placeholder="Product Name"
+                          placeholder="Tên sản phẩm"
                           value={formData.name}
                           onChange={e => setFormData({ ...formData, name: e.target.value })}
                         />
@@ -418,7 +417,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, onCancel, initialDa
                     <textarea
                       rows={4}
                       className={`${inputClass} resize-none`}
-                      placeholder="Product details..."
+                      placeholder="Chi tiết sản phẩm..."
                       value={formData.description}
                       onChange={e => setFormData({ ...formData, description: e.target.value })}
                     />
@@ -431,39 +430,21 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, onCancel, initialDa
                     <DollarSign size={18} className="text-gray-500"/> {t.pricing}
                  </h3>
                  <div className="grid grid-cols-3 gap-[15px]">
-                    <div>
-                       <label className={labelClass}>{t.price}</label>
-                       <div className="relative">
-                         <input
-                            type="text"
-                            className={`${inputClass} pl-8`}
-                            placeholder="0"
-                            value={priceInput}
-                            onChange={e => {
-                              const formatted = formatNumberInput(e.target.value);
-                              setPriceInput(formatted);
-                              setFormData({ ...formData, price: parseFormattedNumber(formatted) });
-                            }}
-                         />
-                         <span className="absolute left-3 top-2.5 text-gray-400">₫</span>
-                       </div>
+                     <div>
+                       <CurrencyInput
+                          label={t.price}
+                          value={formData.price}
+                          onChange={(val) => setFormData({ ...formData, price: val })}
+                          placeholder="0"
+                       />
                     </div>
                     <div>
-                       <label className={labelClass}>{t.costPrice}</label>
-                       <div className="relative">
-                         <input
-                            type="text"
-                            className={`${inputClass} pl-8`}
-                            placeholder="0"
-                            value={costPriceInput}
-                            onChange={e => {
-                              const formatted = formatNumberInput(e.target.value);
-                              setCostPriceInput(formatted);
-                              setFormData({ ...formData, costPrice: parseFormattedNumber(formatted) });
-                            }}
-                         />
-                         <span className="absolute left-3 top-2.5 text-gray-400">₫</span>
-                       </div>
+                       <CurrencyInput
+                          label={t.costPrice}
+                          value={formData.costPrice}
+                          onChange={(val) => setFormData({ ...formData, costPrice: val })}
+                          placeholder="0"
+                       />
                     </div>
                      <div>
                        <label className={labelClass}>{t.sku}</label>
@@ -483,7 +464,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, onCancel, initialDa
                  <h3 className="font-bold text-gray-900 mb-6 flex items-center gap-2 border-b border-gray-100 pb-3">
                     <Tag size={18} className="text-gray-500"/> {t.inventory}
                  </h3>
-                 
+
                  <div className="mb-6">
                     <label className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-100 transition-colors">
                       <input
@@ -511,13 +492,13 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, onCancel, initialDa
                  ) : (
                     <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
                        <div className="flex justify-between items-center mb-4">
-                          <span className="text-sm font-semibold text-gray-700">{formData.variants.length} Variants</span>
+                          <span className="text-sm font-semibold text-gray-700">{formData.variants.length} Biến thể</span>
                           <button
                             type="button"
                             onClick={handleAddVariant}
                             className="text-xs bg-white border border-gray-300 px-3 py-1.5 rounded-lg hover:bg-indigo-50 hover:border-indigo-200 hover:text-indigo-600 font-medium transition-all shadow-sm"
                           >
-                            + Add Option
+                            + Thêm tùy chọn
                           </button>
                        </div>
                        <div className="space-y-3">
@@ -530,24 +511,22 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, onCancel, initialDa
                                   value={variant.name}
                                   onChange={e => updateVariant(idx, 'name', e.target.value)}
                                 />
-                                <div className="relative flex-1">
-                                    <input
-                                        type="text"
-                                        placeholder="Price"
-                                        className={`${inputClass} pl-6 bg-white`}
-                                        value={variant.price === 0 ? '' : formatNumberInput(variant.price.toString())}
-                                        onChange={e => updateVariant(idx, 'price', parseFormattedNumber(e.target.value))}
+                                <div className="flex-1">
+                                    <CurrencyInput
+                                        value={variant.price}
+                                        onChange={(val) => updateVariant(idx, 'price', val)}
+                                        placeholder="Giá"
+                                        className="h-[42px] py-2"
                                     />
-                                    <span className="absolute left-2.5 top-2.5 text-gray-400 text-xs">₫</span>
                                 </div>
                                 <input
                                   type="number"
-                                  placeholder="Stock"
+                                  placeholder="Tồn kho"
                                   className={`${inputClass} w-24 bg-white`}
                                   value={variant.stock === 0 ? '' : variant.stock}
                                   onChange={e => updateVariant(idx, 'stock', parseInt(e.target.value) || 0)}
                                 />
-                                <button 
+                                <button
                                   type="button"
                                   onClick={() => removeVariant(idx)}
                                   className="p-2 text-gray-400 hover:text-red-500 transition-colors"
@@ -558,7 +537,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ onSubmit, onCancel, initialDa
                           ))}
                           {formData.variants.length === 0 && (
                             <div className="text-center py-8 text-gray-400 text-sm border-2 border-dashed border-gray-200 rounded-lg">
-                              No variants added yet.
+                              Chưa thêm biến thể nào.
                             </div>
                           )}
                        </div>

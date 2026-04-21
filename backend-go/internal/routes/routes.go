@@ -6,6 +6,7 @@ import (
 
 	"unishop/backend/internal/config"
 	"unishop/backend/internal/handlers"
+	"unishop/backend/internal/middleware"
 )
 
 func Setup(r *gin.Engine, db *mongo.Database, cfg *config.Config) {
@@ -63,124 +64,143 @@ func Setup(r *gin.Engine, db *mongo.Database, cfg *config.Config) {
 	api.GET("/categories/:id", categoryH.GetByID)
 	api.GET("/categories/:id/products", categoryH.GetProducts)
 
-	// Protected routes — require valid JWT (DISABLED FOR DEVELOPMENT)
+	// --- PROTECTED ROUTES ---
+
+	// Base JWT Auth Middleware
 	protected := api.Group("")
-	// protected.Use(middleware.Auth(cfg.JWTSecret)) // TODO: Enable for production
+	protected.Use(middleware.Auth(cfg.JWTSecret))
+
+	// 1. Admin Routes (Employees Only)
+	admin := protected.Group("")
+	admin.Use(middleware.RequireEmployee())
 	{
-		// Products (admin write)
-		protected.POST("/products", productH.Create)
-		protected.PUT("/products/:id", productH.Update)
-		protected.DELETE("/products/:id", productH.Delete)
-		protected.PUT("/products/:id/toggle-visibility", productH.ToggleVisibility)
-		protected.POST("/products/:id/clone", productH.Clone)
-		protected.POST("/products/bulk-delete", productH.BulkDelete)
-		protected.PUT("/products/bulk-visibility", productH.BulkVisibility)
-		protected.PUT("/products/bulk-category", productH.BulkCategory)
-		protected.GET("/products/:id/history", productH.GetHistory)
-		protected.GET("/products/history", productH.GetAllHistory)
+		// Products
+		admin.POST("/products", productH.Create)
+		admin.PUT("/products/:id", productH.Update)
+		admin.DELETE("/products/:id", productH.Delete)
+		admin.PUT("/products/:id/toggle-visibility", productH.ToggleVisibility)
+		admin.POST("/products/:id/clone", productH.Clone)
+		admin.POST("/products/bulk-delete", productH.BulkDelete)
+		admin.PUT("/products/bulk-visibility", productH.BulkVisibility)
+		admin.PUT("/products/bulk-category", productH.BulkCategory)
+		admin.GET("/products/:id/history", productH.GetHistory)
+		admin.GET("/products/history", productH.GetAllHistory)
 
 		// Categories
-		protected.POST("/categories", categoryH.Create)
-		protected.PUT("/categories/:id", categoryH.Update)
-		protected.DELETE("/categories/:id", categoryH.Delete)
-		protected.PUT("/categories/:id/toggle-active", categoryH.ToggleActive)
-		protected.POST("/categories/bulk-delete", categoryH.BulkDelete)
-		protected.POST("/categories/bulk-reorder", categoryH.BulkReorder)
+		admin.POST("/categories", categoryH.Create)
+		admin.PUT("/categories/:id", categoryH.Update)
+		admin.DELETE("/categories/:id", categoryH.Delete)
+		admin.PUT("/categories/:id/toggle-active", categoryH.ToggleActive)
+		admin.POST("/categories/bulk-delete", categoryH.BulkDelete)
+		admin.POST("/categories/bulk-reorder", categoryH.BulkReorder)
 
-		// Orders
-		protected.GET("/orders", orderH.List)
-		protected.GET("/orders/:id", orderH.GetByID)
-		protected.POST("/orders", orderH.Place)
-		protected.PUT("/orders/:id/status", orderH.UpdateStatus)
-		protected.PUT("/orders/:id/payment-status", orderH.UpdatePaymentStatus)
-		protected.PUT("/orders/:id/tracking", orderH.UpdateTracking)
-		protected.PUT("/orders/:id/notes", orderH.UpdateNotes)
-		protected.DELETE("/orders/:id", orderH.Delete)
-		protected.POST("/orders/bulk-delete", orderH.BulkDelete)
-		protected.PUT("/orders/bulk-status", orderH.BulkStatus)
-		protected.GET("/orders/:id/labels/shipping", orderH.GetShippingLabel)
-		protected.GET("/orders/:id/labels/packing", orderH.GetPackingLabel)
-		protected.GET("/orders/:id/labels/invoice", orderH.GetInvoice)
+		// Orders Management
+		admin.GET("/orders", orderH.List)
+		admin.GET("/orders/:id", orderH.GetByID)
+		admin.PUT("/orders/:id/status", orderH.UpdateStatus)
+		admin.PUT("/orders/:id/payment-status", orderH.UpdatePaymentStatus)
+		admin.PUT("/orders/:id/tracking", orderH.UpdateTracking)
+		admin.PUT("/orders/:id/notes", orderH.UpdateNotes)
+		admin.DELETE("/orders/:id", orderH.Delete)
+		admin.POST("/orders/bulk-delete", orderH.BulkDelete)
+		admin.PUT("/orders/bulk-status", orderH.BulkStatus)
+		admin.GET("/orders/:id/labels/shipping", orderH.GetShippingLabel)
+		admin.GET("/orders/:id/labels/packing", orderH.GetPackingLabel)
+		admin.GET("/orders/:id/labels/invoice", orderH.GetInvoice)
 
-		// Customers
-		protected.GET("/customers", customerH.List)
-		protected.POST("/customers", customerH.Create)
-		protected.PUT("/customers/:id", customerH.Update)
-		protected.PUT("/customers/:id/wishlist", customerH.ToggleWishlist)
-		protected.POST("/customers/bulk-lock", customerH.BulkLock)
-		protected.POST("/customers/bulk-unlock", customerH.BulkUnlock)
-		protected.POST("/customers/bulk-tag", customerH.BulkTag)
-		protected.POST("/customers/bulk-email", customerH.BulkEmail)
-		protected.POST("/customers/:id/notes", customerH.AddNote)
-		protected.GET("/customers/:id/notes", customerH.GetNotes)
+		// Customers Management
+		admin.GET("/customers", customerH.List)
+		admin.POST("/customers", customerH.Create)
+		admin.PUT("/customers/:id", customerH.Update)
+		admin.POST("/customers/bulk-lock", customerH.BulkLock)
+		admin.POST("/customers/bulk-unlock", customerH.BulkUnlock)
+		admin.POST("/customers/bulk-tag", customerH.BulkTag)
+		admin.POST("/customers/bulk-email", customerH.BulkEmail)
+		admin.POST("/customers/:id/notes", customerH.AddNote)
+		admin.GET("/customers/:id/notes", customerH.GetNotes)
 
 		// Employees
-		protected.GET("/employees", employeeH.List)
-		protected.POST("/employees", employeeH.Create)
-		protected.PUT("/employees/:id", employeeH.Update)
+		admin.GET("/employees", employeeH.List)
+		admin.POST("/employees", employeeH.Create)
+		admin.PUT("/employees/:id", employeeH.Update)
 
 		// Inventory
-		protected.POST("/inventory/adjust", inventoryH.Adjust)
-		protected.POST("/inventory/transfer", inventoryH.Transfer)
-		protected.POST("/inventory/stock-take", inventoryH.RecordStockTake)
-		protected.GET("/inventory/discrepancies", inventoryH.Discrepancies)
-		protected.GET("/inventory/logs", inventoryH.Logs)
-		protected.GET("/inventory/forecast", forecastH.GetForecast)
-		protected.POST("/inventory/daily-sales", forecastH.RecordDailySales)
+		admin.POST("/inventory/adjust", inventoryH.Adjust)
+		admin.POST("/inventory/transfer", inventoryH.Transfer)
+		admin.POST("/inventory/stock-take", inventoryH.RecordStockTake)
+		admin.GET("/inventory/discrepancies", inventoryH.Discrepancies)
+		admin.GET("/inventory/logs", inventoryH.Logs)
+		admin.GET("/inventory/forecast", forecastH.GetForecast)
+		admin.POST("/inventory/daily-sales", forecastH.RecordDailySales)
 
 		// Finance
-		protected.GET("/transactions", financeH.ListTransactions)
-		protected.POST("/transactions", financeH.AddTransaction)
-		protected.GET("/finance/reports/advanced", financeH.AdvancedReports)
+		admin.GET("/transactions", financeH.ListTransactions)
+		admin.POST("/transactions", financeH.AddTransaction)
+		admin.PUT("/transactions/:id", financeH.UpdateTransaction)
+		admin.DELETE("/transactions/:id", financeH.DeleteTransaction)
+		admin.GET("/finance/accounts", financeH.ListAccounts)
+		admin.POST("/finance/accounts", financeH.CreateAccount)
+		admin.PUT("/finance/accounts/:id", financeH.UpdateAccount)
+		admin.DELETE("/finance/accounts/:id", financeH.DeleteAccount)
+		admin.GET("/finance/reports/advanced", financeH.AdvancedReports)
 
 		// Vouchers
-		protected.GET("/vouchers", voucherH.List)
-		protected.POST("/vouchers", voucherH.Create)
-		protected.PUT("/vouchers/:id", voucherH.Update)
-		protected.DELETE("/vouchers/:id", voucherH.Delete)
+		admin.GET("/vouchers", voucherH.List)
+		admin.POST("/vouchers", voucherH.Create)
+		admin.PUT("/vouchers/:id", voucherH.Update)
+		admin.DELETE("/vouchers/:id", voucherH.Delete)
 
 		// Settings
-		protected.GET("/settings", settingsH.Get)
-		protected.POST("/settings", settingsH.Update)
+		admin.GET("/settings", settingsH.Get)
+		admin.POST("/settings", settingsH.Update)
 
 		// Refunds
-		protected.GET("/refunds", refundH.List)
-		protected.POST("/refunds", refundH.Create)
-		protected.PUT("/refunds/:id/status", refundH.UpdateStatus)
-		protected.DELETE("/refunds/:id", refundH.Delete)
+		admin.GET("/refunds", refundH.List)
+		admin.PUT("/refunds/:id/status", refundH.UpdateStatus)
+		admin.DELETE("/refunds/:id", refundH.Delete)
 
-		// Reviews
-		protected.GET("/reviews", reviewH.List)
-		protected.POST("/reviews", reviewH.Create)
-		protected.PUT("/reviews/:id/reply", reviewH.Reply)
-		protected.PUT("/reviews/:id/toggle-hidden", reviewH.ToggleHidden)
+		// Reviews (Management)
+		admin.PUT("/reviews/:id/reply", reviewH.Reply)
+		admin.PUT("/reviews/:id/toggle-hidden", reviewH.ToggleHidden)
 
 		// Invoices
-		protected.GET("/invoices", invoiceH.GetAll)
-		protected.POST("/invoices", invoiceH.Create)
-		protected.PUT("/invoices/:id/status", invoiceH.UpdateStatus)
+		admin.GET("/invoices", invoiceH.GetAll)
+		admin.POST("/invoices", invoiceH.Create)
+		admin.PUT("/invoices/:id/status", invoiceH.UpdateStatus)
 
 		// Email Campaigns
-		protected.GET("/email-campaigns", emailCampaignH.List)
-		protected.POST("/email-campaigns/create", emailCampaignH.Create)
-		protected.POST("/email-campaigns/:id/send", emailCampaignH.Send)
-		protected.DELETE("/email-campaigns/:id", emailCampaignH.Delete)
+		admin.GET("/email-campaigns", emailCampaignH.List)
+		admin.POST("/email-campaigns/create", emailCampaignH.Create)
+		admin.POST("/email-campaigns/:id/send", emailCampaignH.Send)
+		admin.DELETE("/email-campaigns/:id", emailCampaignH.Delete)
 
 		// Suppliers
-		protected.GET("/suppliers", supplierH.List)
-		protected.POST("/suppliers", supplierH.Create)
-		protected.PUT("/suppliers/:id", supplierH.Update)
-		protected.DELETE("/suppliers/:id", supplierH.Delete)
+		admin.GET("/suppliers", supplierH.List)
+		admin.POST("/suppliers", supplierH.Create)
+		admin.PUT("/suppliers/:id", supplierH.Update)
+		admin.DELETE("/suppliers/:id", supplierH.Delete)
 
 		// Purchase Orders
-		protected.GET("/purchase-orders", purchaseOrderH.List)
-		protected.POST("/purchase-orders", purchaseOrderH.Create)
-		protected.PUT("/purchase-orders/:id/status", purchaseOrderH.UpdateStatus)
+		admin.GET("/purchase-orders", purchaseOrderH.List)
+		admin.POST("/purchase-orders", purchaseOrderH.Create)
+		admin.PUT("/purchase-orders/:id/status", purchaseOrderH.UpdateStatus)
 
 		// Warehouses
-		protected.GET("/warehouses", warehouseH.List)
-		protected.POST("/warehouses", warehouseH.Create)
-		protected.PUT("/warehouses/:id", warehouseH.Update)
-		protected.DELETE("/warehouses/:id", warehouseH.Delete)
+		admin.GET("/warehouses", warehouseH.List)
+		admin.POST("/warehouses", warehouseH.Create)
+		admin.PUT("/warehouses/:id", warehouseH.Update)
+		admin.DELETE("/warehouses/:id", warehouseH.Delete)
 	}
+
+	// 2. Customer Routes (Customers Only)
+	store := protected.Group("")
+	store.Use(middleware.RequireCustomer())
+	{
+		store.POST("/orders", orderH.Place)
+		store.PUT("/customers/:id/wishlist", customerH.ToggleWishlist)
+		store.POST("/refunds", refundH.Create)
+		store.POST("/reviews", reviewH.Create)
+		store.GET("/reviews", reviewH.List) // Review list could be public, but maybe we want it here
+	}
+
 }

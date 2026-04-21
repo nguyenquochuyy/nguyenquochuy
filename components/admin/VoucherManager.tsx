@@ -126,7 +126,7 @@ const VoucherManager: React.FC<VoucherManagerProps> = ({ backend, lang }) => {
         {activeTab === 'list' && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[15px]">
                 {state.vouchers.map(v => (
-                    <div key={v.id} className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 relative overflow-hidden hover:shadow-md transition-shadow">
+                    <div key={v.id} className="bg-white rounded-xl p-6 shadow-sm border border-slate-200 relative overflow-hidden hover:shadow-md transition-shadow">
                         {/* Status Strip */}
                         <div className={`absolute left-0 top-0 bottom-0 w-1 ${v.status === 'ACTIVE' ? 'bg-emerald-500' : 'bg-slate-300'}`}></div>
 
@@ -175,7 +175,7 @@ const VoucherManager: React.FC<VoucherManagerProps> = ({ backend, lang }) => {
             <div className="space-y-[15px]">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-[15px]">
                     {/* Chart */}
-                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
                         <h3 className="font-bold text-slate-800 mb-6">{t.performance}</h3>
                         <ResponsiveContainer width="100%" height={300}>
                             <BarChart data={voucherStats}>
@@ -192,7 +192,7 @@ const VoucherManager: React.FC<VoucherManagerProps> = ({ backend, lang }) => {
                     </div>
 
                     {/* Summary Table */}
-                    <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                         <h3 className="font-bold text-slate-800 mb-4">{t.detailedMetrics}</h3>
                         <div className="overflow-x-auto">
                             <table className="w-full text-left text-sm">
@@ -224,8 +224,8 @@ const VoucherManager: React.FC<VoucherManagerProps> = ({ backend, lang }) => {
         {/* Modal */}
         {isModalOpen && (
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in">
-                <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setIsModalOpen(false)}></div>
-                <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl relative z-10 flex flex-col overflow-hidden">
+                <div className="absolute inset-0 bg-black/30" onClick={() => setIsModalOpen(false)}></div>
+                <div className="bg-white rounded-xl w-full max-w-lg shadow-lg relative z-10 flex flex-col overflow-hidden">
                     <div className="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
                         <h3 className="font-bold text-lg text-slate-900">{editingId ? t.editVoucher : t.addVoucher}</h3>
                         <button onClick={() => setIsModalOpen(false)}><X size={20} className="text-slate-400 hover:text-slate-600" /></button>

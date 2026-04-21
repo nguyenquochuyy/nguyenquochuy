@@ -6,8 +6,8 @@ import BarcodeScanner from './BarcodeScanner';
 import SupplierManager from './SupplierManager';
 import WarehouseManager from './WarehouseManager';
 import StockTakeManager from './StockTakeManager';
-import { 
-    Package, Search, Plus, Filter, FileText, ArrowDown, ArrowUp, AlertTriangle, 
+import {
+    Package, Search, Plus, Filter, FileText, ArrowDown, ArrowUp, AlertTriangle,
     Download, Calendar, History, Box, ChevronDown, Check, FileDown, ArrowRight, TrendingDown, ScanLine, Truck, Building2, ClipboardCheck
 } from 'lucide-react';
 
@@ -19,16 +19,16 @@ interface InventoryManagerProps {
 const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) => {
   const t = TRANSLATIONS[lang];
   const { state, adjustStock } = backend;
-  
+
   const [activeTab, setActiveTab] = useState<'stock' | 'history' | 'suppliers' | 'warehouses' | 'stocktake'>('stock');
   const [showForecast, setShowForecast] = useState(false);
   const [showScanner, setShowScanner] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState<'ALL' | 'IN' | 'OUT'>('ALL');
-  
+
   // Modal State - Replaced isImportModalOpen with transactionModalType to support IN and OUT
   const [transactionModalType, setTransactionModalType] = useState<'IN' | 'OUT' | null>(null);
-  
+
   const [selectedProduct, setSelectedProduct] = useState<string>('');
   const [selectedVariant, setSelectedVariant] = useState<string>('');
   const [quantity, setQuantity] = useState(0);
@@ -91,7 +91,7 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
       if (!selectedProduct) return 0;
       const product = state.products.find(p => p.id === selectedProduct);
       if (!product) return 0;
-      
+
       if (product.hasVariants && selectedVariant) {
           const v = product.variants.find(v => v.id === selectedVariant);
           return v ? v.stock : 0;
@@ -173,15 +173,15 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
   const handleTransactionSubmit = (e: React.FormEvent) => {
       e.preventDefault();
       if (!selectedProduct || quantity <= 0 || !transactionModalType) return;
-      
+
       const product = state.products.find(p => p.id === selectedProduct);
       if(!product) return;
 
       adjustStock(
-          selectedProduct, 
-          product.hasVariants ? selectedVariant : undefined, 
-          quantity, 
-          transactionModalType, 
+          selectedProduct,
+          product.hasVariants ? selectedVariant : undefined,
+          quantity,
+          transactionModalType,
           reason || (transactionModalType === 'IN' ? 'Manual Import' : 'Manual Export')
       );
 
@@ -196,11 +196,11 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
   // Stock List Render
   const renderStockList = () => {
       const flattenedInventory: Array<{
-          id: string, 
-          name: string, 
-          variant?: string, 
-          sku: string, 
-          stock: number, 
+          id: string,
+          name: string,
+          variant?: string,
+          sku: string,
+          stock: number,
           price: number,
           image: string
       }> = [];
@@ -233,7 +233,7 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
       });
 
       return (
-          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+          <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
               <div className="overflow-x-auto">
                   <table className="w-full text-left">
                   <thead className="bg-slate-50 border-b border-slate-200 text-xs text-slate-500 uppercase font-semibold">
@@ -293,7 +293,7 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
       });
 
       return (
-          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+          <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
               <div className="overflow-x-auto">
                   <table className="w-full text-left">
                   <thead className="bg-slate-50 border-b border-slate-200 text-xs text-slate-500 uppercase font-semibold">
@@ -349,15 +349,15 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
     <div className="space-y-[15px] max-w-7xl mx-auto animate-fade-in-up">
         {/* Header Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-[15px]">
-            <div className="bg-gradient-to-br from-indigo-600 to-indigo-700 rounded-2xl p-6 text-white shadow-lg shadow-indigo-200">
+            <div className="bg-gradient-to-br from-indigo-600 to-indigo-700 rounded-xl p-6 text-white shadow-lg shadow-indigo-200">
                 <div className="flex items-center gap-3 mb-2 opacity-90">
                     <Box size={20} />
                     <span className="font-semibold text-sm uppercase tracking-wide">{t.totalValue}</span>
                 </div>
                 <p className="text-3xl font-bold">{formatCurrency(totalInventoryValue)}</p>
             </div>
-            
-            <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex items-center justify-between">
+
+            <div className="bg-white rounded-xl p-6 border border-slate-200 shadow-sm flex items-center justify-between">
                 <div>
                     <div className="flex items-center gap-2 text-rose-600 mb-1">
                         <AlertTriangle size={18} />
@@ -371,22 +371,22 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
                 </div>
             </div>
 
-            <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col justify-center gap-3">
+            <div className="bg-white rounded-xl p-6 border border-slate-200 shadow-sm flex flex-col justify-center gap-3">
                 <div className="flex gap-2">
-                    <button 
+                    <button
                         onClick={() => setTransactionModalType('IN')}
                         className="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold transition-colors flex items-center justify-center gap-2 shadow-sm"
                     >
                         <ArrowDown size={18} /> {t.importStock}
                     </button>
-                    <button 
+                    <button
                         onClick={() => setTransactionModalType('OUT')}
                         className="flex-1 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-bold transition-colors flex items-center justify-center gap-2 shadow-sm"
                     >
                         <ArrowUp size={18} /> {t.exportStock}
                     </button>
                 </div>
-                <button 
+                <button
                     onClick={handleExport}
                     className="w-full py-2.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-xl font-bold transition-colors flex items-center justify-center gap-2"
                 >
@@ -397,7 +397,7 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
 
         {/* Cảnh báo tồn kho thấp */}
         {lowStockDetails.length > 0 && (
-            <div className="bg-rose-50 border border-rose-200 rounded-2xl p-6 shadow-sm animate-fade-in">
+            <div className="bg-rose-50 border border-rose-200 rounded-xl p-6 shadow-sm animate-fade-in">
                 <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
                         <AlertTriangle size={24} className="text-rose-600" />
@@ -435,42 +435,42 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
         {/* Toolbar */}
         <div className="flex flex-col sm:flex-row justify-between items-end gap-[15px] border-b border-slate-200 pb-2">
             <div className="flex gap-[15px]">
-                <button 
+                <button
                     onClick={() => setActiveTab('stock')}
                     className={`pb-3 font-bold text-sm flex items-center gap-2 transition-all relative ${activeTab === 'stock' ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-700'}`}
                 >
                     <Package size={18} /> {t.stockList}
                     {activeTab === 'stock' && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 rounded-t-full"></div>}
                 </button>
-                <button 
+                <button
                     onClick={() => setActiveTab('history')}
                     className={`pb-3 font-bold text-sm flex items-center gap-2 transition-all relative ${activeTab === 'history' ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-700'}`}
                 >
                     <History size={18} /> {t.history}
                     {activeTab === 'history' && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 rounded-t-full"></div>}
                 </button>
-                <button 
+                <button
                     onClick={() => setShowForecast(true)}
                     className="pb-3 font-bold text-sm flex items-center gap-2 transition-all relative text-violet-600 hover:text-violet-800"
                 >
                     <TrendingDown size={18} /> Dự Báo Tồn Kho
                     {lowStockItems > 0 && <span className="absolute -top-1 -right-2 w-4 h-4 bg-rose-500 text-white text-[10px] rounded-full flex items-center justify-center font-bold">{lowStockItems}</span>}
                 </button>
-                <button 
+                <button
                     onClick={() => setActiveTab('suppliers')}
                     className={`pb-3 font-bold text-sm flex items-center gap-2 transition-all relative ${activeTab === 'suppliers' ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-700'}`}
                 >
                     <Truck size={18} /> Nhà cung cấp
                     {activeTab === 'suppliers' && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 rounded-t-full"></div>}
                 </button>
-                <button 
+                <button
                     onClick={() => setActiveTab('warehouses')}
                     className={`pb-3 font-bold text-sm flex items-center gap-2 transition-all relative ${activeTab === 'warehouses' ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-700'}`}
                 >
                     <Building2 size={18} /> Kho hàng
                     {activeTab === 'warehouses' && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 rounded-t-full"></div>}
                 </button>
-                <button 
+                <button
                     onClick={() => setActiveTab('stocktake')}
                     className={`pb-3 font-bold text-sm flex items-center gap-2 transition-all relative ${activeTab === 'stocktake' ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-700'}`}
                 >
@@ -490,9 +490,9 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
                 </button>
                 <div className="relative flex-1 sm:w-64">
                     <Search className="absolute left-3 top-2.5 text-slate-400" size={16} />
-                    <input 
-                        type="text" 
-                        placeholder={t.search} 
+                    <input
+                        type="text"
+                        placeholder={t.search}
                         className="w-full pl-9 pr-4 py-2 bg-white text-slate-900 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
@@ -500,7 +500,7 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
                 </div>
                 {activeTab === 'history' && (
                     <div className="relative">
-                        <select 
+                        <select
                             className="pl-3 pr-8 py-2 bg-white text-slate-900 border border-slate-200 rounded-lg text-sm font-medium appearance-none focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
                             value={filterType}
                             onChange={(e) => setFilterType(e.target.value as any)}
@@ -522,8 +522,8 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
         {/* Transaction Modal (Combined Import/Export) */}
         {transactionModalType && (
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in">
-                <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setTransactionModalType(null)}></div>
-                <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl relative z-10 flex flex-col overflow-hidden">
+                <div className="absolute inset-0 bg-black/30" onClick={() => setTransactionModalType(null)}></div>
+                <div className="bg-white rounded-xl w-full max-w-lg shadow-lg relative z-10 flex flex-col overflow-hidden">
                     <div className="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
                         <h3 className={`font-bold text-lg flex items-center gap-2 ${transactionModalType === 'IN' ? 'text-emerald-700' : 'text-amber-600'}`}>
                             {transactionModalType === 'IN' ? <ArrowDown size={20}/> : <ArrowUp size={20}/>}
@@ -531,11 +531,11 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
                         </h3>
                         <button onClick={() => setTransactionModalType(null)}><span className="text-slate-400 hover:text-slate-600">✕</span></button>
                     </div>
-                    
+
                     <form onSubmit={handleTransactionSubmit} className="p-6 space-y-[15px]">
                         <div>
                             <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">{t.selectProduct}</label>
-                            <select 
+                            <select
                                 required
                                 className="w-full p-2.5 bg-white text-slate-900 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                                 value={selectedProduct}
@@ -551,7 +551,7 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
                         {selectedProduct && state.products.find(p => p.id === selectedProduct)?.hasVariants && (
                             <div>
                                 <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">{t.variant}</label>
-                                <select 
+                                <select
                                     required
                                     className="w-full p-2.5 bg-white text-slate-900 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                                     value={selectedVariant}
@@ -569,8 +569,8 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
                             <div>
                                 <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">{t.quantity}</label>
                                 <div className="relative">
-                                    <input 
-                                        type="text" 
+                                    <input
+                                        type="text"
                                         required
                                         className="w-full p-2.5 bg-white text-slate-900 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                                         value={quantity === 0 ? '' : new Intl.NumberFormat('vi-VN').format(quantity).replace(/,/g, '.')}
@@ -588,8 +588,8 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
                             </div>
                             <div>
                                 <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">{t.note}</label>
-                                <input 
-                                    type="text" 
+                                <input
+                                    type="text"
                                     className="w-full p-2.5 bg-white text-slate-900 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                                     placeholder={transactionModalType === 'IN' ? t.placeholderIn || "e.g. PO-2024-001" : t.placeholderOut || "e.g. Damaged / Return"}
                                     value={reason}
@@ -599,18 +599,18 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
                         </div>
 
                         <div className="pt-4 flex justify-end gap-3">
-                            <button 
-                                type="button" 
+                            <button
+                                type="button"
                                 onClick={() => setTransactionModalType(null)}
                                 className="px-4 py-2 text-slate-500 hover:bg-slate-100 rounded-lg text-sm font-bold"
                             >
                                 {t.cancel}
                             </button>
-                            <button 
-                                type="submit" 
+                            <button
+                                type="submit"
                                 className={`px-6 py-2 text-white rounded-lg text-sm font-bold shadow-md transition-colors ${
-                                    transactionModalType === 'IN' 
-                                    ? 'bg-emerald-600 hover:bg-emerald-700' 
+                                    transactionModalType === 'IN'
+                                    ? 'bg-emerald-600 hover:bg-emerald-700'
                                     : 'bg-amber-500 hover:bg-amber-600'
                                 }`}
                             >
@@ -624,9 +624,9 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
 
         {/* Suppliers Tab */}
         {activeTab === 'suppliers' && (
-            <SupplierManager 
-                suppliers={state.suppliers || []} 
-                purchaseOrders={state.purchaseOrders || []} 
+            <SupplierManager
+                suppliers={state.suppliers || []}
+                purchaseOrders={state.purchaseOrders || []}
                 products={state.products || []}
                 onAddSupplier={async (data) => {
                     await fetch('/api/suppliers', { method: 'POST', body: JSON.stringify(data), headers: {'Content-Type': 'application/json'} });
@@ -648,7 +648,7 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
 
         {/* Warehouses Tab */}
         {activeTab === 'warehouses' && (
-            <WarehouseManager 
+            <WarehouseManager
                 warehouses={state.warehouses || []}
                 products={state.products || []}
                 onAddWarehouse={async (data) => {
@@ -668,14 +668,14 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
 
         {/* Stock Take Tab */}
         {activeTab === 'stocktake' && (
-            <StockTakeManager 
+            <StockTakeManager
                 stockTakes={state.stockTakes || []}
                 products={state.products || []}
                 onRecordStockTake={async (data) => {
-                    await fetch('/api/inventory/stock-take', { 
-                        method: 'POST', 
-                        body: JSON.stringify({...data, performedBy: 'admin'}), 
-                        headers: {'Content-Type': 'application/json'} 
+                    await fetch('/api/inventory/stock-take', {
+                        method: 'POST',
+                        body: JSON.stringify({...data, performedBy: 'admin'}),
+                        headers: {'Content-Type': 'application/json'}
                     });
                 }}
             />
@@ -686,11 +686,11 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ backend, lang }) =>
 
         {/* Barcode Scanner Modal */}
         {showScanner && (
-            <BarcodeScanner 
-                onClose={() => setShowScanner(false)} 
+            <BarcodeScanner
+                onClose={() => setShowScanner(false)}
                 onProductFound={(product) => {
                     setSearchTerm(product.barcode || product.sku || product.name);
-                }} 
+                }}
             />
         )}
     </div>

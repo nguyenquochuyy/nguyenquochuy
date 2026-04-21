@@ -11,11 +11,22 @@ export default {
     extend: {
       screens: {
         'xs': '480px',
-        '3xl': '1920px',
-        '4xl': '2560px',
+        '3xl': '1920px',  // 1080p Full HD
+        '4xl': '2560px',  // 2K QHD
+        '5xl': '3840px',  // 4K UHD
+      },
+      container: {
+        center: true,
+        padding: {
+          DEFAULT: '1rem',
+          sm: '2rem',
+          lg: '4rem',
+          xl: '5rem',
+          '2xl': '6rem',
+        },
       },
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
+        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
       },
       animation: {
         'fade-in': 'fadeIn 0.3s ease-out',

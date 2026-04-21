@@ -18,7 +18,7 @@ const MyProfile: React.FC<MyProfileProps> = ({ currentUser, backend, lang }) => 
     phone: currentUser.phone || '',
   });
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
-  
+
   const [passwordData, setPasswordData] = useState({ newPassword: '', confirmPassword: '' });
   const [passwordSaveStatus, setPasswordSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
   const [passwordError, setPasswordError] = useState('');
@@ -30,7 +30,7 @@ const MyProfile: React.FC<MyProfileProps> = ({ currentUser, backend, lang }) => 
       phone: currentUser.phone || '',
     });
   }, [currentUser]);
-  
+
   const isOwner = currentUser.role === 'OWNER';
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,7 +47,7 @@ const MyProfile: React.FC<MyProfileProps> = ({ currentUser, backend, lang }) => 
     e.preventDefault();
     setSaveStatus('saving');
     backend.updateEmployee(currentUser.id, formData);
-    
+
     setTimeout(() => {
       setSaveStatus('saved');
       setTimeout(() => setSaveStatus('idle'), 2000);
@@ -101,9 +101,9 @@ const MyProfile: React.FC<MyProfileProps> = ({ currentUser, backend, lang }) => 
         </button>
       </div>
 
-      <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
+      <div className="bg-white p-8 rounded-xl border border-slate-200 shadow-sm">
         <form id="profileForm" onSubmit={handleSubmitInfo} className="grid grid-cols-1 md:grid-cols-2 gap-[15px]">
-          
+
           <div className="flex flex-col items-center md:items-start text-center md:text-left">
             <div className="w-32 h-32 rounded-full bg-gradient-to-br from-indigo-100 to-violet-100 flex items-center justify-center text-5xl font-bold text-indigo-600 border-4 border-white shadow-lg mb-4">
               {currentUser.name.charAt(0)}
@@ -155,9 +155,9 @@ const MyProfile: React.FC<MyProfileProps> = ({ currentUser, backend, lang }) => 
           </div>
         </form>
       </div>
-      
+
       {/* Password Section */}
-       <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
+       <div className="bg-white p-8 rounded-xl border border-slate-200 shadow-sm">
         <form id="passwordForm" onSubmit={handleSubmitPassword}>
           <div className="flex justify-between items-start mb-6 pb-4 border-b border-slate-100">
               <div>
@@ -179,10 +179,10 @@ const MyProfile: React.FC<MyProfileProps> = ({ currentUser, backend, lang }) => 
             <div>
               <label className={labelClass}>Mật khẩu mới</label>
               <div className="relative">
-                <input 
-                    type="password" 
-                    name="newPassword" 
-                    value={passwordData.newPassword} 
+                <input
+                    type="password"
+                    name="newPassword"
+                    value={passwordData.newPassword}
                     onChange={handlePasswordChange}
                     className={inputClass}
                     placeholder="Ít nhất 6 ký tự"
@@ -192,9 +192,9 @@ const MyProfile: React.FC<MyProfileProps> = ({ currentUser, backend, lang }) => 
             <div>
               <label className={labelClass}>Xác nhận mật khẩu mới</label>
               <div className="relative">
-                <input 
-                    type="password" 
-                    name="confirmPassword" 
+                <input
+                    type="password"
+                    name="confirmPassword"
                     value={passwordData.confirmPassword}
                     onChange={handlePasswordChange}
                     className={inputClass}

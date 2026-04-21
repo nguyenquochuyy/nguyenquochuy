@@ -111,9 +111,9 @@ const AddOrderModal: React.FC<AddOrderModalProps> = ({ onClose, lang, onOrderCre
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in bg-slate-900/60 backdrop-blur-sm">
-      <div className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" onClick={onClose}></div>
-      <div className="bg-white w-full max-w-6xl rounded-2xl shadow-2xl relative overflow-hidden flex flex-col max-h-[90vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30">
+      <div className="absolute inset-0" onClick={onClose}></div>
+      <div className="bg-white w-full max-w-6xl rounded-xl border border-gray-200 shadow-lg relative overflow-hidden flex flex-col max-h-[90vh]">
         <div className="flex justify-between items-center p-4 border-b border-gray-100 shrink-0">
           <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
             <Plus className="text-indigo-600" /> {t.addNewOrder}

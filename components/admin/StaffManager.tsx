@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { BackendContextType, Language, Employee, UserRole } from '../../types';
 import { TRANSLATIONS } from '../../services/translations';
-import { 
-  Users, Plus, Edit, Lock, Unlock, Key, History, Activity, 
+import {
+  Users, Plus, Edit, Lock, Unlock, Key, History, Activity,
   Mail, Calendar, Shield, User, Save, X, Check, Copy, ArrowRight, ShieldCheck, Phone
 } from 'lucide-react';
 
@@ -14,11 +14,11 @@ interface StaffManagerProps {
 const StaffManager: React.FC<StaffManagerProps> = ({ backend, lang }) => {
   const t = TRANSLATIONS[lang];
   const { state, addEmployee, updateEmployee } = backend;
-  
+
   const [activeTab, setActiveTab] = useState<'list' | 'activity'>('list');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  
+
   // New States for Email & Password Flow
   const [showEmailPreview, setShowEmailPreview] = useState(false);
   const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
@@ -56,9 +56,9 @@ const StaffManager: React.FC<StaffManagerProps> = ({ backend, lang }) => {
       const tempPass = generateRandomPassword();
       setGeneratedPassword(tempPass);
       setEmailData({ name: formData.name, email: formData.email });
-      
+
       addEmployee({ ...formData, password: tempPass }); // FIX: Add password to new employee
-      
+
       setIsModalOpen(false);
       setShowEmailPreview(true); // Trigger Email Simulation
       resetForm();
@@ -95,7 +95,7 @@ const StaffManager: React.FC<StaffManagerProps> = ({ backend, lang }) => {
       const tempPass = generateRandomPassword();
       setGeneratedPassword(tempPass);
       setEmailData({ name: formData.name, email: formData.email });
-      
+
       // FIX: Actually update the password in the backend
       if (editingId) {
           updateEmployee(editingId, { password: tempPass });
@@ -124,10 +124,10 @@ const StaffManager: React.FC<StaffManagerProps> = ({ backend, lang }) => {
 
       return (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 animate-fade-in">
-            <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setShowEmailPreview(false)}></div>
-            
+            <div className="absolute inset-0 bg-black/70 " onClick={() => setShowEmailPreview(false)}></div>
+
             {/* Email Container (Styled like a real HTML email) */}
-            <div className="bg-slate-100 w-full max-w-lg shadow-2xl relative z-10 rounded-xl overflow-hidden flex flex-col font-sans">
+            <div className="bg-slate-100 w-full max-w-lg shadow-lg relative z-10 rounded-xl overflow-hidden flex flex-col font-sans">
                 {/* Email Header / Top Bar Simulation */}
                 <div className="bg-white border-b border-slate-200 px-4 py-3 flex items-center justify-between text-xs text-slate-500">
                     <div className="flex items-center gap-2">
@@ -139,12 +139,12 @@ const StaffManager: React.FC<StaffManagerProps> = ({ backend, lang }) => {
 
                 {/* Email Body */}
                 <div className="p-8">
-                    <div className="bg-white rounded-2xl shadow-sm p-8 text-center border-t-4 border-indigo-600">
+                    <div className="bg-white rounded-xl shadow-sm p-8 text-center border-t-4 border-indigo-600">
                         {/* Logo */}
                         <div className="w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center text-white font-bold text-xl mx-auto mb-6 shadow-lg shadow-indigo-200">
                             U
                         </div>
-                        
+
                         <h2 className="text-2xl font-bold text-slate-900 mb-2">Chào mừng đến với UniShop!</h2>
                         <p className="text-slate-500 mb-6 text-sm leading-relaxed">
                             Xin chào <strong>{emailData.name}</strong>,<br/>
@@ -167,18 +167,18 @@ const StaffManager: React.FC<StaffManagerProps> = ({ backend, lang }) => {
                         </div>
 
                         {/* CTA Button */}
-                        <button 
+                        <button
                             onClick={handleLoginClick}
                             className="bg-indigo-600 text-white px-8 py-3 rounded-lg font-bold text-sm hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-200 w-full mb-4"
                         >
                             Đăng nhập & Đổi mật khẩu
                         </button>
-                        
+
                         <p className="text-xs text-slate-400">
                             Vì lý do bảo mật, hãy đổi mật khẩu ngay sau lần đăng nhập đầu tiên.
                         </p>
                     </div>
-                    
+
                     <div className="text-center mt-6 text-xs text-slate-400">
                         &copy; 2024 UniShop Enterprise System.<br/>Automated Security Notification.
                     </div>
@@ -207,9 +207,9 @@ const StaffManager: React.FC<StaffManagerProps> = ({ backend, lang }) => {
 
       return (
         <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 animate-fade-in">
-            <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-md"></div>
-            
-            <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl relative z-10 overflow-hidden">
+            <div className="absolute inset-0 bg-slate-900/80 "></div>
+
+            <div className="bg-white rounded-xl w-full max-w-md shadow-lg relative z-10 overflow-hidden">
                 {step === 1 ? (
                     <form onSubmit={handleSave} className="p-8">
                         <div className="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mb-4 mx-auto">
@@ -223,7 +223,7 @@ const StaffManager: React.FC<StaffManagerProps> = ({ backend, lang }) => {
                         <div className="space-y-[15px]">
                             <div>
                                 <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">{t.newPassword}</label>
-                                <input 
+                                <input
                                     type="password" required minLength={6}
                                     className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                                     value={newPass}
@@ -232,7 +232,7 @@ const StaffManager: React.FC<StaffManagerProps> = ({ backend, lang }) => {
                             </div>
                             <div>
                                 <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">{t.confirmPassword}</label>
-                                <input 
+                                <input
                                     type="password" required minLength={6}
                                     className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                                     value={confirmPass}
@@ -241,7 +241,7 @@ const StaffManager: React.FC<StaffManagerProps> = ({ backend, lang }) => {
                             </div>
                         </div>
 
-                        <button 
+                        <button
                             type="submit"
                             className="mt-8 w-full bg-slate-900 text-white py-3 rounded-xl font-bold hover:bg-slate-800 transition-colors"
                         >
@@ -267,14 +267,14 @@ const StaffManager: React.FC<StaffManagerProps> = ({ backend, lang }) => {
         {/* Header & Tabs */}
         <div className="flex flex-col md:flex-row justify-between items-end gap-[15px] border-b border-slate-200 pb-2">
             <div className="flex gap-[15px]">
-                <button 
+                <button
                     onClick={() => setActiveTab('list')}
                     className={`pb-3 font-bold text-sm flex items-center gap-2 transition-all relative ${activeTab === 'list' ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-700'}`}
                 >
                     <Users size={18} /> {t.staffList}
                     {activeTab === 'list' && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 rounded-t-full"></div>}
                 </button>
-                <button 
+                <button
                     onClick={() => setActiveTab('activity')}
                     className={`pb-3 font-bold text-sm flex items-center gap-2 transition-all relative ${activeTab === 'activity' ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-700'}`}
                 >
@@ -282,7 +282,7 @@ const StaffManager: React.FC<StaffManagerProps> = ({ backend, lang }) => {
                     {activeTab === 'activity' && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 rounded-t-full"></div>}
                 </button>
             </div>
-            <button 
+            <button
                 onClick={() => { resetForm(); setIsModalOpen(true); }}
                 className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-indigo-700 transition-colors flex items-center gap-2 shadow-lg shadow-indigo-200"
             >
@@ -294,7 +294,7 @@ const StaffManager: React.FC<StaffManagerProps> = ({ backend, lang }) => {
         {activeTab === 'list' && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[15px]">
                 {state.employees.map(emp => (
-                    <div key={emp.id} className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 relative overflow-hidden group hover:shadow-md transition-shadow">
+                    <div key={emp.id} className="bg-white rounded-xl p-6 shadow-sm border border-slate-200 relative overflow-hidden group hover:shadow-md transition-shadow">
                         <div className="flex justify-between items-start mb-4">
                             <div className="flex items-center gap-[15px]">
                                 <div className="w-12 h-12 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 font-bold text-lg border border-indigo-100">
@@ -335,7 +335,7 @@ const StaffManager: React.FC<StaffManagerProps> = ({ backend, lang }) => {
 
         {/* ACTIVITY LOG VIEW */}
         {activeTab === 'activity' && (
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                 <table className="w-full text-left text-sm">
                     <thead className="bg-slate-50 text-slate-500 font-medium uppercase text-xs border-b border-slate-200">
                         <tr>
@@ -378,8 +378,8 @@ const StaffManager: React.FC<StaffManagerProps> = ({ backend, lang }) => {
         {/* Main Add/Edit Modal */}
         {isModalOpen && (
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in">
-                <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setIsModalOpen(false)}></div>
-                <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl relative z-10 flex flex-col overflow-hidden">
+                <div className="absolute inset-0 bg-black/30" onClick={() => setIsModalOpen(false)}></div>
+                <div className="bg-white rounded-xl w-full max-w-lg shadow-lg relative z-10 flex flex-col overflow-hidden">
                     <div className="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
                         <h3 className="font-bold text-lg text-slate-900">{editingId ? t.editStaff : t.addStaff}</h3>
                         <button onClick={() => setIsModalOpen(false)}><X size={20} className="text-slate-400 hover:text-slate-600" /></button>
@@ -390,8 +390,8 @@ const StaffManager: React.FC<StaffManagerProps> = ({ backend, lang }) => {
                                 <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">{t.name}</label>
                                 <div className="relative">
                                     <User size={18} className="absolute left-3 top-2.5 text-slate-400"/>
-                                    <input 
-                                        type="text" required 
+                                    <input
+                                        type="text" required
                                         value={formData.name}
                                         onChange={e => setFormData({...formData, name: e.target.value})}
                                         className="w-full pl-10 pr-3 py-2.5 bg-white text-slate-900 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none font-medium"
@@ -402,7 +402,7 @@ const StaffManager: React.FC<StaffManagerProps> = ({ backend, lang }) => {
                                 <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">{t.phone}</label>
                                 <div className="relative">
                                     <Phone size={18} className="absolute left-3 top-2.5 text-slate-400"/>
-                                    <input 
+                                    <input
                                         type="tel"
                                         value={formData.phone}
                                         onChange={e => setFormData({...formData, phone: e.target.value})}
@@ -415,8 +415,8 @@ const StaffManager: React.FC<StaffManagerProps> = ({ backend, lang }) => {
                             <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">{t.email}</label>
                             <div className="relative">
                                 <Mail size={18} className="absolute left-3 top-2.5 text-slate-400"/>
-                                <input 
-                                    type="email" required 
+                                <input
+                                    type="email" required
                                     className="w-full pl-10 pr-3 py-2.5 bg-white text-slate-900 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none font-medium"
                                     value={formData.email}
                                     onChange={e => setFormData({...formData, email: e.target.value})}
@@ -427,7 +427,7 @@ const StaffManager: React.FC<StaffManagerProps> = ({ backend, lang }) => {
                         <div className="grid grid-cols-2 gap-[15px]">
                             <div>
                                 <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">{t.role}</label>
-                                <select 
+                                <select
                                     className="w-full p-2.5 bg-white text-slate-900 border border-slate-200 rounded-xl text-sm outline-none"
                                     value={formData.role}
                                     onChange={e => setFormData({...formData, role: e.target.value as any})}
@@ -439,7 +439,7 @@ const StaffManager: React.FC<StaffManagerProps> = ({ backend, lang }) => {
                             </div>
                             <div>
                                 <label className="block text-xs font-bold text-slate-500 uppercase mb-1.5">{t.accountAccess}</label>
-                                <select 
+                                <select
                                     className="w-full p-2.5 bg-white text-slate-900 border border-slate-200 rounded-xl text-sm outline-none"
                                     value={formData.status}
                                     onChange={e => setFormData({...formData, status: e.target.value as any})}
@@ -452,8 +452,8 @@ const StaffManager: React.FC<StaffManagerProps> = ({ backend, lang }) => {
 
                         {editingId ? (
                             <div className="pt-2">
-                                <button 
-                                    type="button" 
+                                <button
+                                    type="button"
                                     onClick={handleResetPassword}
                                     className="text-sm text-indigo-600 font-bold hover:underline flex items-center gap-1"
                                 >
@@ -470,13 +470,13 @@ const StaffManager: React.FC<StaffManagerProps> = ({ backend, lang }) => {
                         )}
 
                         <div className="pt-4 flex justify-end gap-3 border-t border-slate-50 mt-2">
-                            <button 
+                            <button
                                 type="button" onClick={() => setIsModalOpen(false)}
                                 className="px-4 py-2 text-slate-500 hover:bg-slate-100 rounded-lg text-sm font-bold"
                             >
                                 {t.cancel}
                             </button>
-                            <button 
+                            <button
                                 type="submit"
                                 className="px-6 py-2 bg-indigo-600 text-white hover:bg-indigo-700 rounded-lg text-sm font-bold shadow-md flex items-center gap-2"
                             >
@@ -496,7 +496,7 @@ const StaffManager: React.FC<StaffManagerProps> = ({ backend, lang }) => {
 
         {/* Toast for Final Success */}
         {showResetToast && (
-            <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-[80] bg-slate-900 text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 animate-fade-in-up">
+            <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-[80] bg-slate-900 text-white px-6 py-3 rounded-full shadow-lg flex items-center gap-3 animate-fade-in-up">
                 <Check size={20} className="text-emerald-400"/>
                 <span className="font-medium">{t.passwordUpdatedSuccess}</span>
             </div>

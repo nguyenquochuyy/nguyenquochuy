@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7
+    container_name: unishop-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+      MONGO_INITDB_DATABASE: unishop
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - unishop-network
+
+  backend:
+    build:
+      context: ./backend-go
+      dockerfile: Dockerfile
+    container_name: unishop-backend
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      MONGODB_URI: mongodb://admin:password123@mongodb:27017/unishop?authSource=admin
+      JWT_SECRET: your-secret-key-change-in-production
+      PORT: 8080
+    depends_on:
+      - mongodb
+    networks:
+      - unishop-network
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: unishop-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - unishop-network
+
+volumes:
+  mongodb_data:
+
+networks:
+  unishop-network:
+    driver: bridge

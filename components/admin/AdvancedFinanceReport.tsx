@@ -27,7 +27,7 @@ interface ReportData {
 const AdvancedFinanceReport: React.FC<AdvancedFinanceReportProps> = () => {
   const [data, setData] = useState<ReportData | null>(null);
   const [loading, setLoading] = useState(false);
-  
+
   // Date ranges
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -40,13 +40,13 @@ const AdvancedFinanceReport: React.FC<AdvancedFinanceReportProps> = () => {
     const now = new Date();
     const firstDayThisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
     const lastDayThisMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-    
+
     const firstDayLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
     const lastDayLastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
 
     setStartDate(firstDayThisMonth.toISOString().split('T')[0]);
     setEndDate(lastDayThisMonth.toISOString().split('T')[0]);
-    
+
     setCompareStartDate(firstDayLastMonth.toISOString().split('T')[0]);
     setCompareEndDate(lastDayLastMonth.toISOString().split('T')[0]);
   }, []);
@@ -58,14 +58,28 @@ const AdvancedFinanceReport: React.FC<AdvancedFinanceReportProps> = () => {
       if (enableCompare) {
         url += `&compareStartDate=${compareStartDate ? new Date(compareStartDate).toISOString() : ''}&compareEndDate=${compareEndDate ? new Date(compareEndDate).toISOString() : ''}`;
       }
-      
-      const res = await fetch(url);
+
+      const res = await fetch(url, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('unishop_admin_token')}`
+        }
+      });
       if (res.ok) {
         const json = await res.json();
-        setData(json.data || json); // fallback if it's not wrapped
+        setData(json.data || json);
+      } else {
+        console.error('API error:', res.status, res.statusText);
+        setData({
+          current: { income: 0, expense: 0, profit: 0, incomeByCategory: {}, expenseByCategory: {} },
+          comparison: { income: 0, expense: 0, profit: 0, incomeByCategory: {}, expenseByCategory: {} }
+        });
       }
     } catch (e) {
-      console.error(e);
+      console.error('Fetch error:', e);
+      setData({
+        current: { income: 0, expense: 0, profit: 0, incomeByCategory: {}, expenseByCategory: {} },
+        comparison: { income: 0, expense: 0, profit: 0, incomeByCategory: {}, expenseByCategory: {} }
+      });
     } finally {
       setLoading(false);
     }
@@ -106,7 +120,7 @@ const AdvancedFinanceReport: React.FC<AdvancedFinanceReportProps> = () => {
   return (
     <div className="space-y-[15px] animate-fade-in">
       {/* Date Filters */}
-      <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-wrap gap-[15px] items-end">
+      <div className="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex flex-wrap gap-[15px] items-end">
         <div className="space-y-1">
           <label className="text-xs font-bold text-slate-500 uppercase">Kỳ Báo Cáo</label>
           <div className="flex items-center gap-2">
@@ -146,7 +160,7 @@ const AdvancedFinanceReport: React.FC<AdvancedFinanceReportProps> = () => {
         ].map((kpi, idx) => {
           const trend = calculateTrend(kpi.current, kpi.compare);
           return (
-            <div key={idx} className={`bg-white p-6 rounded-2xl shadow-sm border border-${kpi.color}-100`}>
+            <div key={idx} className={`bg-white p-6 rounded-xl shadow-sm border border-${kpi.color}-100`}>
               <div className="flex justify-between items-start">
                 <div>
                   <p className={`text-xs font-bold text-${kpi.color}-600 uppercase`}>{kpi.label}</p>
@@ -174,7 +188,7 @@ const AdvancedFinanceReport: React.FC<AdvancedFinanceReportProps> = () => {
 
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-[15px]">
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
           <h3 className="font-bold text-slate-800 mb-6">Biểu đồ So Sánh</h3>
           <div className="h-72">
             <ResponsiveContainer width="100%" height="100%">
@@ -191,7 +205,7 @@ const AdvancedFinanceReport: React.FC<AdvancedFinanceReportProps> = () => {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
           <h3 className="font-bold text-slate-800 mb-6">Phân Bổ Chi Phí Theo Danh Mục</h3>
           <div className="space-y-[15px]">
              {Object.entries(data.current.expenseByCategory || {})
@@ -203,8 +217,8 @@ const AdvancedFinanceReport: React.FC<AdvancedFinanceReportProps> = () => {
                     <span className="font-bold text-slate-900">{formatCurrency(amount)}</span>
                   </div>
                   <div className="w-full bg-slate-100 rounded-full h-2">
-                    <div 
-                      className="bg-rose-500 h-2 rounded-full" 
+                    <div
+                      className="bg-rose-500 h-2 rounded-full"
                       style={{ width: `${Math.min(100, (amount / Math.max(data.current.expense, 1)) * 100)}%` }}
                     ></div>
                   </div>

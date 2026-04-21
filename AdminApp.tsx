@@ -25,9 +25,9 @@ const AdminAppController: React.FC = () => {
 
   if (isLoading) {
       return (
-          <div className="min-h-screen flex items-center justify-center bg-slate-50 flex-col gap-4">
-              <Loader2 size={48} className="text-indigo-600 animate-spin" />
-              <p className="text-slate-500 font-medium">Loading Admin System...</p>
+          <div className="min-h-screen flex items-center justify-center bg-gray-50 flex-col gap-3">
+              <Loader2 size={36} className="text-blue-600 animate-spin" />
+              <p className="text-gray-500 text-sm font-medium">Loading Admin System...</p>
           </div>
       );
   }
@@ -42,7 +42,7 @@ const AdminAppController: React.FC = () => {
               <WifiOff size={16} /> Offline Mode: Server unreachable.
           </div>
       )}
-      
+
       <div className="flex-1 min-h-0 flex flex-col">
       <Routes>
         {/* Auth Route */}
@@ -58,7 +58,7 @@ const AdminAppController: React.FC = () => {
         <Route path="/*" element={
             isEmployee ? (
                 isL2AuthRequired ? (
-                    <Level2PasswordModal 
+                    <Level2PasswordModal
                         user={currentUser as Employee}
                         backend={backend}
                         onSuccess={() => {
@@ -72,7 +72,7 @@ const AdminAppController: React.FC = () => {
                         onCancel={() => backend.logout()}
                     />
                 ) : (
-                    <AdminDashboard 
+                    <AdminDashboard
                         backend={backend}
                         onExit={() => { adminAuthStorage.clearSession(); setCurrentUser(null); }}
                         lang={lang}

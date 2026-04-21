@@ -145,7 +145,7 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({ cart, setCart, backend, onO
             <div className="grid grid-cols-1 gap-[15px]">
                 <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
                     <h2 className="text-xl font-bold text-slate-900 mb-6">Thông tin giao hàng</h2>
-                    <div className="space-y-5">
+                    <div className="space-y-[15px]">
                         <div className="relative"><Mail size={18} className="absolute left-4 top-3.5 text-slate-400 pointer-events-none"/><input type="email" name="email" placeholder="Địa chỉ Email" required className={inputClass} value={customerInfo.email} onChange={handleInputChange} /></div>
                         <div className="relative"><User size={18} className="absolute left-4 top-3.5 text-slate-400 pointer-events-none"/><input type="text" name="name" placeholder="Họ và Tên" required className={inputClass} value={customerInfo.name} onChange={handleInputChange} /></div>
                         <div className="relative"><Phone size={18} className="absolute left-4 top-3.5 text-slate-400 pointer-events-none"/><input type="tel" name="phone" placeholder="Số điện thoại" required className={inputClass} value={customerInfo.phone} onChange={handleInputChange} /></div>

@@ -41,13 +41,13 @@ const StockTakeManager: React.FC<Props> = ({ stockTakes, products, onRecordStock
     };
 
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
-        <div className="bg-white rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl flex flex-col">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30 animate-fade-in">
+        <div className="bg-white rounded-xl w-full max-w-lg overflow-hidden shadow-lg flex flex-col">
           <div className="flex justify-between items-center p-4 border-b border-slate-100 bg-slate-50">
             <h3 className="font-bold text-slate-800 flex items-center gap-2"><ClipboardCheck size={20} className="text-indigo-600"/> Ghi nhận Kiểm Kê</h3>
             <button onClick={() => setShowModal(false)} className="text-slate-400 hover:text-slate-600"><X size={20}/></button>
           </div>
-          <div className="p-6 space-y-5">
+          <div className="p-6 space-y-[15px]">
             <div>
               <label className="block text-sm font-semibold text-slate-700 mb-1">Sản phẩm</label>
               <select className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm" value={selectedProduct} onChange={e => { setSelectedProduct(e.target.value); setSelectedVariant(''); }}>
@@ -64,7 +64,7 @@ const StockTakeManager: React.FC<Props> = ({ stockTakes, products, onRecordStock
                 </select>
               </div>
             )}
-            
+
             {(selectedProduct && (!product?.hasVariants || selectedVariant)) ? (
               <div className="grid grid-cols-3 gap-[15px]">
                 <div className="bg-slate-50 p-3 rounded-lg border border-slate-200 text-center">
@@ -107,7 +107,7 @@ const StockTakeManager: React.FC<Props> = ({ stockTakes, products, onRecordStock
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 flex flex-col h-full animate-fade-in">
+    <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6 flex flex-col h-full animate-fade-in">
       <div className="flex justify-between items-center mb-6 border-b border-slate-200 pb-4">
         <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2"><ClipboardCheck className="text-indigo-600"/> Lịch sử Kiểm kê & Lệch kho</h2>
         <div className="flex items-center gap-[15px]">

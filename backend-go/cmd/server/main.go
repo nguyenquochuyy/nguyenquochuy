@@ -2,9 +2,14 @@ package main
 
 import (
 	"context"
+	"fmt"
+	"net"
 	"net/http"
 	"os"
+	"os/exec"
 	"os/signal"
+	"runtime"
+	"strings"
 	"syscall"
 	"time"
 
@@ -22,6 +27,49 @@ import (
 	"unishop/backend/internal/routes"
 	"unishop/backend/pkg/db"
 )
+
+// freePort tries to kill whatever process is occupying the given port.
+func freePort(port string) {
+	ln, err := net.Listen("tcp", ":"+port)
+	if err == nil {
+		ln.Close()
+		return // port is free
+	}
+
+	logger.Log.Warn("Port is occupied, attempting to free it", zap.String("port", port))
+
+	if runtime.GOOS == "windows" {
+		// Find PID using netstat
+		out, e := exec.Command("cmd", "/C", "netstat -ano | findstr :"+port).Output()
+		if e != nil {
+			return
+		}
+		for _, line := range strings.Split(string(out), "\n") {
+			fields := strings.Fields(strings.TrimSpace(line))
+			if len(fields) >= 5 && strings.Contains(fields[1], ":"+port) && fields[3] == "LISTENING" {
+				pid := fields[4]
+				if pid != "0" {
+					logger.Log.Info("Killing process on port", zap.String("port", port), zap.String("pid", pid))
+					exec.Command("taskkill", "/F", "/PID", pid).Run()
+					time.Sleep(500 * time.Millisecond)
+				}
+			}
+		}
+	} else {
+		// Linux/Mac: use fuser or lsof
+		exec.Command("fuser", "-k", port+"/tcp").Run()
+		time.Sleep(500 * time.Millisecond)
+	}
+
+	// Verify
+	ln2, err2 := net.Listen("tcp", ":"+port)
+	if err2 != nil {
+		logger.Log.Error(fmt.Sprintf("Could not free port %s — please close the process manually", port))
+	} else {
+		ln2.Close()
+		logger.Log.Info("Port freed successfully", zap.String("port", port))
+	}
+}
 
 func ensureIndexes(database *mongo.Database) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -137,10 +185,10 @@ func main() {
 
 	// Use Gin without default loggers
 	router := gin.New()
-	
+
 	// Add Zap Logger & Recovery
 	router.Use(middleware.ZapLogger(), gin.Recovery())
-	
+
 	// Apply rate limiting
 	router.Use(middleware.RateLimit())
 
@@ -155,6 +203,9 @@ func main() {
 	}))
 
 	routes.Setup(router, database, cfg)
+
+	// Auto-free port if occupied
+	freePort(cfg.Port)
 
 	srv := &http.Server{
 		Addr:              ":" + cfg.Port,
@@ -178,7 +229,7 @@ func main() {
 	logger.Log.Info("Shutting down gracefully...")
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	
+
 	if err := srv.Shutdown(ctx); err != nil {
 		logger.Log.Fatal("Server forced to shutdown", zap.Error(err))
 	}

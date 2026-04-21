@@ -53,3 +53,12 @@ func RequireRole(roles ...string) gin.HandlerFunc {
 		c.Abort()
 	}
 }
+
+func RequireEmployee() gin.HandlerFunc {
+	return RequireRole("OWNER", "STAFF", "ACCOUNTANT")
+}
+
+func RequireCustomer() gin.HandlerFunc {
+	return RequireRole("CUSTOMER")
+}
+
