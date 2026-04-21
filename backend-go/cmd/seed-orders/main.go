@@ -99,8 +99,6 @@ var (
 )
 
 func main() {
-	rand.Seed(time.Now().UnixNano())
-
 	// Connect to MongoDB
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -109,7 +107,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to connect to MongoDB: %v", err)
 	}
-	defer client.Disconnect(ctx)
+	defer func() { _ = client.Disconnect(ctx) }()
 
 	db := client.Database("unishop")
 	collection := db.Collection("orders")

@@ -270,7 +270,7 @@ func (h *InventoryHandler) RecordStockTake(c *gin.Context) {
 			PerformedBy: body.PerformedBy,
 			CreatedAt:   time.Now(),
 		}
-		h.logs.InsertOne(ctx, log)
+		_, _ = h.logs.InsertOne(ctx, log)
 
 		events.Global.Broadcast("products")
 		events.Global.Broadcast("inventoryLogs")

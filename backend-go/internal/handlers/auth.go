@@ -216,7 +216,7 @@ func (h *AuthHandler) Refresh(c *gin.Context) {
 	}
 
 	if time.Now().After(rt.ExpiresAt) {
-		h.refreshTokens.UpdateOne(ctx, bson.M{"token": body.RefreshToken}, bson.M{"$set": bson.M{"revoked": true}})
+		_, _ = h.refreshTokens.UpdateOne(ctx, bson.M{"token": body.RefreshToken}, bson.M{"$set": bson.M{"revoked": true}})
 		c.JSON(401, gin.H{"success": false, "message": "Refresh token đã hết hạn, vui lòng đăng nhập lại"})
 		return
 	}
@@ -234,12 +234,12 @@ func (h *AuthHandler) Logout(c *gin.Context) {
 	var body struct {
 		RefreshToken string `json:"refreshToken"`
 	}
-	c.ShouldBindJSON(&body)
+	_ = c.ShouldBindJSON(&body)
 
 	if body.RefreshToken != "" {
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 		defer cancel()
-		h.refreshTokens.UpdateOne(ctx,
+		_, _ = h.refreshTokens.UpdateOne(ctx,
 			bson.M{"token": body.RefreshToken},
 			bson.M{"$set": bson.M{"revoked": true}},
 		)

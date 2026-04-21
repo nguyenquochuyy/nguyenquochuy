@@ -38,7 +38,7 @@ func main() {
 	if err != nil {
 		log.Fatal("Connect error:", err)
 	}
-	defer client.Disconnect(ctx)
+	defer func() { _ = client.Disconnect(ctx) }()
 
 	if err = client.Ping(ctx, nil); err != nil {
 		log.Fatal("Ping error:", err)
@@ -47,8 +47,8 @@ func main() {
 	db := client.Database(dbName)
 
 	// --- Clear old data ---
-	db.Collection("employees").Drop(ctx)
-	db.Collection("customers").Drop(ctx)
+	_ = db.Collection("employees").Drop(ctx)
+	_ = db.Collection("customers").Drop(ctx)
 	fmt.Println("✅ Cleared old employees & customers")
 
 	// --- Seed Employees ---

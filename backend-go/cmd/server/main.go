@@ -53,14 +53,14 @@ func freePort(port string) {
 				pid := fields[4]
 				if pid != "0" {
 					logger.Log.Info("Killing process on port", zap.String("port", port), zap.String("pid", pid))
-					exec.Command("taskkill", "/F", "/PID", pid).Run()
+					_ = exec.Command("taskkill", "/F", "/PID", pid).Run()
 					time.Sleep(500 * time.Millisecond)
 				}
 			}
 		}
 	} else {
 		// Linux/Mac: use fuser or lsof
-		exec.Command("fuser", "-k", port+"/tcp").Run()
+		_ = exec.Command("fuser", "-k", port+"/tcp").Run()
 		time.Sleep(500 * time.Millisecond)
 	}
 
@@ -157,9 +157,7 @@ func ensureIndexes(database *mongo.Database) {
 }
 
 func main() {
-	if err := godotenv.Load(); err != nil {
-		// Just a fallback logic, we don't log fatal because in prod it might not exist
-	}
+	_ = godotenv.Load()
 
 	cfg := config.Load()
 	logger.Init(cfg.Env)

@@ -15,7 +15,7 @@ func RequestID() gin.HandlerFunc {
 		id := c.GetHeader(RequestIDKey)
 		if id == "" {
 			b := make([]byte, 8)
-			rand.Read(b)
+			_, _ = rand.Read(b)
 			id = hex.EncodeToString(b)
 		}
 		c.Set("requestId", id)

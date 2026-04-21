@@ -122,7 +122,7 @@ func (h *FinanceHandler) AdvancedReports(c *gin.Context) {
 		defer cursor.Close(ctx)
 
 		var txs []models.Transaction
-		cursor.All(ctx, &txs)
+		_ = cursor.All(ctx, &txs)
 
 		var income, expense float64
 		incomeByCategory := make(map[string]float64)

@@ -40,7 +40,7 @@ func (h *ForecastHandler) GetForecast(c *gin.Context) {
 	// Parse query params
 	forecastDays := 30
 	if d := c.Query("days"); d != "" {
-		fmt.Sscanf(d, "%d", &forecastDays)
+		_, _ = fmt.Sscanf(d, "%d", &forecastDays)
 	}
 	if forecastDays < 7 {
 		forecastDays = 7
@@ -256,7 +256,7 @@ func (h *ForecastHandler) GetForecast(c *gin.Context) {
 			CreatedAt:      now,
 		}
 		upsertOpt := options.Update().SetUpsert(true)
-		h.forecasts.UpdateOne(ctx,
+		_, _ = h.forecasts.UpdateOne(ctx,
 			bson.M{"id": forecast.ForecastID},
 			bson.M{"$set": forecast},
 			upsertOpt,
